@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/network/api_paths.dart';
 import 'package:butterfly/platform_utils.dart';
-import 'package:butterfly/presentation/components/controls/buttons.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:butterfly/presentation/pages/authentication/otp_verifiction_page.dart';
 import 'package:butterfly/presentation/pages/home_page.dart';
 import 'package:butterfly/presentation/pages/payment/plans_list_page.dart';
@@ -169,138 +169,60 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.colorBackground,
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/images/butterfly-text.png",
-              width: 200,
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              height: 50,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              decoration: BoxDecoration(
-                                color: const Color(0x45454545),
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  bottomLeft: Radius.circular(8),
-                                ),
-                                border: Border.all(
-                                  color: phoneError != null
-                                      ? Colors.redAccent
-                                      : const Color(0xFF878787),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '+91',
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.7),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: const Color(0x45454545),
-                                  borderRadius: const BorderRadius.only(
-                                    topRight: Radius.circular(8),
-                                    bottomRight: Radius.circular(8),
-                                  ),
-                                  border: Border(
-                                    left: BorderSide.none,
-                                    top: BorderSide(
-                                      color: phoneError != null
-                                          ? Colors.redAccent
-                                          : const Color(0xFF878787),
-                                      width: 1,
-                                    ),
-                                    right: BorderSide(
-                                      color: phoneError != null
-                                          ? Colors.redAccent
-                                          : const Color(0xFF878787),
-                                      width: 1,
-                                    ),
-                                    bottom: BorderSide(
-                                      color: phoneError != null
-                                          ? Colors.redAccent
-                                          : const Color(0xFF878787),
-                                      width: 1,
-                                    ),
-                                  ),
-                                ),
-                                child: TextField(
-                                  style: const TextStyle(color: Colors.white),
-                                  controller: phoneController,
-                                  keyboardType: TextInputType.phone,
-                                  maxLength: 10,
-                                  cursorColor: AppColors.colorPrimary,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 14,
-                                    ),
-                                    counterText: "",
-                                    hintText: 'Phone Number',
-                                    hintStyle: const TextStyle(
-                                      color: Color(0xFF878787),
-                                    ),
-                                  ),
-                                  onEditingComplete: () {
-                                    FocusScope.of(context).unfocus();
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (phoneError != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8, left: 16),
-                            child: Text(
-                              phoneError!,
-                              style: const TextStyle(
-                                color: Colors.redAccent,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 15),
-            SubmitButton(
-              buttonText: "Continue",
-              isLoading: _isButtonDisabled,
-              onPressed: _isButtonDisabled
-                  ? () {}
-                  : () async {
+      body: AppBackground(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Navigator.of(context).canPop()
+                      ? IconButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+                        )
+                      : const SizedBox(height: 12),
+                ),
+                const SizedBox(height: 8),
+                Image.asset('assets/images/butterfly-logo.png', height: 72),
+                const SizedBox(height: 28),
+                const Text(
+                  'Welcome Back',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Sign in to continue streaming',
+                  style: TextStyle(
+                    color: AppColors.colorTextSecondary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                DarkField(
+                  controller: phoneController,
+                  hintText: 'Phone Number',
+                  icon: Icons.phone_outlined,
+                  keyboardType: TextInputType.phone,
+                  maxLength: 10,
+                  errorText: phoneError,
+                  onEditingComplete: () => FocusScope.of(context).unfocus(),
+                ),
+                const SizedBox(height: 20),
+                GradientButton(
+                  label: 'Sign In',
+                  isLoading: _isButtonDisabled,
+                  onPressed: _isButtonDisabled
+                      ? null
+                      : () async {
                       phoneNumber = phoneController.text;
                       if (phoneNumber.isNotEmpty) {
                         setState(() {
@@ -345,216 +267,190 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     },
             ),
-            const SizedBox(height: 20),
-            SocialLoginButton(
-              text: Text(
-                "Continue With Google",
-                style: TextStyle(color: Colors.black),
+            const SizedBox(height: 28),
+            const Text(
+              'OR CONTINUE WITH',
+              style: TextStyle(
+                color: AppColors.colorTextMuted,
+                fontSize: 11,
+                letterSpacing: 1.4,
+                fontWeight: FontWeight.w700,
               ),
-              logo: Image.asset("assets/images/google.png", width: 49),
-              backgroundColor: Colors.white,
-              onPressed: _isButtonDisabled
-                  ? () {}
-                  : () async {
-                try {
-                  final account = await _googleSignIn.signIn();
-
-                  if (account == null) return;
-
-                  final googleAuth = await account.authentication;
-                  final idToken = googleAuth.idToken;
-
-                  if (idToken != null) {
-                    await NetworkService().post(
-                      APIPath.googleSignIn,
-                      {'id_token': idToken},
-                          (data) async {
-                        final sessionId = data['body']['session_id'];
-                        final userJson = data['body']['user'];
-                        await authenticationProvider.saveUserToken(sessionId,
-                            userJson: userJson);
-                        // Modal will be shown from HomePage's initState after navigation
-                        // or from the build method if user is already on HomePage
-                      },
-                          (error) {
-                        final keyboardHeight =
-                            MediaQuery.of(context).viewInsets.bottom;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(error['body']['message']),
-                            behavior: SnackBarBehavior.floating,
-                            margin:
-                            EdgeInsets.only(bottom: keyboardHeight),
-                          ),
-                        );
-                      },
-                          () {},
-                    );
-                    setState(() {
-                      _isButtonDisabled = false;
-                    });
-                  }
-                } catch (error) {
-                  if (mounted) {
-                    setState(() {
-                      _isButtonDisabled = false;
-                    });
-                  }
-                }
-              },
             ),
-            const SizedBox(height: 20),
-            SocialLoginButton(
-              text: Text(
-                "Continue With Apple",
-                style: TextStyle(color: Colors.black),
-              ),
-              logo: Container(
-                margin: EdgeInsets.only(left: 12),
-                child: const FaIcon(
-                  FontAwesomeIcons.apple,
-                  color: Colors.black,
-                  size: 28,
+            const SizedBox(height: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SocialCircleButton(
+                  onPressed: _isButtonDisabled
+                      ? () {}
+                      : () async {
+                          try {
+                            final account = await _googleSignIn.signIn();
+                            if (account == null) return;
+                            final googleAuth = await account.authentication;
+                            final idToken = googleAuth.idToken;
+                            if (idToken != null) {
+                              await NetworkService().post(
+                                APIPath.googleSignIn,
+                                {'id_token': idToken},
+                                (data) async {
+                                  final sessionId = data['body']['session_id'];
+                                  final userJson = data['body']['user'];
+                                  await authenticationProvider.saveUserToken(
+                                    sessionId,
+                                    userJson: userJson,
+                                  );
+                                },
+                                (error) {
+                                  final keyboardHeight =
+                                      MediaQuery.of(context).viewInsets.bottom;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(error['body']['message']),
+                                      behavior: SnackBarBehavior.floating,
+                                      margin: EdgeInsets.only(bottom: keyboardHeight),
+                                    ),
+                                  );
+                                },
+                                () {},
+                              );
+                              setState(() {
+                                _isButtonDisabled = false;
+                              });
+                            }
+                          } catch (error) {
+                            if (mounted) {
+                              setState(() {
+                                _isButtonDisabled = false;
+                              });
+                            }
+                          }
+                        },
+                  child: Image.asset("assets/images/google.png", width: 26),
                 ),
-              ),
-              backgroundColor: Colors.white,
-              onPressed: _isButtonDisabled
-                  ? () {}
-                  : () async {
-                try {
-                  final appleCredential = await SignInWithApple.getAppleIDCredential(
-                    scopes: [
-                      AppleIDAuthorizationScopes.email,
-                      AppleIDAuthorizationScopes.fullName,
-                    ],
-                    webAuthenticationOptions: WebAuthenticationOptions(
-                      clientId: "app.butterflyott.app.signin",
-                      redirectUri: Uri.parse(
-                        "https://butterflyott.com/api/v1/auth/callback/apple-sign-in",
-                      ),
-                    ),
-                  );
-
-                  final token = appleCredential.identityToken;
-
-                  NetworkService().post(
-                    APIPath.appleSignIn,
-                    {"token": token, "first_name": appleCredential.givenName, "last_name": appleCredential.familyName},
-                        (data) {
-                      final sessionId = data['body']['session_id'];
-                      final userJson = data['body']['user'];
-                      authenticationProvider.saveUserToken(sessionId, userJson: userJson);
-                    },
-                        (error) {
-                      final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(error['body']['message']),
-                          behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.only(bottom: keyboardHeight),
-                        ),
-                      );
-                    },
-                        () {},
-                  );
-                } catch (error) {
-                  print(error);
-                }
-              },
-            ),
-            // const SizedBox(height: 20),
-            // SocialLoginButton(
-            //   text: Text(
-            //     "Continue With Facebook",
-            //     style: TextStyle(color: Colors.white),
-            //   ),
-            //   logo: Container(
-            //     margin: EdgeInsets.only(left: 12),
-            //     child: const FaIcon(
-            //       FontAwesomeIcons.facebookF,
-            //       color: Colors.white,
-            //       size: 24,
-            //     ),
-            //   ),
-            //   backgroundColor: const Color(0xFF1877F2),
-            //   onPressed: _isButtonDisabled
-            //       ? () {}
-            //       : () async {
-            //           final LoginResult result = await FacebookAuth.instance.login();
-            //           if (result.status == LoginStatus.success) {
-            //             final AccessToken accessToken = result.accessToken!;
-            //             NetworkService().post(
-            //               APIPath.facebookSignIn,
-            //               {"token": accessToken.tokenString},
-            //               (data) {
-            //                 final sessionId = data['body']['session_id'];
-            //                 final userJson = data['body']['user'];
-            //                 authenticationProvider.saveUserToken(sessionId, userJson: userJson);
-            //               },
-            //               (error) {
-            //                 final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-            //                 ScaffoldMessenger.of(context).showSnackBar(
-            //                   SnackBar(
-            //                     content: Text(error['body']['message']),
-            //                     behavior: SnackBarBehavior.floating,
-            //                     margin: EdgeInsets.only(bottom: keyboardHeight),
-            //                   ),
-            //                 );
-            //               },
-            //               () {},
-            //             );
-            //           } else {
-            //             if (!context.mounted) return;
-            //             final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-            //             ScaffoldMessenger.of(context).showSnackBar(
-            //               SnackBar(
-            //                 content: Text(
-            //                   "Facebook Login Failed ${result.message}",
-            //                 ),
-            //                 behavior: SnackBarBehavior.floating,
-            //                 margin: EdgeInsets.only(bottom: keyboardHeight),
-            //               ),
-            //             );
-            //           }
-            //         },
-            // ),
-            const SizedBox(height: 20),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 22),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: const TextStyle(
-                          height: 1.3,
-                          color: Colors.white,
-                        ),
-                        children: <TextSpan>[
-                          const TextSpan(
-                              text:
-                                  "By using this app you confirm that you agree to our "),
-                          TextSpan(
-                            text: 'Policies',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const LegalListPage(),
-                                ));
+                const SizedBox(width: 18),
+                SocialCircleButton(
+                  onPressed: _isButtonDisabled
+                      ? () {}
+                      : () async {
+                          try {
+                            final appleCredential =
+                                await SignInWithApple.getAppleIDCredential(
+                              scopes: [
+                                AppleIDAuthorizationScopes.email,
+                                AppleIDAuthorizationScopes.fullName,
+                              ],
+                              webAuthenticationOptions: WebAuthenticationOptions(
+                                clientId: "app.butterflyott.app.signin",
+                                redirectUri: Uri.parse(
+                                  "https://butterflyott.com/api/v1/auth/callback/apple-sign-in",
+                                ),
+                              ),
+                            );
+                            final token = appleCredential.identityToken;
+                            NetworkService().post(
+                              APIPath.appleSignIn,
+                              {
+                                "token": token,
+                                "first_name": appleCredential.givenName,
+                                "last_name": appleCredential.familyName
                               },
-                          ),
-                        ],
-                      ),
+                              (data) {
+                                final sessionId = data['body']['session_id'];
+                                final userJson = data['body']['user'];
+                                authenticationProvider.saveUserToken(
+                                  sessionId,
+                                  userJson: userJson,
+                                );
+                              },
+                              (error) {
+                                final keyboardHeight =
+                                    MediaQuery.of(context).viewInsets.bottom;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(error['body']['message']),
+                                    behavior: SnackBarBehavior.floating,
+                                    margin:
+                                        EdgeInsets.only(bottom: keyboardHeight),
+                                  ),
+                                );
+                              },
+                              () {},
+                            );
+                          } catch (error) {
+                            print(error);
+                          }
+                        },
+                  child: const FaIcon(
+                    FontAwesomeIcons.apple,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 18),
+                SocialCircleButton(
+                  onPressed: () => FocusScope.of(context).unfocus(),
+                  child: const Icon(Icons.phone_iphone_rounded, color: Colors.white),
+                ),
+              ],
+            ),
+            const SizedBox(height: 28),
+            RichText(
+              text: TextSpan(
+                style: const TextStyle(
+                  color: AppColors.colorTextSecondary,
+                  fontSize: 14,
+                  fontFamily: 'Mulish',
+                ),
+                children: [
+                  const TextSpan(text: "Don't have an account? "),
+                  TextSpan(
+                    text: 'Sign Up',
+                    style: const TextStyle(
+                      color: AppColors.colorPrimary,
+                      fontWeight: FontWeight.w800,
                     ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        FocusScope.of(context).unfocus();
+                      },
                   ),
                 ],
               ),
             ),
-          ],
+            const SizedBox(height: 24),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: const TextStyle(
+                  height: 1.4,
+                  color: AppColors.colorTextMuted,
+                  fontSize: 12,
+                  fontFamily: 'Mulish',
+                ),
+                children: <TextSpan>[
+                  const TextSpan(text: "By using this app you confirm that you agree to our "),
+                  TextSpan(
+                    text: 'Policies',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.colorAccent,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const LegalListPage(),
+                        ));
+                      },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+              ],
+            ),
+          ),
         ),
       ),
     );

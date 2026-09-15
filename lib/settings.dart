@@ -38,8 +38,9 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
             height: 60,
             margin: EdgeInsets.only(left: 20, right: 20),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.orange, width: 2),
+              borderRadius: BorderRadius.circular(16),
+              color: AppColors.colorSurface,
+              border: Border.all(color: AppColors.colorInputBorder),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -55,7 +56,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
                   margin: EdgeInsets.only(right: 4),
                   child: Switch(
                     value: true,
-                    activeColor: Colors.orange,
+                    activeTrackColor: AppColors.colorPrimary,
                     onChanged: (bool newValue) {
                       setState(() {});
                     },
@@ -70,8 +71,9 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
             height: 60,
             margin: EdgeInsets.only(left: 20, right: 20),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.orange, width: 2),
+              borderRadius: BorderRadius.circular(16),
+              color: AppColors.colorSurface,
+              border: Border.all(color: AppColors.colorInputBorder),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,7 +89,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
                   margin: EdgeInsets.only(right: 4),
                   child: Switch(
                     value: true,
-                    activeColor: Colors.orange,
+                    activeTrackColor: AppColors.colorPrimary,
                     onChanged: (bool newValue) {
                       setState(() {});
                     },
@@ -102,8 +104,9 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
             height: 60,
             margin: EdgeInsets.only(left: 20, right: 20),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.orange, width: 2),
+              borderRadius: BorderRadius.circular(16),
+              color: AppColors.colorSurface,
+              border: Border.all(color: AppColors.colorInputBorder),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,7 +122,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
                   margin: EdgeInsets.only(right: 4),
                   child: Switch(
                     value: true,
-                    activeColor: Colors.orange,
+                    activeTrackColor: AppColors.colorPrimary,
                     onChanged: (bool newValue) {
                       setState(() {});
                     },
@@ -272,7 +275,7 @@ class _DownloadQualityContainerState extends State<DownloadQualityContainer> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.orange,
+                  color: AppColors.colorPrimary,
                 ),
               ),
               ListTile(
@@ -316,8 +319,9 @@ class _DownloadQualityContainerState extends State<DownloadQualityContainer> {
       height: 60,
       margin: EdgeInsets.only(left: 20, right: 20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.orange, width: 2),
+        borderRadius: BorderRadius.circular(16),
+        color: AppColors.colorSurface,
+        border: Border.all(color: AppColors.colorInputBorder),
       ),
       child: GestureDetector(
         onTap: _showBottomSheet,

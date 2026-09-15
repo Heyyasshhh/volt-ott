@@ -13,18 +13,18 @@ class MediaTile extends StatelessWidget {
 
   Widget _buildSectionHeader(BuildContext context, {bool showViewAll = true}) {
     return Padding(
-      padding: EdgeInsetsGeometry.only(bottom: 6),
+      padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 6),
+            padding: const EdgeInsets.only(left: 16),
             child: Text(
               section.title,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 17.0,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w800,
               ),
             ),
           ),
@@ -35,22 +35,14 @@ class MediaTile extends StatelessWidget {
                   builder: (context) => SearchPage(section: section),
                 ));
               },
-              child: Padding(
-                padding: const EdgeInsets.only(right: 6),
-                child: Container(
-                  margin: const EdgeInsets.all(4),
-                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF181818),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    "View All",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+              child: const Padding(
+                padding: EdgeInsets.only(right: 16),
+                child: Text(
+                  "See All",
+                  style: TextStyle(
+                    color: Color(0xFF6B7280),
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),

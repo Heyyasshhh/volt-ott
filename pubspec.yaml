@@ -77,18 +77,19 @@ dev_dependencies:
   hive_generator: ^2.0.1
   build_runner: ^2.4.9
 
-# flutter pub run flutter_launcher_icons
+# dart run flutter_launcher_icons
 flutter_launcher_icons:
   android: true
   ios: true
+  image_path: "assets/images/butterfly-logo.png"
+  remove_alpha_ios: true
+  adaptive_icon_background: "#07070C"
+  adaptive_icon_foreground: "assets/images/butterfly-logo.png"
   web:
     generate: true
-    image_path: "assets/images/butterfly-icon.png"
-    background_color: "#FFFFFF"
-    theme_color: "#FFFFFF"
-  adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/images/butterfly-icon.png"
-  image_path: "assets/images/butterfly-icon.png"
+    image_path: "assets/images/butterfly-logo.png"
+    background_color: "#07070C"
+    theme_color: "#07070C"
 # dart run flutter_native_splash:create
 flutter:
   assets:
@@ -108,15 +109,18 @@ flutter:
           weight: 700
 
 flutter_native_splash:
-  color: "#000000"
+  color: "#07070C"
   android: true
   ios: true
   web: true
   fullscreen: true
-  image: assets/images/splash.png
+  android_gravity: center
+  ios_content_mode: center
+  image: assets/images/butterfly-logo.png
   android_12:
-    color: "#000000"
-    image: assets/images/splash.png
+    color: "#07070C"
+    icon_background_color: "#07070C"
+    image: assets/images/butterfly-logo.png
 
 dependency_overrides:
   river_player:

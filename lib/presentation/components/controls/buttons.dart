@@ -29,10 +29,18 @@ class SubmitButton extends StatelessWidget {
             width: buttonWidth,
             margin: const EdgeInsets.symmetric(horizontal: 25),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: isLoading
-                  ? AppColors.colorPrimary.withOpacity(0.7)
-                  : AppColors.colorPrimary,
+              borderRadius: BorderRadius.circular(28),
+              gradient: isLoading ? null : AppColors.primaryGradient,
+              color: isLoading ? AppColors.colorPrimary.withValues(alpha: 0.7) : null,
+              boxShadow: isLoading
+                  ? null
+                  : [
+                      BoxShadow(
+                        color: AppColors.colorPrimary.withValues(alpha: 0.28),
+                        blurRadius: 18,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
             ),
             child: Center(
               child: isLoading

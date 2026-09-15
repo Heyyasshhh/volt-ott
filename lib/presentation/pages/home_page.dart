@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/more_info_page.dart';
 import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,15 +10,16 @@ import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/platform_utils.dart';
 import 'package:butterfly/presentation/pages/fragments/search_page.dart';
 import 'package:butterfly/presentation/pages/fragments/sections_page.dart';
-import 'package:butterfly/presentation/pages/fragments/upcoming_page.dart';
+import 'package:butterfly/presentation/pages/fragments/my_list_page.dart';
 import 'package:butterfly/presentation/pages/media/downloads_page.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/profile_page.dart';
 import 'package:butterfly/presentation/components/notification_permission_modal.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:butterfly/providers/content_provider.dart';
 import 'package:butterfly/providers/home_page_provider.dart';
 import 'package:butterfly/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'fragments/sections_page_web.dart';
 
@@ -82,43 +82,6 @@ class _HomePageState extends State<HomePage> {
         });
         deepLinkProvider.redirectToReels(null);
       });
-    }
-  }
-
-  Widget _buildNavIcon(String assetPath, bool isSelected) {
-    // Use PNG for icons that have PNG versions
-    if (assetPath.contains('.png')) {
-      return Image.asset(
-        assetPath,
-        width: 24,
-        height: 24,
-        color: isSelected ? AppColors.colorPrimary : Colors.white,
-        colorBlendMode: BlendMode.srcIn,
-      );
-    }
-    
-    // Downloads SVG has simple fills - make it larger
-    if (assetPath.contains('downloads')) {
-      return SvgPicture.asset(
-        assetPath,
-        width: 28,
-        height: 28,
-        colorFilter: ColorFilter.mode(
-          isSelected ? AppColors.colorPrimary : Colors.white,
-          BlendMode.srcIn,
-        ),
-      );
-    } else {
-      // For gradient SVGs with Illustrator markup
-      // The unhandled elements warnings are expected - flutter_svg ignores
-      // Illustrator-specific elements but should still render the paths
-      return SvgPicture.asset(
-        assetPath,
-        width: 24,
-        height: 24,
-        allowDrawingOutsideViewBox: true,
-        fit: BoxFit.contain,
-      );
     }
   }
 
@@ -264,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                                   child: const Text(
                                     "Exit",
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -297,60 +260,10 @@ class _HomePageState extends State<HomePage> {
           child: AnimatedOpacity(
             opacity: _isDrawerOpen ? 0.0 : 1.0,
             duration: const Duration(milliseconds: 300),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.colorBackground,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, -2),
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: Theme(
-                data: Theme.of(context).copyWith(
-                  splashFactory: NoSplash.splashFactory,
-                  highlightColor: Colors.transparent,
-                ),
-                child: BottomNavigationBar(
-                  type: BottomNavigationBarType.fixed,
-                  currentIndex: _currentIndex,
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  selectedItemColor: AppColors.colorPrimary,
-                  unselectedItemColor: Colors.white,
-                  selectedLabelStyle: const TextStyle(fontSize: 12),
-                  unselectedLabelStyle: const TextStyle(fontSize: 12),
-                  items: [
-                    BottomNavigationBarItem(
-                      icon: _buildNavIcon('assets/images/icons/home.png', _currentIndex == 0),
-                      label: "Home",
-                    ),
-                    BottomNavigationBarItem(
-                      icon: _buildNavIcon('assets/images/icons/search.png', _currentIndex == 1),
-                      label: "Search",
-                    ),
-                    BottomNavigationBarItem(
-                      icon: _buildNavIcon('assets/images/icons/upcoming.png', _currentIndex == 2),
-                      label: "Upcoming",
-                    ),
-                    if (!kIsWeb)
-                      BottomNavigationBarItem(
-                        icon: _buildNavIcon('assets/images/icons/downloads.svg', _currentIndex == 3),
-                        label: "Download",
-                      ),
-                    BottomNavigationBarItem(
-                      icon: _buildNavIcon('assets/images/icons/more.png', _currentIndex == (kIsWeb ? 3 : 4)),
-                      label: "More",
-                    ),
-                  ],
-                  onTap: (idx) {
-                    setState(() => _currentIndex = idx);
-                  },
-                ),
-              ),
+            child: ButterflyBottomNav(
+              currentIndex: _currentIndex,
+              showDownloads: !kIsWeb,
+              onTap: (idx) => setState(() => _currentIndex = idx),
             ),
           ),
         ),
@@ -368,11 +281,12 @@ class _HomePageState extends State<HomePage> {
             if (!kIsWeb)
               SectionsPage(
                 scaffoldKey: _homeSectionsPageKey,
+                onSearchTap: () => setState(() => _currentIndex = 1),
               ),
             const SearchPage(),
-            const UpcomingPage(),
+            const MyListPage(),
             if (!kIsWeb) const DownloadsPage(),
-            MoreInfoPage(),
+            const ProfilePage(),
           ],
         ),
       ),

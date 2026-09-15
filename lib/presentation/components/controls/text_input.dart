@@ -50,19 +50,19 @@ class TextInput extends StatelessWidget {
           maxLines: max(1, max(minLines, maxLines)),
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              borderSide: const BorderSide(color: Color(0xFF878787)),
+              borderRadius: const BorderRadius.all(Radius.circular(16)),
+              borderSide: const BorderSide(color: AppColors.colorInputBorder),
             ),
             errorBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+              borderRadius: BorderRadius.all(Radius.circular(16)),
               borderSide: BorderSide(color: Colors.redAccent),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              borderSide: const BorderSide(color: Color(0xFF878787)),
+              borderRadius: const BorderRadius.all(Radius.circular(16)),
+              borderSide: const BorderSide(color: AppColors.colorPrimary),
             ),
             filled: true,
-            fillColor: const Color(0x45454545),
+            fillColor: AppColors.colorInputFill,
             counterText: "",
             hintText: hintText,
             floatingLabelBehavior: FloatingLabelBehavior.always,

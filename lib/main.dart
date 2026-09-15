@@ -22,6 +22,7 @@ import 'package:butterfly/providers/content_provider.dart';
 import 'package:butterfly/providers/download_provider.dart';
 import 'package:butterfly/providers/home_page_provider.dart';
 import 'package:butterfly/providers/in_app_notification_provider.dart';
+import 'package:butterfly/providers/my_list_provider.dart';
 import 'package:butterfly/providers/reels_provider.dart';
 import 'package:butterfly/services/download_service.dart';
 import 'package:butterfly/services/hive_service.dart';
@@ -143,6 +144,8 @@ void main() async {
   final contentProvider = ContentProvider();
   final homePageProvider = HomePageProvider();
   final reelsProvider = ReelsProvider();
+  final myListProvider = MyListProvider();
+  await myListProvider.init();
   if (!kIsWeb) {
     reelsProvider.loadReels();
   }
@@ -220,6 +223,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => contentProvider),
         ChangeNotifierProvider(create: (_) => reelsProvider),
         ChangeNotifierProvider(create: (_) => homePageProvider),
+        ChangeNotifierProvider(create: (_) => myListProvider),
         ...providers,
       ],
       child: DeepLinkHandler(child: MainApp(nextPage: nextPage)),

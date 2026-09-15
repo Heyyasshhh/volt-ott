@@ -6,25 +6,25 @@ import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/platform_utils.dart';
 import 'package:butterfly/presentation/components/media/media_tile.dart';
 import 'package:butterfly/presentation/pages/drawer_pages/notifications_page.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:butterfly/providers/content_provider.dart';
 import 'package:butterfly/providers/in_app_notification_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../main.dart';
 import '../../../models/media/media_item.dart';
+import '../../../models/media/section.dart';
 import '../../../providers/authentication_provider.dart';
 import '../../components/bottom_sheet/media_bottomsheet.dart';
 import '../../components/carousel_hero.dart';
 
 class SectionsPage extends StatefulWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
+  final VoidCallback? onSearchTap;
 
-  const SectionsPage({super.key, this.scaffoldKey});
+  const SectionsPage({super.key, this.scaffoldKey, this.onSearchTap});
 
   @override
   State<SectionsPage> createState() => _SectionsPageState();
@@ -42,6 +42,8 @@ class _SectionsPageState extends State<SectionsPage> with WidgetsBindingObserver
   int dotPosition = 0;
   late final GlobalKey<ScaffoldState> _key;
   int _current = 0;
+  int _selectedCategory = 0;
+  static const _categories = ['All', 'Movies', 'Series', 'Kids', 'Documentaries'];
   final List<GlobalKey<CarouselHeroItemState>> heroKeys = [];
 
   final CarouselSliderController _carouselController = CarouselSliderController();
@@ -167,13 +169,41 @@ class _SectionsPageState extends State<SectionsPage> with WidgetsBindingObserver
     );
   }
 
+  bool _matchesCategory(BaseItem item) {
+    final cat = item.categories.join(' ').toLowerCase();
+    switch (_selectedCategory) {
+      case 1:
+        return item.mediaType == MediaType.movie;
+      case 2:
+        return item.mediaType == MediaType.series;
+      case 3:
+        return !item.getIsAdult();
+      case 4:
+        return cat.contains('document');
+      default:
+        return true;
+    }
+  }
+
+  List<Section> _filteredSections(ContentProvider contentProvider) {
+    final sections = contentProvider.getSections().skip(1);
+    if (_selectedCategory == 0) return sections.toList();
+    return sections
+        .map((section) {
+          final items = section.baseItems.where(_matchesCategory).toList();
+          return section.copyWith(baseItems: items);
+        })
+        .where((section) => section.baseItems.isNotEmpty)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final contentProvider = Provider.of<ContentProvider>(context);
     final inAppNotificationProvider = Provider.of<InAppNotificationProvider>(context);
     final authenticationProvider = Provider.of<AuthenticationProvider>(context);
     final user = authenticationProvider.getUser();
-    final double appBarHeight = kToolbarHeight;
+    final double appBarHeight = kToolbarHeight + 48;
 
     final slides = contentProvider.getPosters();
     if (heroKeys.length != slides.length) {
@@ -397,14 +427,14 @@ class _SectionsPageState extends State<SectionsPage> with WidgetsBindingObserver
                     ])
                   else
                     Column(
-                      children: contentProvider.getSections().skip(1).map((section) {
+                      children: _filteredSections(contentProvider).map((section) {
                         return Container(
-                          margin: EdgeInsets.only(top: 8),
+                          margin: const EdgeInsets.only(top: 8),
                           child: MediaTile(section),
                         );
                       }).toList(),
                     ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 96),
                   if (PlatformUtils.isWeb) FooterWithBadges(),
                 ],
               ),
@@ -414,86 +444,88 @@ class _SectionsPageState extends State<SectionsPage> with WidgetsBindingObserver
               top: 0,
               left: 0,
               right: 0,
-              child: ClipRRect(
-                child: Container(
-                  height: appBarHeight,
-                  color: AppColors.colorBackground.withValues(alpha: 1),
-                  child: AppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    iconTheme: const IconThemeData(color: Colors.white),
-                    foregroundColor: Colors.white,
-                    automaticallyImplyLeading: false,
-                    shadowColor: Colors.transparent,
-                    surfaceTintColor: Colors.transparent,
-                    centerTitle: false,
-                    toolbarHeight: appBarHeight,
-                    leading: Container(
-                      margin: const EdgeInsets.only(left: 13.0),
-                      child: Image.asset(
-                        "assets/images/butterfly-text.png",
-                      ),
-                    ),
-                    leadingWidth: 80,
-                    actions: [
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          IconButton(
-                            icon: FaIcon(FontAwesomeIcons.solidBell, color: AppColors.colorPrimary, size: 26),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (_) => NotificationsPage()),
-                              );
-                            },
-                          ),
-                          if (inAppNotificationProvider.getNotifications().isNotEmpty)
-                            Positioned(
-                              right: 4,
-                              top: 4,
-                              child: Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(0),
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth: 16,
-                                  minHeight: 16,
-                                ),
-                                child: Text(
-                                  inAppNotificationProvider.getNotifications().length.toString(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
+              child: Container(
+                color: AppColors.colorBackground,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: kToolbarHeight,
+                      child: AppBar(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        iconTheme: const IconThemeData(color: Colors.white),
+                        foregroundColor: Colors.white,
+                        automaticallyImplyLeading: false,
+                        shadowColor: Colors.transparent,
+                        surfaceTintColor: Colors.transparent,
+                        centerTitle: false,
+                        toolbarHeight: kToolbarHeight,
+                        titleSpacing: 16,
+                        title: Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/butterfly-logo.png',
+                              height: 34,
+                            ),
+                            const SizedBox(width: 8),
+                            ShaderMask(
+                              shaderCallback: (bounds) =>
+                                  AppColors.brandTextGradient.createShader(bounds),
+                              child: const Text(
+                                'Butterfly',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w800,
+                                  fontStyle: FontStyle.italic,
                                 ),
                               ),
                             ),
+                          ],
+                        ),
+                        actions: [
+                          IconButton(
+                            icon: const Icon(Icons.search_rounded, color: Colors.white, size: 24),
+                            onPressed: widget.onSearchTap,
+                          ),
+                          Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 24),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => NotificationsPage()),
+                                  );
+                                },
+                              ),
+                              if (inAppNotificationProvider.getNotifications().isNotEmpty)
+                                Positioned(
+                                  right: 8,
+                                  top: 8,
+                                  child: Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.colorPrimary,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(width: 4),
                         ],
                       ),
-                      IconButton(
-                        icon: SvgPicture.asset(
-                          'assets/images/icons/share.svg',
-                          width: 26,
-                          height: 26,
-                          colorFilter: ColorFilter.mode(
-                            AppColors.colorPrimary,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                        onPressed: () {
-                          Share.share(
-                            contentProvider.getShareUrl(),
-                            subject: contentProvider.getShareText(),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                    CategoryChipBar(
+                      labels: _categories,
+                      selectedIndex: _selectedCategory,
+                      onSelected: (index) => setState(() => _selectedCategory = index),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
                 ),
               ),
             ),

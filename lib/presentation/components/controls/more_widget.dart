@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:butterfly/constants/colors.dart';
 
 class MoreWidget extends StatefulWidget {
   final String text;
@@ -37,31 +38,45 @@ class _MoreWidgetState extends State<MoreWidget> {
           ),
           child: Row(
             children: [
-              widget.svgIconPath != null
-                  ? SvgPicture.asset(
-                      widget.svgIconPath!,
-                      width: 28,
-                      height: 28,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
+              Container(
+                width: 42,
+                height: 42,
+                decoration: const BoxDecoration(
+                  color: AppColors.colorSurfaceElevated,
+                  shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+                child: widget.svgIconPath != null
+                    ? SvgPicture.asset(
+                        widget.svgIconPath!,
+                        width: 20,
+                        height: 20,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                      )
+                    : Icon(
+                        widget.icon,
+                        color: Colors.white,
+                        size: 20,
                       ),
-                    )
-                  : Icon(
-                      widget.icon,
-                      color: Colors.white,
-                      size: 28,
-                    ),
-              const SizedBox(width: 16),
+              ),
+              const SizedBox(width: 14),
               Expanded(
                 child: Text(
                   widget.text,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
+              ),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.colorTextMuted,
+                size: 22,
               ),
             ],
           ),

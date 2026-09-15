@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:butterfly/constants/app_theme.dart';
 import 'package:butterfly/constants/text.dart';
 import 'package:butterfly/providers/authentication_provider.dart';
 import 'package:butterfly/services/notification_service.dart';
@@ -70,17 +71,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
       navigatorKey: mainNavigatorKey,
       debugShowCheckedModeBanner: false,
       navigatorObservers: [routeObserver],
-      theme: ThemeData(
-        useMaterial3: true,
-        fontFamily: 'Mulish',
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-          displayMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-          titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-          bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-          bodyMedium: TextStyle(fontSize: 14, color: Colors.grey),
-        ),
-      ),
+      theme: AppTheme.dark(),
       title: AppText.appName,
       builder: (context, child) {
         return Stack(

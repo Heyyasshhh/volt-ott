@@ -74,6 +74,8 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+              Image.asset('assets/images/butterfly-logo.png', height: 64),
+              const SizedBox(height: 24),
               Text(
                 "Enter OTP",
                 style: const TextStyle(

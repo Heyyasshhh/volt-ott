@@ -46,7 +46,7 @@ class MediaItem extends StatelessWidget {
               child: CachedNetworkImage(
                 fadeInDuration: Duration.zero,
                 imageUrl: localUrl,
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
                 placeholder: (context, url) => Container(
                   decoration: BoxDecoration(
                     color: const Color(0xFF1F1F1F),

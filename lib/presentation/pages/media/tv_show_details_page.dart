@@ -1,15 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:butterfly/constants/app_theme.dart';
+import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/models/media/media_item.dart';
 import 'package:butterfly/presentation/components/media/episode_item.dart';
 import 'package:butterfly/presentation/components/media/media_item.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
+import 'package:butterfly/providers/my_list_provider.dart';
 import 'package:butterfly/presentation/pages/media/trailer_player.dart';
 import 'package:butterfly/trailer_player_stub.dart' if (dart.library.html) 'package:butterfly/presentation/pages/media/trailer_player_web.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../components/bottom_sheet/media_bottomsheet.dart';
 import '../../../providers/authentication_provider.dart';
 import '../../../providers/content_provider.dart';
 import '../../../services/deeplinkly_service.dart';
@@ -124,6 +129,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
     final contentProvider = Provider.of<ContentProvider>(context);
     final authenticationProvider = Provider.of<AuthenticationProvider>(context);
     final isLoggedIn = authenticationProvider.getUser() != null;
+    final myList = Provider.of<MyListProvider>(context);
     final series = contentProvider.getMediaById(
       widget.baseItem.id,
       widget.baseItem.mediaType,
@@ -139,8 +145,10 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: SingleChildScrollView(
+      backgroundColor: AppColors.colorBackground,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
         controller: _mainScrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -309,9 +317,62 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(displayItem.title, style: AppTextStyles.displayTitle.copyWith(fontSize: 28)),
+                  const SizedBox(height: 8),
+                  Text(mediaMetaLine(displayItem), style: AppTextStyles.meta),
+                  const SizedBox(height: 16),
+                  GradientButton(
+                    label: 'Play',
+                    icon: Icons.play_arrow_rounded,
+                    onPressed: () {
+                      if (episodeList.isNotEmpty) {
+                        showBottomSheetOrNavigate(context, episodeList.first);
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      DetailAction(
+                        icon: myList.contains(displayItem.id) ? Icons.add_circle : Icons.add_circle_outline,
+                        label: 'My List',
+                        active: myList.contains(displayItem.id),
+                        onPressed: () => myList.toggle(displayItem.id),
+                      ),
+                      DetailAction(
+                        icon: Icons.favorite_border,
+                        label: 'Like',
+                        onPressed: () {},
+                      ),
+                      DetailAction(
+                        icon: Icons.ios_share_rounded,
+                        label: 'Share',
+                        onPressed: () async {
+                          setState(() => _isSharing = true);
+                          try {
+                            final url = await DeepLinklyLinkService.instance.generateLink(
+                              context,
+                              type: LinkType.series,
+                              data: {
+                                'slug': widget.baseItem.id,
+                                'title': widget.baseItem.title,
+                                'description': widget.baseItem.description,
+                                'poster': widget.baseItem.verticalPosterUrl,
+                              },
+                            );
+                            if (mounted) Share.share(url);
+                          } finally {
+                            if (mounted) setState(() => _isSharing = false);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
                   // Line separator
                   const Padding(
-                    padding: EdgeInsets.only(top: 0),
+                    padding: EdgeInsets.only(top: 8),
                     child: Divider(
                       color: Colors.white24,
                       height: 1,
@@ -629,6 +690,27 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
             ),
           ],
         ),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 4,
+            left: 8,
+            child: CircleIconButton(
+              icon: Icons.arrow_back_ios_new_rounded,
+              size: 40,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 4,
+            right: 8,
+            child: CircleIconButton(
+              icon: myList.contains(displayItem.id) ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+              size: 40,
+              iconColor: myList.contains(displayItem.id) ? AppColors.colorPrimary : Colors.white,
+              onPressed: () => myList.toggle(displayItem.id),
+            ),
+          ),
+        ],
       ),
     );
   }

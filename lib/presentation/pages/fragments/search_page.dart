@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:butterfly/models/media/media_item.dart';
 import 'package:butterfly/models/media/section.dart';
-import 'package:butterfly/presentation/components/controls/text_input.dart';
 import 'package:butterfly/presentation/components/media/media_item.dart';
 import 'package:butterfly/providers/content_provider.dart';
 import 'package:provider/provider.dart';
@@ -64,7 +63,7 @@ class _ShowsPageState extends State<SearchPage> {
                 backgroundColor: AppColors.colorBackground,
                 elevation: 0,
                 leading: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 title: Text(
@@ -76,19 +75,39 @@ class _ShowsPageState extends State<SearchPage> {
                   ),
                 ),
               )
-            : null,
+            : AppBar(
+                automaticallyImplyLeading: false,
+                title: const Text('Explore'),
+              ),
         body: SafeArea(
+          top: false,
           child: SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 96),
             child: Column(
               children: [
                 const SizedBox(height: 10),
                 if (widget.section == null)
-                  TextInput(
-                    controller: searchController,
-                    hintText: "Search for title, topic or keyword",
-                    obscureText: false,
-                    isLast: true,
-                    padding: 10,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.colorInputFill,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.colorInputBorder),
+                      ),
+                      child: TextField(
+                        controller: searchController,
+                        style: const TextStyle(color: Colors.white),
+                        cursorColor: AppColors.colorPrimary,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Search for title, topic or keyword',
+                          hintStyle: TextStyle(color: AppColors.colorHint),
+                          prefixIcon: Icon(Icons.search_rounded, color: AppColors.colorHint),
+                          contentPadding: EdgeInsets.symmetric(vertical: 14),
+                        ),
+                      ),
+                    ),
                   ),
                 if (widget.section == null)
                   const SizedBox(height: 10),
