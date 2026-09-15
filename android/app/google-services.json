@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "227381852653",
+    "project_id": "chill-app-e716c",
+    "storage_bucket": "chill-app-e716c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:227381852653:android:f8f95c6162f323d87d8fe4",
+        "android_client_info": {
+          "package_name": "com.chill.entertainment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "227381852653-av03d0k2decs4gpql2poc7g1b8sqv9ma.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chill.entertainment",
+            "certificate_hash": "8d0a2532b383bb98430b35a552ebebbb80a2ec46"
+          }
+        },
+        {
+          "client_id": "227381852653-jskdv59enm926fpi7kv8934tshgjg5lc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDU_BUv7QOOSN7_As8AlBlaJWv6Swu5kg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "227381852653-jskdv59enm926fpi7kv8934tshgjg5lc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "227381852653-9gps57rdanb5jh9r52ed7fmhh6qicmf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.chill.entertainment"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
