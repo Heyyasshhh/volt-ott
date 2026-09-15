@@ -47,32 +47,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDgqHFkryAI2dQf78zD0BdjVPjUzqZo8Ls',
-    appId: '1:227381852653:web:aacd05e13183acd17d8fe4',
-    messagingSenderId: '227381852653',
-    projectId: 'chill-app-e716c',
-    authDomain: 'chill-app-e716c.firebaseapp.com',
-    storageBucket: 'chill-app-e716c.firebasestorage.app',
-    measurementId: 'G-CC84DDWSF8',
+    apiKey: 'AIzaSyDWMzms0nfFuCHJIX-VcEQS72Tkc2xJ7m0',
+    appId: '1:260972891398:web:2bcd41794f20356f586287',
+    messagingSenderId: '260972891398',
+    projectId: 'butterfly-ott',
+    authDomain: 'butterfly-ott.firebaseapp.com',
+    storageBucket: 'butterfly-ott.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBDU_BUv7QOOSN7_As8AlBlaJWv6Swu5kg',
-    appId: '1:227381852653:android:f8f95c6162f323d87d8fe4',
-    messagingSenderId: '227381852653',
-    projectId: 'chill-app-e716c',
-    storageBucket: 'chill-app-e716c.firebasestorage.app',
+    apiKey: 'AIzaSyD--yK6PU6HEgmG_RrRPtB9R-qMubW3w9I',
+    appId: '1:260972891398:android:f9933972b17ad356586287',
+    messagingSenderId: '260972891398',
+    projectId: 'butterfly-ott',
+    storageBucket: 'butterfly-ott.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD-QKuPGLowftKrkApBhcQ_Cf2jnxtz2-o',
-    appId: '1:227381852653:ios:7ca5f38960384bd57d8fe4',
-    messagingSenderId: '227381852653',
-    projectId: 'chill-app-e716c',
-    storageBucket: 'chill-app-e716c.firebasestorage.app',
-    androidClientId: '227381852653-av03d0k2decs4gpql2poc7g1b8sqv9ma.apps.googleusercontent.com',
-    iosClientId: '227381852653-9gps57rdanb5jh9r52ed7fmhh6qicmf1.apps.googleusercontent.com',
-    iosBundleId: 'com.chill.entertainment',
+    apiKey: 'AIzaSyCApAenPfxDjNpV_YHnIjCg9WtgLARIb1Q',
+    appId: '1:260972891398:ios:8f1b9966b02b891c586287',
+    messagingSenderId: '260972891398',
+    projectId: 'butterfly-ott',
+    storageBucket: 'butterfly-ott.firebasestorage.app',
+    iosBundleId: 'app.butterflyott.app',
   );
 
 }
