@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/models/media/media_item.dart';
-import 'package:chill/providers/content_provider.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/models/media/media_item.dart';
+import 'package:butterfly/providers/content_provider.dart';
 import 'package:provider/provider.dart';
 
 void showWarningDialog(BaseItem baseItem, BuildContext context, VoidCallback onPressed) {

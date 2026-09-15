@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/network/api_paths.dart';
-import 'package:chill/providers/authentication_provider.dart';
-import 'package:chill/services/network_service.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/network/api_paths.dart';
+import 'package:butterfly/providers/authentication_provider.dart';
+import 'package:butterfly/services/network_service.dart';
 import 'package:provider/provider.dart';
 
 class AppSettingsPage extends StatefulWidget {

@@ -2,17 +2,17 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/network/api_paths.dart';
-import 'package:chill/platform_utils.dart';
-import 'package:chill/presentation/components/controls/buttons.dart';
-import 'package:chill/presentation/pages/authentication/otp_verifiction_page.dart';
-import 'package:chill/presentation/pages/home_page.dart';
-import 'package:chill/presentation/pages/payment/plans_list_page.dart';
-import 'package:chill/providers/authentication_provider.dart';
-import 'package:chill/providers/content_provider.dart';
-import 'package:chill/services/logging_service.dart';
-import 'package:chill/services/network_service.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/network/api_paths.dart';
+import 'package:butterfly/platform_utils.dart';
+import 'package:butterfly/presentation/components/controls/buttons.dart';
+import 'package:butterfly/presentation/pages/authentication/otp_verifiction_page.dart';
+import 'package:butterfly/presentation/pages/home_page.dart';
+import 'package:butterfly/presentation/pages/payment/plans_list_page.dart';
+import 'package:butterfly/providers/authentication_provider.dart';
+import 'package:butterfly/providers/content_provider.dart';
+import 'package:butterfly/services/logging_service.dart';
+import 'package:butterfly/services/network_service.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -176,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              "assets/images/chill-text.png",
+              "assets/images/butterfly-text.png",
               width: 200,
             ),
             const SizedBox(height: 20),
@@ -428,9 +428,9 @@ class _LoginPageState extends State<LoginPage> {
                       AppleIDAuthorizationScopes.fullName,
                     ],
                     webAuthenticationOptions: WebAuthenticationOptions(
-                      clientId: "in.chillapp.chillapp",
+                      clientId: "app.butterflyott.app.signin",
                       redirectUri: Uri.parse(
-                        "https://chillapp.in/api/v1/auth/callback/apple-sign-in",
+                        "https://butterflyott.com/api/v1/auth/callback/apple-sign-in",
                       ),
                     ),
                   );

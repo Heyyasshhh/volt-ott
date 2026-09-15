@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/platform_utils.dart';
-import 'package:chill/presentation/components/controls/buttons.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/platform_utils.dart';
+import 'package:butterfly/presentation/components/controls/buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Shown when server requires a newer app version (compare by integer version code).
@@ -12,7 +12,7 @@ class ForceUpdatePage extends StatelessWidget {
 
   static Future<void> openStore() async {
     final uri = PlatformUtils.isAndroid
-        ? Uri.parse('https://play.google.com/store/apps/details?id=com.chill.entertainment')
+        ? Uri.parse('https://play.google.com/store/apps/details?id=app.butterflyott.app')
         : PlatformUtils.isIOS
             ? Uri.parse('https://apps.apple.com/app/id') // Replace with real App Store ID
             : null;

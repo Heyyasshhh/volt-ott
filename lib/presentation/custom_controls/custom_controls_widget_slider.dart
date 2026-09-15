@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:chill/models/media/media_item.dart';
-import 'package:chill/presentation/pages/authentication/login_screen.dart';
-import 'package:chill/presentation/pages/media/movie_details_page.dart';
-import 'package:chill/presentation/pages/media/tv_show_details_page.dart';
-import 'package:chill/presentation/pages/payment/plans_list_page.dart';
+import 'package:butterfly/models/media/media_item.dart';
+import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
+import 'package:butterfly/presentation/pages/media/movie_details_page.dart';
+import 'package:butterfly/presentation/pages/media/tv_show_details_page.dart';
+import 'package:butterfly/presentation/pages/payment/plans_list_page.dart';
 import 'package:river_player/src/configuration/better_player_controls_configuration.dart';
 import 'package:river_player/src/controls/better_player_clickable_widget.dart';
 import 'package:river_player/src/controls/better_player_controls_state.dart';

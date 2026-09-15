@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:chill/models/media/media_item.dart';
-import 'package:chill/network/api_paths.dart';
-import 'package:chill/presentation/custom_controls/custom_controls_widget.dart';
-import 'package:chill/providers/content_provider.dart';
-import 'package:chill/services/network_service.dart';
+import 'package:butterfly/models/media/media_item.dart';
+import 'package:butterfly/network/api_paths.dart';
+import 'package:butterfly/presentation/custom_controls/custom_controls_widget.dart';
+import 'package:butterfly/providers/content_provider.dart';
+import 'package:butterfly/services/network_service.dart';
 import 'package:provider/provider.dart';
 import 'package:river_player/river_player.dart';
 

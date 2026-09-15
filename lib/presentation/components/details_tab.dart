@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:chill/models/media/media_item.dart';
+import 'package:butterfly/models/media/media_item.dart';
 import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 import 'controls/expandable_text.dart';
 

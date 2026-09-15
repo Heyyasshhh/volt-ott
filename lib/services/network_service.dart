@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:chill/network/api_paths.dart';
+import 'package:butterfly/network/api_paths.dart';
 import 'dart:async';
-import 'package:chill/services/authentication_service.dart';
+import 'package:butterfly/services/authentication_service.dart';
 
 import '../platform_utils.dart';
 

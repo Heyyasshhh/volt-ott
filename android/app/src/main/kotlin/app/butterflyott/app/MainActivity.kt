@@ -1,4 +1,4 @@
-package com.chill.entertainment
+package app.butterflyott.app
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine

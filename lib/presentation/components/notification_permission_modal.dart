@@ -1,11 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/platform_utils.dart';
-import 'package:chill/services/notification_service.dart';
-import 'package:chill/services/preferences_service.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/platform_utils.dart';
+import 'package:butterfly/services/notification_service.dart';
+import 'package:butterfly/services/preferences_service.dart';
 import 'package:provider/provider.dart';
-import 'package:chill/providers/authentication_provider.dart';
+import 'package:butterfly/providers/authentication_provider.dart';
 
 class NotificationPermissionModal extends StatelessWidget {
   const NotificationPermissionModal({super.key});

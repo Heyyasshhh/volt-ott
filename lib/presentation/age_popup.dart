@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/platform_utils.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/platform_utils.dart';
 
 import '../../../models/subscription_plan.dart';
 

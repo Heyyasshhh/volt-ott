@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/presentation/pages/drawer_pages/contact_us_page.dart';
-import 'package:chill/services/logging_service.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/contact_us_page.dart';
+import 'package:butterfly/services/logging_service.dart';
 
 import '../../components/controls/buttons.dart';
 import '../home_page.dart';
@@ -32,7 +32,7 @@ class _PaymentFailurePageState extends State<PaymentFailurePage> {
             children: [
               Image.asset(
                 height: 130,
-                "assets/images/chill-text.png",
+                "assets/images/butterfly-text.png",
               ),
               const SizedBox(height: 50),
               const Padding(

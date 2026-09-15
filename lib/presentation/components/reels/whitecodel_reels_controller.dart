@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
-import 'package:chill/models/media/reel_item.dart';
+import 'package:butterfly/models/media/reel_item.dart';
 import 'package:video_player/video_player.dart';
 import 'video_controller_service.dart';
 

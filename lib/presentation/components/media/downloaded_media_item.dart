@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:chill/models/media/download_item_wrapper.dart';
-import 'package:chill/presentation/components/bottom_sheet/download_bottomsheet.dart';
-import 'package:chill/presentation/pages/media/offline_video_player.dart';
+import 'package:butterfly/models/media/download_item_wrapper.dart';
+import 'package:butterfly/presentation/components/bottom_sheet/download_bottomsheet.dart';
+import 'package:butterfly/presentation/pages/media/offline_video_player.dart';
 
 class DownloadedMediaItem extends StatelessWidget {
   final DownloadItemWrapper wrapper;

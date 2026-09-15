@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/models/notification.dart';
-import 'package:chill/presentation/components/notification_item.dart';
-import 'package:chill/providers/in_app_notification_provider.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/models/notification.dart';
+import 'package:butterfly/presentation/components/notification_item.dart';
+import 'package:butterfly/providers/in_app_notification_provider.dart';
 import 'package:provider/provider.dart';
 
 class NotificationsPage extends StatelessWidget {

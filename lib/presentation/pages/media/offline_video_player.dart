@@ -1,10 +1,10 @@
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/models/media/download_item_wrapper.dart';
-import 'package:chill/presentation/components/controls/expandable_text.dart';
-import 'package:chill/providers/download_provider.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/models/media/download_item_wrapper.dart';
+import 'package:butterfly/presentation/components/controls/expandable_text.dart';
+import 'package:butterfly/providers/download_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:river_player/river_player.dart';
 

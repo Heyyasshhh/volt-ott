@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:chill/constants/text.dart';
-import 'package:chill/providers/authentication_provider.dart';
-import 'package:chill/services/notification_service.dart';
-import 'package:chill/presentation/pages/home_page.dart';
+import 'package:butterfly/constants/text.dart';
+import 'package:butterfly/providers/authentication_provider.dart';
+import 'package:butterfly/services/notification_service.dart';
+import 'package:butterfly/presentation/pages/home_page.dart';
 
 import '../main.dart';
 import '../platform_utils.dart';

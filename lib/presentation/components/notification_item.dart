@@ -4,11 +4,11 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:chill/models/media/media_item.dart';
-import 'package:chill/presentation/pages/media/movie_details_page.dart';
-import 'package:chill/presentation/pages/media/tv_show_details_page.dart';
-import 'package:chill/episode_player_stub.dart' if (dart.library.html) 'package:chill/presentation/pages/media/episode_player_page_web.dart';
-import 'package:chill/presentation/pages/media/episode_player_page.dart';
+import 'package:butterfly/models/media/media_item.dart';
+import 'package:butterfly/presentation/pages/media/movie_details_page.dart';
+import 'package:butterfly/presentation/pages/media/tv_show_details_page.dart';
+import 'package:butterfly/episode_player_stub.dart' if (dart.library.html) 'package:butterfly/presentation/pages/media/episode_player_page_web.dart';
+import 'package:butterfly/presentation/pages/media/episode_player_page.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../models/notification.dart';
@@ -123,7 +123,7 @@ class _NotificationItemState extends State<NotificationItem> {
                                   ),
                                 ),
                                 errorWidget: (_, __, ___) => Image.asset(
-                                  'assets/images/chill-512.png',
+                                  'assets/images/butterfly-512.png',
                                   width: double.infinity,
                                   height: 180,
                                   fit: BoxFit.cover,
@@ -256,7 +256,7 @@ class _NotificationImage extends StatelessWidget {
         errorWidget: (_, __, ___) => ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Image.asset(
-            'assets/images/chill-512.png',
+            'assets/images/butterfly-512.png',
             width: width,
             height: height,
             fit: BoxFit.cover,

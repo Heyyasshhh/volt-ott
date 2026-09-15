@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:app_links/app_links.dart';
-import 'package:chill/providers/home_page_provider.dart';
+import 'package:butterfly/providers/home_page_provider.dart';
 import 'package:provider/provider.dart';
 
 class DeepLinkHandler extends StatefulWidget {

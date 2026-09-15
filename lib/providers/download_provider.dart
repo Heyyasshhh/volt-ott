@@ -9,13 +9,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:chill/models/media/download_item.dart';
-import 'package:chill/models/media/download_item_wrapper.dart';
-import 'package:chill/models/media/media_item.dart';
-import 'package:chill/models/user/user.dart';
-import 'package:chill/services/download_service.dart';
+import 'package:butterfly/models/media/download_item.dart';
+import 'package:butterfly/models/media/download_item_wrapper.dart';
+import 'package:butterfly/models/media/media_item.dart';
+import 'package:butterfly/models/user/user.dart';
+import 'package:butterfly/services/download_service.dart';
 import 'package:flutter/material.dart';
-import 'package:chill/services/media_service.dart';
+import 'package:butterfly/services/media_service.dart';
 
 enum DownloadStatus { downloading, downloaded, failed, paused, notDownloaded }
 

@@ -4,12 +4,12 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:chill/models/media/media_item.dart';
-import 'package:chill/models/media/reel_item.dart';
-import 'package:chill/models/media/section.dart';
-import 'package:chill/network/api_paths.dart';
-import 'package:chill/services/media_service.dart';
-import 'package:chill/services/network_service.dart';
+import 'package:butterfly/models/media/media_item.dart';
+import 'package:butterfly/models/media/reel_item.dart';
+import 'package:butterfly/models/media/section.dart';
+import 'package:butterfly/network/api_paths.dart';
+import 'package:butterfly/services/media_service.dart';
+import 'package:butterfly/services/network_service.dart';
 
 enum Status { fetched, fetching, failed }
 

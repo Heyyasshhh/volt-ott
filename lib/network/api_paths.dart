@@ -48,7 +48,7 @@ class APIPathHelper {
   // static const String _domain = "https://sahilasopa.pagekite.me";
   // static const String _domain = "https://warm-leopard-uniquely.ngrok-free.app";
 
-  static const String _domain = "https://api.butterflyott.com";
+  static const String _domain = "https://butterflyott.com";
   static const String _authBasePath = "$_domain/api/v1/auth";
   static const String _paymentsBasePath = "$_domain/api/v1/payments";
   static const String _mediaBasePath = "$_domain/api/v1/media";

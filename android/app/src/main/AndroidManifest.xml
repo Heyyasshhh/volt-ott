@@ -19,7 +19,7 @@
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="Chill"
+        android:label="Butterfly"
         android:largeHeap="true"
         tools:replace="android:label">
         <meta-data
@@ -80,11 +80,11 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="chill.deeplinkly.com"
+                    android:host="butterfly.deeplinkly.com"
                     android:scheme="https" />
 
                 <data
-                    android:host="share.chillapp.in"
+                    android:host="share.butterflyott.com"
                     android:scheme="https" />
 
                 <data

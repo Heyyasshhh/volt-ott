@@ -1,4 +1,4 @@
 class AppText {
-  static String appName = "Chill";
+  static String appName = "Butterfly";
   static String lowerAppName = "butterfly";
 }

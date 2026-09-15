@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/presentation/components/media/downloaded_media_item.dart';
-import 'package:chill/providers/download_provider.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/presentation/components/media/downloaded_media_item.dart';
+import 'package:butterfly/providers/download_provider.dart';
 import 'package:provider/provider.dart';
 
 class DownloadsPage extends StatelessWidget {

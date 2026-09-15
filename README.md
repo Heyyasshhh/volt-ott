@@ -1,6 +1,6 @@
 # butterfly
 
-Chill OTT
+Butterfly OTT
 
 ## Getting Started
 

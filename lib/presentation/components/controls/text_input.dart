@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
+import 'package:butterfly/constants/colors.dart';
 
 class TextInput extends StatelessWidget {
   final TextEditingController? controller;

@@ -2,21 +2,21 @@ import 'dart:ui';
 
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chill/presentation/pages/drawer_pages/more_info_page.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/more_info_page.dart';
 import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/platform_utils.dart';
-import 'package:chill/presentation/pages/fragments/search_page.dart';
-import 'package:chill/presentation/pages/fragments/sections_page.dart';
-import 'package:chill/presentation/pages/fragments/upcoming_page.dart';
-import 'package:chill/presentation/pages/media/downloads_page.dart';
-import 'package:chill/presentation/components/notification_permission_modal.dart';
-import 'package:chill/providers/content_provider.dart';
-import 'package:chill/providers/home_page_provider.dart';
-import 'package:chill/services/notification_service.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/platform_utils.dart';
+import 'package:butterfly/presentation/pages/fragments/search_page.dart';
+import 'package:butterfly/presentation/pages/fragments/sections_page.dart';
+import 'package:butterfly/presentation/pages/fragments/upcoming_page.dart';
+import 'package:butterfly/presentation/pages/media/downloads_page.dart';
+import 'package:butterfly/presentation/components/notification_permission_modal.dart';
+import 'package:butterfly/providers/content_provider.dart';
+import 'package:butterfly/providers/home_page_provider.dart';
+import 'package:butterfly/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final contentProvider = Provider.of<ContentProvider>(context);
-    precacheImage(const AssetImage("assets/images/chill-text.png"), context);
+    precacheImage(const AssetImage("assets/images/butterfly-text.png"), context);
     for (var movie in contentProvider.getMovies()) {
       if (_isAbsoluteImageUrl(movie.verticalPosterUrl)) {
         precacheImage(CachedNetworkImageProvider(movie.verticalPosterUrl), context);

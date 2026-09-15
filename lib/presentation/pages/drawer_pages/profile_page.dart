@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/network/api_paths.dart';
-import 'package:chill/presentation/pages/home_page.dart';
-import 'package:chill/presentation/purchase_history_page.dart';
-import 'package:chill/services/network_service.dart';
-import 'package:chill/presentation/components/controls/text_input.dart';
-import 'package:chill/presentation/components/controls/more_widget.dart';
-import 'package:chill/presentation/pages/payment/plans_list_page.dart';
-import 'package:chill/providers/authentication_provider.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/network/api_paths.dart';
+import 'package:butterfly/presentation/pages/home_page.dart';
+import 'package:butterfly/presentation/purchase_history_page.dart';
+import 'package:butterfly/services/network_service.dart';
+import 'package:butterfly/presentation/components/controls/text_input.dart';
+import 'package:butterfly/presentation/components/controls/more_widget.dart';
+import 'package:butterfly/presentation/pages/payment/plans_list_page.dart';
+import 'package:butterfly/providers/authentication_provider.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -66,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     children: [
                       Image.asset(
-                        "assets/images/chill-text.png",
+                        "assets/images/butterfly-text.png",
                         height: 60,
                       ),
                       const SizedBox(height: 12),

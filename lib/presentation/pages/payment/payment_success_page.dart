@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/presentation/age_popup.dart';
-import 'package:chill/presentation/pages/home_page.dart';
-import 'package:chill/presentation/pages/payment/payment_failure_page.dart';
-import 'package:chill/services/logging_service.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/presentation/age_popup.dart';
+import 'package:butterfly/presentation/pages/home_page.dart';
+import 'package:butterfly/presentation/pages/payment/payment_failure_page.dart';
+import 'package:butterfly/services/logging_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/authentication_provider.dart';
@@ -92,7 +92,7 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
             children: [
               Image.asset(
                 height: 110,
-                "assets/images/chill-text.png",
+                "assets/images/butterfly-text.png",
               ),
               const SizedBox(height: 50),
               const Text(

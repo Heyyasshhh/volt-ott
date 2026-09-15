@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:chill/models/media/reel_item.dart';
+import 'package:butterfly/models/media/reel_item.dart';
 
 import '../models/media/media_item.dart';
 import '../models/media/section.dart';
@@ -30,11 +30,11 @@ class MediaService {
   String _alertTitle = "";
   String _alertMessage = "";
 
-  String _shareText = "Check Out Chill";
-  String _shareUrl = "https://chillapp.in";
+  String _shareText = "Check Out Butterfly";
+  String _shareUrl = "https://butterflyott.com";
 
   String _referralText =
-      "Hey! I just installed the Chill app and found the video content super entertaining. If you're signing up, make sure to use my code during checkout to get a special bonus! {code}";
+      "Hey! I just installed the Butterfly app and found the video content super entertaining. If you're signing up, make sure to use my code during checkout to get a special bonus! {code}";
   String? _referralVideoUrl;
   String? _referralPosterUrl;
 

@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/models/media/media_item.dart';
-import 'package:chill/network/api_paths.dart';
-import 'package:chill/providers/content_provider.dart';
-import 'package:chill/services/network_service.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/models/media/media_item.dart';
+import 'package:butterfly/network/api_paths.dart';
+import 'package:butterfly/providers/content_provider.dart';
+import 'package:butterfly/services/network_service.dart';
 import 'package:provider/provider.dart';
 import '../bottom_sheet/media_bottomsheet.dart';
 
@@ -54,7 +54,7 @@ class MediaItem extends StatelessWidget {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/chill-text.png",
+                      "assets/images/butterfly-text.png",
                       width: 100,
                     ),
                   ),
@@ -66,7 +66,7 @@ class MediaItem extends StatelessWidget {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/chill-text.png",
+                      "assets/images/butterfly-text.png",
                       width: 100,
                     ),
                   ),
@@ -159,7 +159,7 @@ class MediaItemHorizontal extends StatelessWidget {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/chill-text.png",
+                      "assets/images/butterfly-text.png",
                       width: 100,
                     ),
                   ),
@@ -171,7 +171,7 @@ class MediaItemHorizontal extends StatelessWidget {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/chill-text.png",
+                      "assets/images/butterfly-text.png",
                       width: 100,
                     ),
                   ),
@@ -293,7 +293,7 @@ class MediaItemHorizontalSingle extends StatelessWidget {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/chill-text.png",
+                      "assets/images/butterfly-text.png",
                       width: 100,
                     ),
                   ),
@@ -305,7 +305,7 @@ class MediaItemHorizontalSingle extends StatelessWidget {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/chill-text.png",
+                      "assets/images/butterfly-text.png",
                       width: 100,
                     ),
                   ),
@@ -399,7 +399,7 @@ class MediaItemSquare extends StatelessWidget {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/chill-text.png",
+                      "assets/images/butterfly-text.png",
                       width: 100,
                     ),
                   ),
@@ -411,7 +411,7 @@ class MediaItemSquare extends StatelessWidget {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/chill-text.png",
+                      "assets/images/butterfly-text.png",
                       width: 100,
                     ),
                   ),
@@ -501,7 +501,7 @@ class MediaItemHorizontalLarge extends StatelessWidget {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/chill-text.png",
+                      "assets/images/butterfly-text.png",
                       width: 100,
                     ),
                   ),
@@ -513,7 +513,7 @@ class MediaItemHorizontalLarge extends StatelessWidget {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/chill-text.png",
+                      "assets/images/butterfly-text.png",
                       width: 100,
                     ),
                   ),
@@ -582,7 +582,7 @@ class ShimmerMediaItem extends StatelessWidget {
         ),
         child: Center(
           child: Image.asset(
-            "assets/images/chill-text.png",
+            "assets/images/butterfly-text.png",
             width: 100,
           ),
         ),

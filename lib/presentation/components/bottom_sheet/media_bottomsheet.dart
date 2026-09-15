@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:chill/models/media/media_item.dart';
-import 'package:chill/network/api_paths.dart';
-import 'package:chill/platform_utils.dart';
-import 'package:chill/presentation/pages/media/episode_details_page.dart';
-import 'package:chill/trailer_player_stub.dart' if (dart.library.html) 'package:chill/presentation/pages/media/trailer_player_web.dart';
-import 'package:chill/episode_player_stub.dart' if (dart.library.html) 'package:chill/presentation/pages/media/episode_player_page_web.dart';
-import 'package:chill/presentation/pages/payment/plans_list_page.dart';
-import 'package:chill/providers/authentication_provider.dart';
+import 'package:butterfly/models/media/media_item.dart';
+import 'package:butterfly/network/api_paths.dart';
+import 'package:butterfly/platform_utils.dart';
+import 'package:butterfly/presentation/pages/media/episode_details_page.dart';
+import 'package:butterfly/trailer_player_stub.dart' if (dart.library.html) 'package:butterfly/presentation/pages/media/trailer_player_web.dart';
+import 'package:butterfly/episode_player_stub.dart' if (dart.library.html) 'package:butterfly/presentation/pages/media/episode_player_page_web.dart';
+import 'package:butterfly/presentation/pages/payment/plans_list_page.dart';
+import 'package:butterfly/providers/authentication_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ import '../../pages/media/movie_details_page.dart';
 import '../../pages/media/trailer_player.dart';
 import '../../pages/media/tv_show_details_page.dart';
 import '../../pages/media/episode_player_page.dart';
-import 'package:chill/services/authentication_service.dart';
+import 'package:butterfly/services/authentication_service.dart';
 
 /// Opens external URL and records click for analytics (KPIs). Platform is sent as android/ios/web.
 /// Can be used from bottom sheet or from Upcoming tab.

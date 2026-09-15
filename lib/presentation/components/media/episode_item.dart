@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chill/services/deeplinkly_service.dart';
+import 'package:butterfly/services/deeplinkly_service.dart';
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/models/media/media_item.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/models/media/media_item.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:provider/provider.dart';
-import 'package:chill/providers/authentication_provider.dart';
-import 'package:chill/providers/download_provider.dart';
-import 'package:chill/providers/content_provider.dart';
+import 'package:butterfly/providers/authentication_provider.dart';
+import 'package:butterfly/providers/download_provider.dart';
+import 'package:butterfly/providers/content_provider.dart';
 import '../bottom_sheet/media_bottomsheet.dart';
 import '../bottom_sheet/download_bottomsheet.dart';
 

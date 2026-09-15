@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:chill/presentation/pages/authentication/login_screen.dart';
-import 'package:chill/providers/authentication_provider.dart';
+import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
+import 'package:butterfly/providers/authentication_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/subscription_plan.dart';
@@ -40,7 +40,7 @@ class _PaymentBottomSheetWidgetState extends State<PaymentBottomSheetWidget> {
     // Map of available payment options
     final Map<String, Widget Function()> paymentOptions = {
       'juspay': () => PaymentOption(
-            imagePath: "assets/images/chill-512.png",
+            imagePath: "assets/images/butterfly-512.png",
             methodName: "Pay Via UPI / Cards / Wallet",
             methods: Row(
               children: [
@@ -116,7 +116,7 @@ class _PaymentBottomSheetWidgetState extends State<PaymentBottomSheetWidget> {
         },
       ),
       'cashfree': () => PaymentOption(
-        imagePath: "assets/images/chill-512.png",
+        imagePath: "assets/images/butterfly-512.png",
         methodName: "Pay Via Cashfree",
         methods: Row(
           children: [

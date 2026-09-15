@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/presentation/components/controls/buttons.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/presentation/components/controls/buttons.dart';
 
 class ContactUsSuccessPage extends StatefulWidget {
   const ContactUsSuccessPage({super.key});
@@ -21,7 +21,7 @@ class _ContactUsSuccessPageState extends State<ContactUsSuccessPage> {
             children: [
               Image.asset(
                 height: 100,
-                "assets/images/chill-text.png",
+                "assets/images/butterfly-text.png",
               ),
               const Text(
                 "Thank you for contacting us",

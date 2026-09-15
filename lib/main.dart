@@ -10,29 +10,29 @@ import 'package:flutter/services.dart';
 import 'package:flutter_deeplinkly/flutter_deeplinkly.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:chill/deeplink_pending_handler.dart';
-import 'package:chill/deep_links_handler.dart';
-import 'package:chill/presentation/main.dart';
-import 'package:chill/presentation/pages/authentication/force_update_page.dart';
-import 'package:chill/presentation/pages/authentication/login_screen.dart';
-import 'package:chill/presentation/pages/payment/plans_list_page.dart';
+import 'package:butterfly/deeplink_pending_handler.dart';
+import 'package:butterfly/deep_links_handler.dart';
+import 'package:butterfly/presentation/main.dart';
+import 'package:butterfly/presentation/pages/authentication/force_update_page.dart';
+import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
+import 'package:butterfly/presentation/pages/payment/plans_list_page.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:chill/providers/authentication_provider.dart';
-import 'package:chill/providers/content_provider.dart';
-import 'package:chill/providers/download_provider.dart';
-import 'package:chill/providers/home_page_provider.dart';
-import 'package:chill/providers/in_app_notification_provider.dart';
-import 'package:chill/providers/reels_provider.dart';
-import 'package:chill/services/download_service.dart';
-import 'package:chill/services/hive_service.dart';
-import 'package:chill/services/notification_service.dart';
+import 'package:butterfly/providers/authentication_provider.dart';
+import 'package:butterfly/providers/content_provider.dart';
+import 'package:butterfly/providers/download_provider.dart';
+import 'package:butterfly/providers/home_page_provider.dart';
+import 'package:butterfly/providers/in_app_notification_provider.dart';
+import 'package:butterfly/providers/reels_provider.dart';
+import 'package:butterfly/services/download_service.dart';
+import 'package:butterfly/services/hive_service.dart';
+import 'package:butterfly/services/notification_service.dart';
 import 'package:provider/provider.dart';
 
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'firebase_options.dart';
 import 'models/media/download_item.dart';
-import 'package:chill/video_js_bridge.dart';
+import 'package:butterfly/video_js_bridge.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -146,7 +146,13 @@ void main() async {
   if (!kIsWeb) {
     reelsProvider.loadReels();
   }
-  final config = await contentProvider.getConfig();
+  Map<String, dynamic> config = {};
+  try {
+    config = await contentProvider.getConfig().timeout(const Duration(seconds: 20));
+  } catch (e) {
+    // Don't block startup on the splash screen if config fails to load.
+    debugPrint("Config load error: $e");
+  }
   final loginMethod = (config['login_method'] ?? 'A').toString().toUpperCase();
 
   // Version check: compare app version code (int) with server minimum.

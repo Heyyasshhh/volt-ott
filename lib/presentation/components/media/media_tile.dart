@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:chill/models/media/section.dart';
-import 'package:chill/presentation/components/media/media_item.dart';
-import 'package:chill/presentation/pages/fragments/search_page.dart';
+import 'package:butterfly/models/media/section.dart';
+import 'package:butterfly/presentation/components/media/media_item.dart';
+import 'package:butterfly/presentation/pages/fragments/search_page.dart';
 import 'package:shimmer/shimmer.dart';
 
 const double _verticalCardHorizontalPadding = 4.0;
@@ -386,7 +386,7 @@ class ShimmerTile extends StatelessWidget {
                     ),
                     child: Center(
                       child: Image.asset(
-                        "assets/images/chill-text.png",
+                        "assets/images/butterfly-text.png",
                         width: 80,
                       ),
                     ),
@@ -442,7 +442,7 @@ class ShimmerTileHorizontal extends StatelessWidget {
                     ),
                     child: Center(
                       child: Image.asset(
-                        "assets/images/chill-text.png",
+                        "assets/images/butterfly-text.png",
                         width: 100,
                       ),
                     ),

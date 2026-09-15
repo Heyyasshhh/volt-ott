@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/models/subscription_plan.dart';
-import 'package:chill/presentation/components/subscription/not_logged_in_subscribe.dart';
-import 'package:chill/presentation/pages/payment/payment_success_page.dart';
-import 'package:chill/presentation/pages/payment/plans_list_page_shimmer.dart';
-import 'package:chill/providers/authentication_provider.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/models/subscription_plan.dart';
+import 'package:butterfly/presentation/components/subscription/not_logged_in_subscribe.dart';
+import 'package:butterfly/presentation/pages/payment/payment_success_page.dart';
+import 'package:butterfly/presentation/pages/payment/plans_list_page_shimmer.dart';
+import 'package:butterfly/providers/authentication_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlansListPage extends StatefulWidget {

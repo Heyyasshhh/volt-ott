@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/presentation/components/media/upcoming_item.dart';
-import 'package:chill/providers/content_provider.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/presentation/components/media/upcoming_item.dart';
+import 'package:butterfly/providers/content_provider.dart';
 import 'package:provider/provider.dart';
 
 class UpcomingPage extends StatefulWidget {

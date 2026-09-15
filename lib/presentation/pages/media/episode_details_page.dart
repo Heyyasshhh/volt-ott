@@ -2,19 +2,19 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/models/media/media_item.dart';
-import 'package:chill/network/api_paths.dart';
-import 'package:chill/platform_utils.dart';
-import 'package:chill/presentation/components/media/episode_item.dart';
-import 'package:chill/providers/content_provider.dart';
-import 'package:chill/services/network_service.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/models/media/media_item.dart';
+import 'package:butterfly/network/api_paths.dart';
+import 'package:butterfly/platform_utils.dart';
+import 'package:butterfly/presentation/components/media/episode_item.dart';
+import 'package:butterfly/providers/content_provider.dart';
+import 'package:butterfly/services/network_service.dart';
 import 'package:provider/provider.dart';
 import 'package:river_player/river_player.dart';
 
 import '../../components/controls/expandable_text.dart';
 import '../../custom_controls/custom_controls_widget.dart';
-import 'package:chill/video_js_bridge.dart';
+import 'package:butterfly/video_js_bridge.dart';
 
 class EpisodeDetailsPage extends StatefulWidget {
   final BaseItem baseItem;

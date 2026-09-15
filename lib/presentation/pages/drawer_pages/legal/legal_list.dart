@@ -1,12 +1,12 @@
-import 'package:chill/presentation/pages/drawer_pages/legal/about_us_page.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/legal/about_us_page.dart';
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/platform_utils.dart';
-import 'package:chill/presentation/components/controls/more_widget.dart';
-import 'package:chill/presentation/pages/drawer_pages/legal/grievance.dart';
-import 'package:chill/presentation/pages/drawer_pages/legal/privacy_policy_page.dart';
-import 'package:chill/presentation/pages/drawer_pages/legal/refund_policy_page.dart';
-import 'package:chill/presentation/pages/drawer_pages/legal/terms_and_conditions_page.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/platform_utils.dart';
+import 'package:butterfly/presentation/components/controls/more_widget.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/legal/grievance.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/legal/privacy_policy_page.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/legal/refund_policy_page.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/legal/terms_and_conditions_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LegalListPage extends StatefulWidget {
@@ -47,7 +47,7 @@ class _LegalListPageState extends State<LegalListPage> {
                       icon: Icons.contact_page,
                       onPressed: () {
                         if (PlatformUtils.isWeb) {
-                          _launchURL('https://chillapp.in/legal/terms');
+                          _launchURL('https://butterflyott.com/legal/terms');
                         } else {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -63,7 +63,7 @@ class _LegalListPageState extends State<LegalListPage> {
                       onPressed: () {
                         if (PlatformUtils.isWeb) {
                           _launchURL(
-                              'https://chillapp.in/legal/privacy-policy');
+                              'https://butterflyott.com/legal/privacy-policy');
                         } else {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -79,7 +79,7 @@ class _LegalListPageState extends State<LegalListPage> {
                       onPressed: () {
                         if (PlatformUtils.isWeb) {
                           _launchURL(
-                              'https://chillapp.in/legal/refund-policy');
+                              'https://butterflyott.com/legal/refund-policy');
                         } else {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -95,7 +95,7 @@ class _LegalListPageState extends State<LegalListPage> {
                       onPressed: () {
                         if (PlatformUtils.isWeb) {
                           _launchURL(
-                              'https://chillapp.in/legal/refund-policy');
+                              'https://butterflyott.com/legal/refund-policy');
                         } else {
                           Navigator.of(context).push(
                             MaterialPageRoute(

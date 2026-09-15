@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/providers/authentication_provider.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/providers/authentication_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 

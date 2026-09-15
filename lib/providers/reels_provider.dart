@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:chill/models/media/reel_item.dart';
-import 'package:chill/services/media_service.dart';
+import 'package:butterfly/models/media/reel_item.dart';
+import 'package:butterfly/services/media_service.dart';
 
 import '../network/api_paths.dart';
 import '../services/network_service.dart';

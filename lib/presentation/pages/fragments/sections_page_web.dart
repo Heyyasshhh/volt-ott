@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/presentation/components/media/media_tile_web.dart';
-import 'package:chill/presentation/pages/drawer_pages/notifications_page.dart';
-import 'package:chill/presentation/pages/payment/plans_list_page.dart';
-import 'package:chill/providers/content_provider.dart';
-import 'package:chill/providers/in_app_notification_provider.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/presentation/components/media/media_tile_web.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/notifications_page.dart';
+import 'package:butterfly/presentation/pages/payment/plans_list_page.dart';
+import 'package:butterfly/providers/content_provider.dart';
+import 'package:butterfly/providers/in_app_notification_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
@@ -110,7 +110,7 @@ class _SectionsPageWebState extends State<SectionsPageWeb> {
                                       ),
                                       Center(
                                         child: Image.asset(
-                                          "assets/images/chill-text.png",
+                                          "assets/images/butterfly-text.png",
                                           width: 200,
                                         ),
                                       ),
@@ -262,7 +262,7 @@ class _SectionsPageWebState extends State<SectionsPageWeb> {
                     surfaceTintColor: Colors.transparent,
                     centerTitle: true,
                     title:
-                        Image.asset("assets/images/chill-text.png", width: 135),
+                        Image.asset("assets/images/butterfly-text.png", width: 135),
                     leading: IconButton(
                       icon:
                           const Icon(Icons.menu, color: Colors.white, size: 25),
@@ -423,7 +423,7 @@ class FooterWithBadges extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  'Download Chill Apps',
+                  'Download Butterfly Apps',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -438,7 +438,7 @@ class FooterWithBadges extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () => _launchUrl(
-                        "https://play.google.com/store/apps/details?id=com.chill.entertainment",
+                        "https://play.google.com/store/apps/details?id=app.butterflyott.app",
                       ),
                       child: Image.asset(
                         'assets/images/google-play.webp',

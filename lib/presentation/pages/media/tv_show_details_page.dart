@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:chill/models/media/media_item.dart';
-import 'package:chill/presentation/components/media/episode_item.dart';
-import 'package:chill/presentation/components/media/media_item.dart';
-import 'package:chill/presentation/pages/authentication/login_screen.dart';
-import 'package:chill/presentation/pages/media/trailer_player.dart';
-import 'package:chill/trailer_player_stub.dart' if (dart.library.html) 'package:chill/presentation/pages/media/trailer_player_web.dart';
+import 'package:butterfly/models/media/media_item.dart';
+import 'package:butterfly/presentation/components/media/episode_item.dart';
+import 'package:butterfly/presentation/components/media/media_item.dart';
+import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
+import 'package:butterfly/presentation/pages/media/trailer_player.dart';
+import 'package:butterfly/trailer_player_stub.dart' if (dart.library.html) 'package:butterfly/presentation/pages/media/trailer_player_web.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 

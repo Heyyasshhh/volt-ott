@@ -10,14 +10,14 @@
 	</array>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:chillapp.in</string>
+		<string>applinks:butterflyott.com</string>
 		<string>applinks:warm-leopard-uniquely.ngrok-free.app</string>
-		<string>applinks:share.chillapp.in</string>
-		<string>applinks:chill.deeplinkly.io</string>
+		<string>applinks:share.butterflyott.com</string>
+		<string>applinks:butterfly.deeplinkly.io</string>
 	</array>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.chill.entertainment</string>
+		<string>$(AppIdentifierPrefix)app.butterflyott.app</string>
 	</array>
 </dict>
 </plist>

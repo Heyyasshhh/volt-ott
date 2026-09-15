@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:chill/network/api_paths.dart';
-import 'package:chill/presentation/components/bottom_sheet/media_bottomsheet.dart';
-import 'package:chill/providers/content_provider.dart';
-import 'package:chill/services/network_service.dart';
+import 'package:butterfly/network/api_paths.dart';
+import 'package:butterfly/presentation/components/bottom_sheet/media_bottomsheet.dart';
+import 'package:butterfly/providers/content_provider.dart';
+import 'package:butterfly/services/network_service.dart';
 
 import '../models/user/user.dart';
 

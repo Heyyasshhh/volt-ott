@@ -1,4 +1,4 @@
-import 'package:chill/models/user/user_subscription.dart';
+import 'package:butterfly/models/user/user_subscription.dart';
 
 class User {
   String id;

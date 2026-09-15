@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:chill/constants/colors.dart';
-import 'package:chill/presentation/components/controls/more_widget.dart';
-import 'package:chill/presentation/pages/drawer_pages/profile_page.dart';
-import 'package:chill/presentation/pages/payment/plans_list_page.dart';
-import 'package:chill/presentation/pages/drawer_pages/contact_us_page.dart';
-import 'package:chill/presentation/pages/drawer_pages/legal/privacy_policy_page.dart';
-import 'package:chill/presentation/pages/drawer_pages/legal/terms_and_conditions_page.dart';
-import 'package:chill/presentation/pages/drawer_pages/legal/refund_policy_page.dart';
-import 'package:chill/presentation/pages/drawer_pages/legal/about_us_page.dart';
-import 'package:chill/models/user/user.dart';
-import 'package:chill/providers/authentication_provider.dart';
-import 'package:chill/providers/content_provider.dart';
-import 'package:chill/presentation/pages/authentication/login_screen.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/presentation/components/controls/more_widget.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/profile_page.dart';
+import 'package:butterfly/presentation/pages/payment/plans_list_page.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/contact_us_page.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/legal/privacy_policy_page.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/legal/terms_and_conditions_page.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/legal/refund_policy_page.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/legal/about_us_page.dart';
+import 'package:butterfly/models/user/user.dart';
+import 'package:butterfly/providers/authentication_provider.dart';
+import 'package:butterfly/providers/content_provider.dart';
+import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -79,7 +79,7 @@ class _MoreInfoPageState extends State<MoreInfoPage> {
                   child: Column(
                     children: [
                       Image.asset(
-                        "assets/images/chill-text.png",
+                        "assets/images/butterfly-text.png",
                         height: 60,
                       ),
                       // Only show phone/email when logged in

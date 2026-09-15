@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:chill/constants/colors.dart';
+import 'package:butterfly/constants/colors.dart';
 
 class SubmitButton extends StatelessWidget {
   final String buttonText;

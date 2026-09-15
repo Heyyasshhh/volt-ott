@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:chill/presentation/components/controls/more_widget.dart';
-import 'package:chill/presentation/pages/drawer_pages/contact_us_page.dart';
+import 'package:butterfly/presentation/components/controls/more_widget.dart';
+import 'package:butterfly/presentation/pages/drawer_pages/contact_us_page.dart';
 
 import '../../../services/logging_service.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'package:chill/constants/colors.dart';
+import 'package:butterfly/constants/colors.dart';
 
 /// Shimmer placeholder for the Subscribe Now / plans list page.
 /// Title and subtitle are shown as real text (only plans load from API). Shimmer only on plan cards.

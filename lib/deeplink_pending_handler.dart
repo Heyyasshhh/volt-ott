@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:chill/models/media/media_item.dart';
-import 'package:chill/presentation/main.dart';
-import 'package:chill/presentation/pages/media/tv_show_details_page.dart';
-import 'package:chill/providers/content_provider.dart';
+import 'package:butterfly/models/media/media_item.dart';
+import 'package:butterfly/presentation/main.dart';
+import 'package:butterfly/presentation/pages/media/tv_show_details_page.dart';
+import 'package:butterfly/providers/content_provider.dart';
 
 /// Handles Deeplinkly resolved params: stores them until content is ready,
 /// then navigates to series or series+episode highlight.

@@ -1,5 +1,5 @@
 name: butterfly
-description: "Chill OTT"
+description: "Butterfly OTT"
 publish_to: 'none'
 version: 3.3.0+33
 
@@ -83,12 +83,12 @@ flutter_launcher_icons:
   ios: true
   web:
     generate: true
-    image_path: "assets/images/chill-icon.png"
+    image_path: "assets/images/butterfly-icon.png"
     background_color: "#FFFFFF"
     theme_color: "#FFFFFF"
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/images/chill-icon.png"
-  image_path: "assets/images/chill-icon.png"
+  adaptive_icon_foreground: "assets/images/butterfly-icon.png"
+  image_path: "assets/images/butterfly-icon.png"
 # dart run flutter_native_splash:create
 flutter:
   assets:

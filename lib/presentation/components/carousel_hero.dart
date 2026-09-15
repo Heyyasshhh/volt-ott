@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:chill/models/media/media_item.dart';
-import 'package:chill/models/user/user.dart';
-import 'package:chill/presentation/custom_controls/custom_controls_widget_slider.dart';
+import 'package:butterfly/models/media/media_item.dart';
+import 'package:butterfly/models/user/user.dart';
+import 'package:butterfly/presentation/custom_controls/custom_controls_widget_slider.dart';
 import 'package:river_player/river_player.dart';
 
 class CarouselHeroItem extends StatefulWidget {
@@ -158,7 +158,7 @@ class CarouselHeroItemState extends State<CarouselHeroItem> {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/chill-text.png",
+                      "assets/images/butterfly-text.png",
                       width: 200,
                     ),
                   ),
@@ -170,7 +170,7 @@ class CarouselHeroItemState extends State<CarouselHeroItem> {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/chill-text.png",
+                      "assets/images/butterfly-text.png",
                       width: 200,
                     ),
                   ),
