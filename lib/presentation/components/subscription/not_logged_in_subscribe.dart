@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../../constants/colors.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import '../../pages/authentication/login_screen.dart';
 
 class NotLoggedInSubscribe extends StatelessWidget {
@@ -9,49 +9,34 @@ class NotLoggedInSubscribe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Plans", style: TextStyle(color: Colors.white)),
-        backgroundColor: AppColors.colorBackground,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
       backgroundColor: AppColors.colorBackground,
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 70),
-            const Text(
-              "Oops!, you are not logged in",
-              style: TextStyle(color: Colors.white, fontSize: 26),
-            ),
-            const SizedBox(height: 2),
-            const Text(
-              "Login and Enjoy",
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            ),
-            const SizedBox(height: 20),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const LoginPage(),
-                  ),
-                );
-              },
-              child: Container(
-                height: 45,
-                width: 170,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: AppColors.colorPrimary,
-                ),
-                child: const Text(
-                  "Login Now",
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
+      appBar: AppBar(
+        title: const Text('Plans'),
+      ),
+      body: AppBackground(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const EmptyState(
+                icon: Icons.lock_outline_rounded,
+                title: "You're not signed in",
+                subtitle: 'Sign in to subscribe and keep watching.',
               ),
-            )
-          ],
+              const SizedBox(height: 28),
+              GradientButton(
+                label: 'Sign In',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

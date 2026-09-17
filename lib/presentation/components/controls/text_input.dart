@@ -71,7 +71,7 @@ class TextInput extends StatelessWidget {
               color: Colors.redAccent,
               fontWeight: FontWeight.w500,
             ),
-            hintStyle: const TextStyle(color: Color(0xFF878787)),
+            hintStyle: const TextStyle(color: AppColors.colorHint),
           ),
           onEditingComplete: () {
             if (isLast) {

@@ -16,6 +16,8 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/constants/text.dart';
 import 'package:butterfly/models/subscription_plan.dart';
+import 'package:butterfly/presentation/components/subscription/plan_card.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:butterfly/presentation/pages/payment/payment_failure_page.dart';
 import 'package:butterfly/presentation/pages/payment/payment_success_page.dart';
 import 'package:butterfly/providers/authentication_provider.dart';
@@ -128,22 +130,23 @@ class _PlansListPageState extends State<PlansListPage> implements PayUCheckoutPr
                   Container(
                     padding: const EdgeInsets.all(20.0),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
+                      color: AppColors.colorSurface,
+                      borderRadius: BorderRadius.circular(16.0),
+                      border: Border.all(color: AppColors.colorInputBorder),
                     ),
                     child: const Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        CircularProgressIndicator(),
+                        CircularProgressIndicator(color: AppColors.colorPrimary),
                         SizedBox(height: 20.0),
                         Text(
                           "Processing Your Payment",
-                          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                         SizedBox(height: 10.0),
                         Text(
                           "Please do not close or navigate away from this page.",
-                          style: TextStyle(fontSize: 14.0),
+                          style: TextStyle(fontSize: 14.0, color: AppColors.colorTextSecondary),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -341,17 +344,15 @@ class _PlansListPageState extends State<PlansListPage> implements PayUCheckoutPr
       appBar: AppBar(
         backgroundColor: AppColors.colorBackground,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
-          "Subscribe Now",
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Subscribe'),
         elevation: 0,
       ),
-      body: SafeArea(
-        child: FutureBuilder(
+      body: AppBackground(
+        child: SafeArea(
+          child: FutureBuilder(
           future: authenticationProvider.getPlansListAndEnabledMethods(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -393,293 +394,43 @@ class _PlansListPageState extends State<PlansListPage> implements PayUCheckoutPr
                 }
               }
               return SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title and Subtitle
-                    const Text(
-                      "Choose Your Plan",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    const PlansPageHeader(),
+                    const SizedBox(height: 18),
+                    PromoCodeBar(
+                      expanded: _showPromoInput,
+                      appliedCouponCode: _appliedCouponCode,
+                      couponMessage: _couponMessage,
+                      loading: _couponLoading,
+                      controller: _promoController,
+                      onExpand: () => setState(() => _showPromoInput = true),
+                      onApply: _applyPromoCode,
+                      onClear: _clearPromoCode,
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "Select the perfect plan for your entertainment",
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    // Promo code: show tappable link when collapsed, or full input when expanded / coupon applied
-                    if (!_showPromoInput && _appliedCouponCode == null) ...[
-                      GestureDetector(
-                        onTap: () => setState(() => _showPromoInput = true),
-                        child: Text(
-                          "Have a promo code?",
-                          style: TextStyle(
-                            color: AppColors.colorPrimary.withValues(alpha: 0.9),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                    ] else ...[
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.06),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: _promoController,
-                                    cursorColor: AppColors.colorPrimary,
-                                    style: const TextStyle(color: Colors.white, fontSize: 15),
-                                    decoration: InputDecoration(
-                                      hintText: "Promo code",
-                                      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 15),
-                                      border: InputBorder.none,
-                                      contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-                                      isDense: true,
-                                    ),
-                                    onSubmitted: (_) => _applyPromoCode(),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                SizedBox(
-                                  height: 40,
-                                  child: TextButton(
-                                    onPressed: _couponLoading ? null : _applyPromoCode,
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: AppColors.colorPrimary,
-                                      foregroundColor: Colors.black,
-                                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                    ),
-                                    child: _couponLoading
-                                        ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
-                                        : const Text("Apply", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  ),
-                                ),
-                                if (_appliedCouponCode != null) ...[
-                                  const SizedBox(width: 6),
-                                  TextButton(
-                                    onPressed: _clearPromoCode,
-                                    child: Text("Remove", style: TextStyle(color: Colors.white70, fontSize: 13)),
-                                  ),
-                                ],
-                              ],
-                            ),
-                            if (_couponMessage != null) ...[
-                              const SizedBox(height: 6),
-                              Text(
-                                _couponMessage!,
-                                style: TextStyle(color: AppColors.colorPrimary, fontSize: 13),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                    ],
-                    // Vertically stacked plan cards
+                    const SizedBox(height: 18),
                     ..._plans.asMap().entries.map((entry) {
                       final index = entry.key;
                       final plan = entry.value;
-                      final isSelected = selectedPlan == plan;
                       return Padding(
-                        padding: EdgeInsets.only(bottom: index < _plans.length - 1 ? 10 : 0),
-                        child: GestureDetector(
-                          onTap: () async {
+                        padding: EdgeInsets.only(bottom: index < _plans.length - 1 ? 14 : 0),
+                        child: PlanCard(
+                          plan: plan,
+                          isSelected: selectedPlan == plan,
+                          onTap: () {
                             if (!context.mounted) return;
-                            setState(() {
-                              selectedPlan = plan;
-                            });
+                            setState(() => selectedPlan = plan);
+                          },
+                          onSubscribe: () {
+                            if (!context.mounted) return;
+                            setState(() => selectedPlan = plan);
                             _showPlanPopup(user, plan, null);
                           },
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              AnimatedContainer(
-                                duration: const Duration(milliseconds: 250),
-                                curve: Curves.easeOut,
-                                padding: const EdgeInsets.all(14),
-                                decoration: BoxDecoration(
-                                  color: AppColors.colorBackground.withValues(alpha: 0.8),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(
-                                    color: isSelected ? AppColors.colorPrimary : Colors.white.withValues(alpha: 0.2),
-                                    width: isSelected ? 2.5 : 1.5,
-                                  ),
-                                  boxShadow: isSelected
-                                      ? [
-                                          BoxShadow(
-                                            color: AppColors.colorPrimary.withValues(alpha: 0.3),
-                                            blurRadius: 20,
-                                            spreadRadius: 2,
-                                            offset: const Offset(0, 8),
-                                          ),
-                                        ]
-                                      : [
-                                          BoxShadow(
-                                            color: Colors.black.withValues(alpha: 0.3),
-                                            blurRadius: 10,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                        ],
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Badges row
-                                    Row(
-                                      children: [
-                                        if (plan.isMostPopular)
-                                          Container(
-                                            margin: const EdgeInsets.only(right: 6),
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                              vertical: 4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: AppColors.colorPrimary,
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                            child: const Text(
-                                              "MOST POPULAR",
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        if (plan.isBestValue)
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                              vertical: 4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(color: Colors.yellow, width: 1),
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                            child: const Text(
-                                              "BEST VALUE",
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.yellow,
-                                              ),
-                                            ),
-                                          ),
-                                      ],
-                                    ),
-                                    if (plan.isMostPopular || plan.isBestValue) const SizedBox(height: 8),
-                                    // Title and description
-                                    Text(
-                                      plan.validity,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    const Text(
-                                      "Select the perfect plan for your entertainment",
-                                      style: TextStyle(
-                                        color: Colors.white70,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    // Features
-                                    _buildFeatureItem("Two new releases every week"),
-                                    const SizedBox(height: 6),
-                                    _buildFeatureItem("Unlimited streaming"),
-                                    const SizedBox(height: 6),
-                                    _buildFeatureItem("Premium HD videos"),
-                                    const SizedBox(height: 12),
-                                    // Pricing on second line
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        if (plan.originalCost != null) ...[
-                                          Text(
-                                            "${plan.currency}${SubscriptionPlan.formatCost(plan.originalCost!)}",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white.withValues(alpha: 0.5),
-                                              decoration: TextDecoration.lineThrough,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 4),
-                                        ],
-                                        Text(
-                                          "${plan.currency}${SubscriptionPlan.formatCost(plan.cost)}",
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 12),
-                                    // Subscribe button
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: ElevatedButton(
-                                        onPressed: () async {
-                                          if (!context.mounted) return;
-                                          setState(() {
-                                            selectedPlan = plan;
-                                          });
-                                          _showPlanPopup(user, plan, null);
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: isSelected ? AppColors.colorPrimary : Colors.white.withValues(alpha: 0.1),
-                                          padding: const EdgeInsets.symmetric(vertical: 12),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          elevation: 0,
-                                        ),
-                                        child: Text(
-                                          plan.buttonText,
-                                          style: TextStyle(
-                                            color: isSelected ? Colors.black : Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
                       );
-                    }).toList(),
+                    }),
                   ],
                 ),
               );
@@ -687,6 +438,7 @@ class _PlansListPageState extends State<PlansListPage> implements PayUCheckoutPr
               return const PlansListPageShimmer();
             }
           },
+        ),
         ),
       ),
     );
@@ -707,6 +459,11 @@ class _PlansListPageState extends State<PlansListPage> implements PayUCheckoutPr
 
     showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (context) => PaymentBottomSheetWidget(
         plan: plan,
         enabledMethods: _enabledMethods,
@@ -988,35 +745,6 @@ class _PlansListPageState extends State<PlansListPage> implements PayUCheckoutPr
 // void callProcess(dynamic sdkBody) async {
 //   await sdk.process(sdkBody, hyperSDKCallbackHandler);
 // }
-
-  Widget _buildFeatureItem(String feature) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(3),
-          decoration: BoxDecoration(
-            color: AppColors.colorPrimary.withValues(alpha: 0.2),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.check,
-            color: AppColors.colorPrimary,
-            size: 14,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            feature,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
   void _handleSabpaisaPaymentSuccess() {
     Navigator.pushReplacement(

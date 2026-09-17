@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:butterfly/constants/app_theme.dart';
+import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/presentation/components/controls/more_widget.dart';
 import 'package:butterfly/presentation/pages/drawer_pages/contact_us_page.dart';
 
@@ -22,61 +24,37 @@ class _ContactUsListPageState extends State<ContactUsListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.colorBackground,
       appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(color: Colors.black),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.black,
-        title: const Text("Legal Information"),
+        title: const Text('Help & Support'),
       ),
-      backgroundColor: Colors.black,
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
         children: [
-          Container(
-            alignment: Alignment.center,
-            width: MediaQuery.of(context).size.width * 0.95,
-            child: Wrap(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 20),
-                      child: const Text(
-                        "Tap The Options Below For More Info",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 27,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    MoreWidget(
-                      text: "Concern/Queries",
-                      icon: Icons.contact_page,
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ContactUsPage(),
-                        ));
-                      },
-                    ),
-                    MoreWidget(
-                      text: "Help/Support",
-                      icon: Icons.privacy_tip,
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ContactUsPage(),
-                        ));
-                      },
-                    ),
-                  ],
-                )
-              ],
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+            child: Text(
+              'Tap an option below for more info',
+              style: AppTextStyles.meta,
             ),
+          ),
+          MoreWidget(
+            text: 'Concern / Queries',
+            icon: Icons.contact_page_outlined,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const ContactUsPage(),
+              ));
+            },
+          ),
+          MoreWidget(
+            text: 'Help / Support',
+            icon: Icons.support_agent_rounded,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const ContactUsPage(),
+              ));
+            },
           ),
         ],
       ),

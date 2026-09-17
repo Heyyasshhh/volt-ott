@@ -12,6 +12,7 @@ import 'package:butterfly/presentation/pages/media/episode_player_page.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../models/notification.dart';
+import 'package:butterfly/constants/colors.dart';
 
 class NotificationItem extends StatefulWidget {
   final NotificationModel notification;
@@ -33,13 +34,13 @@ class _NotificationItemState extends State<NotificationItem> {
   Color get _typeColor {
     switch (widget.notification.type) {
       case NotificationType.subscription:
-        return Colors.purpleAccent;
+        return AppColors.colorPrimaryDark;
       case NotificationType.newRelease:
-        return Colors.greenAccent;
+        return AppColors.colorPrimary;
       case NotificationType.trailer:
-        return Colors.blueAccent;
+        return AppColors.colorAccent;
       case NotificationType.info:
-        return Colors.white70;
+        return AppColors.colorTextSecondary;
     }
   }
 
@@ -81,7 +82,7 @@ class _NotificationItemState extends State<NotificationItem> {
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.3),
+              color: AppColors.colorSurface.withValues(alpha: 0.92),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(

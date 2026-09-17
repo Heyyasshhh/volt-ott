@@ -3,6 +3,7 @@ import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/presentation/components/media/upcoming_item.dart';
 import 'package:butterfly/providers/content_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 
 class UpcomingPage extends StatefulWidget {
   const UpcomingPage({super.key});
@@ -30,9 +31,10 @@ class _UpcomingPageState extends State<UpcomingPage> {
             child: SafeArea(
               child: contentProvider.getStatus() == Status.fetched &&
                       contentProvider.getUpcoming().isEmpty
-                  ? const Center(
-                      child: Text("More Upcoming Content Coming Soon",
-                          style: TextStyle(color: Colors.white)),
+                  ? const EmptyState(
+                      icon: Icons.upcoming_outlined,
+                      title: 'More coming soon',
+                      subtitle: 'New titles will appear here as they are announced.',
                     )
                   : contentProvider.getStatus() == Status.fetching
                       ? ListView.builder(

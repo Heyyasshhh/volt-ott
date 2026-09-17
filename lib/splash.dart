@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:butterfly/constants/app_theme.dart';
 import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/presentation/components/ui/app_widgets.dart';
@@ -34,6 +35,15 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Curves.easeOut,
     );
     _fadeController.forward();
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+      systemNavigationBarColor: AppColors.colorBackground,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ));
 
     _fallbackTimer = Timer(const Duration(milliseconds: 2200), () {
       if (!_hasNavigated) {
@@ -100,28 +110,35 @@ class _BrandedSplash extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppBackground(
       child: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            const Spacer(flex: 3),
-            Image.asset(
-              'assets/images/butterfly-logo.png',
-              width: 280,
-              fit: BoxFit.contain,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Stories that\nMove You',
-              textAlign: TextAlign.center,
-              style: AppTextStyles.meta.copyWith(
-                color: AppColors.colorTextSecondary,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                height: 1.35,
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    'assets/images/butterfly-logo.png',
+                    width: 220,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Stories that\nMove You',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.meta.copyWith(
+                      color: AppColors.colorTextSecondary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const Spacer(flex: 4),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 36),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 28,
               child: Text(
                 'WATCH ANYWHERE\nBE YOURSELF',
                 textAlign: TextAlign.center,

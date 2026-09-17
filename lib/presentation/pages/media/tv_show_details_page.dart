@@ -241,7 +241,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                                     vertical: 6,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.red,
+                                    color: AppColors.colorPrimary.withValues(alpha: 0.9),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(

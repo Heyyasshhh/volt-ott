@@ -5,7 +5,8 @@ import 'package:butterfly/presentation/components/media/media_item.dart';
 import 'package:butterfly/providers/content_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../../constants/colors.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 
 class MoviesPage extends StatefulWidget {
   const MoviesPage({super.key});
@@ -101,9 +102,13 @@ class _showsPageState extends State<MoviesPage> {
                   ),
                 )
               else
-                Container(
-                  margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
-                  child: const Center(child: Text("Oops! We don't have this content at the moment", style: TextStyle(color: Colors.white70, fontSize: 18))),
+                const Padding(
+                  padding: EdgeInsets.only(top: 80),
+                  child: EmptyState(
+                    icon: Icons.movie_filter_outlined,
+                    title: "We don't have this yet",
+                    subtitle: 'Try a different title or check back later.',
+                  ),
                 )
             ],
           ),

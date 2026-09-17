@@ -21,20 +21,25 @@ class PaymentOption extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.only(bottom: 10),
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.colorPrimaryLight),
+          color: AppColors.colorSurfaceElevated,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.colorInputBorder),
         ),
         child: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
               child: Image.asset(
                 imagePath,
-                height: 48,
+                height: 40,
+                width: 40,
+                fit: BoxFit.cover,
               ),
             ),
+            const SizedBox(width: 12),
             Flexible(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -42,10 +47,14 @@ class PaymentOption extends StatelessWidget {
                 children: [
                   Text(
                     methodName,
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                  methods
-
+                  const SizedBox(height: 4),
+                  methods,
                 ],
               ),
             ),

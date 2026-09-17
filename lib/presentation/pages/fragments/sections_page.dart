@@ -43,7 +43,7 @@ class _SectionsPageState extends State<SectionsPage> with WidgetsBindingObserver
   late final GlobalKey<ScaffoldState> _key;
   int _current = 0;
   int _selectedCategory = 0;
-  static const _categories = ['All', 'Movies', 'Series', 'Kids', 'Documentaries'];
+  static const _categories = ['All', 'Movies', 'Series'];
   final List<GlobalKey<CarouselHeroItemState>> heroKeys = [];
 
   final CarouselSliderController _carouselController = CarouselSliderController();
@@ -170,16 +170,11 @@ class _SectionsPageState extends State<SectionsPage> with WidgetsBindingObserver
   }
 
   bool _matchesCategory(BaseItem item) {
-    final cat = item.categories.join(' ').toLowerCase();
     switch (_selectedCategory) {
       case 1:
         return item.mediaType == MediaType.movie;
       case 2:
         return item.mediaType == MediaType.series;
-      case 3:
-        return !item.getIsAdult();
-      case 4:
-        return cat.contains('document');
       default:
         return true;
     }

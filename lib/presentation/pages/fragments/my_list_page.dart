@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/app_theme.dart';
 import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/models/media/media_item.dart';
 import 'package:butterfly/presentation/components/media/media_item.dart';
@@ -40,27 +39,10 @@ class MyListPage extends StatelessWidget {
         title: const Text('My List'),
       ),
       body: saved.isEmpty && continueWatching.isEmpty && upcoming.isEmpty
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.bookmark_add_outlined, size: 72, color: Colors.white.withValues(alpha: 0.35)),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Your list is empty',
-                      style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Save titles from a details page to watch them later.',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.meta,
-                    ),
-                  ],
-                ),
-              ),
+          ? const EmptyState(
+              icon: Icons.bookmark_add_outlined,
+              title: 'Your list is empty',
+              subtitle: 'Save titles from a details page to watch them later.',
             )
           : ListView(
               padding: const EdgeInsets.only(bottom: 96),

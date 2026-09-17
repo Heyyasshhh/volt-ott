@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:butterfly/constants/app_theme.dart';
 import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:butterfly/providers/authentication_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -29,33 +31,35 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.colorBackground,
-        foregroundColor: Colors.white,
-        title: Text("Purchase History"),
+        title: const Text('Purchase History'),
       ),
       body: FutureBuilder<List<UserSubscription>>(
         future: _purchaseHistoryFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _buildShimmerPlaceholder();
-          } else if (snapshot.hasError) {
-            return Center(
-                child: Text("Error loading purchase history",
-                    style: TextStyle(color: Colors.white)));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-                child: Text("No purchase history",
-                    style: TextStyle(color: Colors.white)));
+          }
+          if (snapshot.hasError) {
+            return const EmptyState(
+              icon: Icons.error_outline_rounded,
+              title: 'Could not load history',
+              subtitle: 'Please try again in a moment.',
+            );
+          }
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const EmptyState(
+              icon: Icons.receipt_long_rounded,
+              title: 'No purchase history',
+              subtitle: 'Plans you subscribe to will show up here.',
+            );
           }
 
           final purchases = snapshot.data!;
-
           return ListView.builder(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             itemCount: purchases.length,
             itemBuilder: (context, index) {
-              final purchase = purchases[index];
-              return _buildSubscriptionCard(purchase);
+              return _buildSubscriptionCard(purchases[index]);
             },
           );
         },
@@ -64,45 +68,20 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
   }
 
   Widget _buildSubscriptionCard(UserSubscription purchase) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.orange, width: 2),
-        borderRadius: BorderRadius.circular(10),
-        color: AppColors.colorBackground,
-      ),
+    return SurfaceCard(
+      margin: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            purchase.planName,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            "Status: ${purchase.status}",
-            style: TextStyle(color: Colors.white70, fontSize: 14),
-          ),
-          SizedBox(height: 4),
-          Text(
-            "Order ID: ${purchase.orderId}",
-            style: TextStyle(color: Colors.white70, fontSize: 14),
-          ),
-          SizedBox(height: 4),
-          Text(
-            "Valid from: ${purchase.getDisplayStartTime()}",
-            style: TextStyle(color: Colors.white70, fontSize: 14),
-          ),
-          SizedBox(height: 4),
-          Text(
-            "Valid until: ${purchase.getDisplayEndTime()}",
-            style: TextStyle(color: Colors.white70, fontSize: 14),
-          ),
+          Text(purchase.planName, style: AppTextStyles.sectionTitle),
+          const SizedBox(height: 8),
+          Text('Status: ${purchase.status}', style: AppTextStyles.meta),
+          const SizedBox(height: 4),
+          Text('Order ID: ${purchase.orderId}', style: AppTextStyles.meta),
+          const SizedBox(height: 4),
+          Text('Valid from: ${purchase.getDisplayStartTime()}', style: AppTextStyles.meta),
+          const SizedBox(height: 4),
+          Text('Valid until: ${purchase.getDisplayEndTime()}', style: AppTextStyles.meta),
         ],
       ),
     );
@@ -110,19 +89,18 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
 
   Widget _buildShimmerPlaceholder() {
     return ListView.builder(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
       itemCount: 5,
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
-          baseColor: Colors.grey[900]!,
-          highlightColor: Colors.grey[700]!,
+          baseColor: AppColors.colorSurface,
+          highlightColor: AppColors.colorSurfaceElevated,
           child: Container(
-            height: 80,
-            margin: EdgeInsets.symmetric(vertical: 8),
+            height: 118,
+            margin: const EdgeInsets.only(bottom: 12),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.orange, width: 2),
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.black,
+              color: AppColors.colorSurface,
+              borderRadius: BorderRadius.circular(16),
             ),
           ),
         );

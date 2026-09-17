@@ -2,51 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/presentation/components/subscription/plan_card.dart';
 
-/// Shimmer placeholder for the Subscribe Now / plans list page.
-/// Title and subtitle are shown as real text (only plans load from API). Shimmer only on plan cards.
 class PlansListPageShimmer extends StatelessWidget {
   const PlansListPageShimmer({super.key});
 
-  static const _shimmerBase = Color(0xFF1A1A1A);
-  static const _shimmerHighlight = Color(0xFF262626);
+  static const _shimmerBase = Color(0xFF1A1A24);
+  static const _shimmerHighlight = Color(0xFF2A2A36);
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title and subtitle — real text (not loaded from API)
-          const Text(
-            "Choose Your Plan",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            "Select the perfect plan for your entertainment",
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 24),
-          // Plan card placeholders with darker, subtle shimmer
+          const PlansPageHeader(),
+          const SizedBox(height: 18),
           Shimmer.fromColors(
             baseColor: _shimmerBase,
             highlightColor: _shimmerHighlight,
             child: Column(
               children: [
-                _buildPlanCardShimmer(context),
-                const SizedBox(height: 10),
-                _buildPlanCardShimmer(context),
-                const SizedBox(height: 10),
-                _buildPlanCardShimmer(context),
+                _ticket(),
+                const SizedBox(height: 14),
+                _ticket(),
+                const SizedBox(height: 14),
+                _ticket(),
               ],
             ),
           ),
@@ -55,104 +37,62 @@ class PlansListPageShimmer extends StatelessWidget {
     );
   }
 
-  Widget _buildPlanCardShimmer(BuildContext context) {
+  Widget _ticket() {
     return Container(
-      padding: const EdgeInsets.all(14),
+      height: 108,
       decoration: BoxDecoration(
-        color: AppColors.colorBackground.withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1.5),
+        color: AppColors.colorSurface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.colorInputBorder),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          // Badge row
-          Row(
-            children: [
-              Container(
-                height: 22,
-                width: 100,
-                decoration: BoxDecoration(
-                  color: _shimmerBase,
-                  borderRadius: BorderRadius.circular(12),
-                ),
+          Container(
+            width: 78,
+            decoration: const BoxDecoration(
+              color: _shimmerBase,
+              borderRadius: BorderRadius.horizontal(left: Radius.circular(19)),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 14,
+                    width: 140,
+                    decoration: BoxDecoration(
+                      color: _shimmerBase,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    height: 10,
+                    width: 90,
+                    decoration: BoxDecoration(
+                      color: _shimmerBase,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    height: 18,
+                    width: 72,
+                    decoration: BoxDecoration(
+                      color: _shimmerBase,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          // Validity / title line
-          Container(
-            height: 16,
-            width: 140,
-            decoration: BoxDecoration(
-              color: _shimmerBase,
-              borderRadius: BorderRadius.circular(6),
-            ),
-          ),
-          const SizedBox(height: 4),
-          // Description line
-          Container(
-            height: 12,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: _shimmerBase,
-              borderRadius: BorderRadius.circular(6),
-            ),
-          ),
-          const SizedBox(height: 12),
-          // Feature rows
-          _buildFeatureShimmer(),
-          const SizedBox(height: 6),
-          _buildFeatureShimmer(),
-          const SizedBox(height: 6),
-          _buildFeatureShimmer(),
-          const SizedBox(height: 12),
-          // Price line
-          Container(
-            height: 20,
-            width: 80,
-            decoration: BoxDecoration(
-              color: _shimmerBase,
-              borderRadius: BorderRadius.circular(6),
-            ),
-          ),
-          const SizedBox(height: 12),
-          // Button placeholder
-          Container(
-            height: 44,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: _shimmerBase,
-              borderRadius: BorderRadius.circular(10),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildFeatureShimmer() {
-    return Row(
-      children: [
-        Container(
-          width: 14,
-          height: 14,
-          decoration: const BoxDecoration(
-            color: _shimmerBase,
-            shape: BoxShape.circle,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Container(
-            height: 12,
-            decoration: BoxDecoration(
-              color: _shimmerBase,
-              borderRadius: BorderRadius.circular(6),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

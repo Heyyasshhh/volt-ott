@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/presentation/age_popup.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:butterfly/presentation/pages/home_page.dart';
 import 'package:butterfly/presentation/pages/payment/payment_failure_page.dart';
 import 'package:butterfly/services/logging_service.dart';
@@ -29,11 +30,6 @@ class PaymentSuccessPage extends StatefulWidget {
 }
 
 class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final AuthenticationProvider authenticationProvider = Provider.of<AuthenticationProvider>(
@@ -83,42 +79,42 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
         );
       },
     );
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.colorBackground,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                height: 110,
-                "assets/images/butterfly-text.png",
+    return Scaffold(
+      backgroundColor: AppColors.colorBackground,
+      body: AppBackground(
+        child: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/images/butterfly-logo.png', height: 72),
+                  const SizedBox(height: 28),
+                  const CircularProgressIndicator(color: AppColors.colorPrimary),
+                  const SizedBox(height: 28),
+                  const Text(
+                    'Confirming Your Payment',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Please do not press the back button. We will redirect you shortly.',
+                    style: TextStyle(
+                      color: AppColors.colorTextSecondary,
+                      fontSize: 15,
+                      height: 1.4,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-              const SizedBox(height: 50),
-              const Text(
-                "Confirming Your Payment",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                ),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                "Please do not press back button",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                "We will redirect you shortly",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

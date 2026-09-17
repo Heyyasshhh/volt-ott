@@ -5,9 +5,8 @@ import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
 import 'package:butterfly/presentation/pages/home_page.dart';
 import 'package:butterfly/services/logging_service.dart';
 import 'package:butterfly/services/network_service.dart';
-import 'package:butterfly/presentation/components/controls/buttons.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:butterfly/presentation/components/controls/timer_widget.dart';
-import 'package:butterfly/presentation/components/notification_permission_modal.dart';
 import 'package:butterfly/providers/authentication_provider.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +60,8 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     final authenticationProvider = Provider.of<AuthenticationProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
-      body: SafeArea(
+      body: AppBackground(
+        child: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: ConstrainedBox(
@@ -76,12 +76,12 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                   children: [
               Image.asset('assets/images/butterfly-logo.png', height: 64),
               const SizedBox(height: 24),
-              Text(
+              const Text(
                 "Enter OTP",
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 32,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w800,
                   letterSpacing: -0.5,
                 ),
                 textAlign: TextAlign.center,
@@ -89,10 +89,11 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
               const SizedBox(height: 8),
               Text(
                 "We sent a code to\n${widget.phoneNumber}",
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                style: const TextStyle(
+                  color: AppColors.colorTextSecondary,
                   fontSize: 15,
                   height: 1.4,
+                  fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -114,10 +115,10 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
-                        width: 1.5,
-                      ),
-                      color: Colors.white.withOpacity(0.05),
+                      color: AppColors.colorInputBorder,
+                      width: 1.5,
+                    ),
+                    color: AppColors.colorInputFill,
                     ),
                   ),
                   separatorBuilder: (index) => const SizedBox(width: 12),
@@ -157,7 +158,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                         color: AppColors.colorPrimary,
                         width: 2,
                       ),
-                      color: Colors.white.withOpacity(0.05),
+                      color: AppColors.colorInputFill,
                     ),
                   ),
                   submittedPinTheme: PinTheme(
@@ -171,10 +172,10 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
+                        color: AppColors.colorInputBorder,
                         width: 1.5,
                       ),
-                      color: Colors.white.withOpacity(0.05),
+                      color: AppColors.colorInputFill,
                     ),
                   ),
                   errorPinTheme: PinTheme(
@@ -191,13 +192,13 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                         color: Colors.redAccent,
                         width: 1.5,
                       ),
-                      color: Colors.redAccent.withOpacity(0.1),
+                      color: Colors.redAccent.withValues(alpha: 0.1),
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 40),
-              SubmitButton(
+              GradientButton(
                 onPressed: () async {
                   if (!isClickable) return;
                   setState(() {
@@ -248,7 +249,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                     );
                   }
                 },
-                buttonText: "Verify",
+                label: "Verify",
                 isLoading: !isClickable,
               ),
               const SizedBox(height: 24),
@@ -258,8 +259,8 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                 children: [
                   Text(
                     "Didn't receive code? ",
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.6),
+                    style: const TextStyle(
+                      color: AppColors.colorTextMuted,
                       fontSize: 14,
                     ),
                   ),
@@ -298,11 +299,11 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                 },
                 child: Text(
                   "Change Phone Number",
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
+                  style: const TextStyle(
+                    color: AppColors.colorTextSecondary,
                     fontSize: 14,
                     decoration: TextDecoration.underline,
-                    decorationColor: Colors.white.withOpacity(0.7),
+                    decorationColor: AppColors.colorTextSecondary,
                   ),
                 ),
               ),
@@ -312,6 +313,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
               ),
             ),
           ),
+        ),
         ),
       ),
     );

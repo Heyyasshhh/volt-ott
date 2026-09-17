@@ -6,6 +6,8 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/models/subscription_plan.dart';
 import 'package:butterfly/presentation/components/subscription/not_logged_in_subscribe.dart';
+import 'package:butterfly/presentation/components/subscription/plan_card.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:butterfly/presentation/pages/payment/payment_success_page.dart';
 import 'package:butterfly/presentation/pages/payment/plans_list_page_shimmer.dart';
 import 'package:butterfly/providers/authentication_provider.dart';
@@ -343,17 +345,15 @@ class _PlansListPageState extends State<PlansListPage> {
       appBar: AppBar(
         backgroundColor: AppColors.colorBackground,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
-          "Subscribe Now",
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Subscribe'),
         elevation: 0,
       ),
-      body: SafeArea(
-        child: FutureBuilder(
+      body: AppBackground(
+        child: SafeArea(
+          child: FutureBuilder(
           future: _plansFuture,
           builder: (context, snap) {
             if (!snap.hasData) {
@@ -391,6 +391,7 @@ class _PlansListPageState extends State<PlansListPage> {
             return _buildUI(context);
           },
         ),
+        ),
       ),
     );
   }
@@ -400,236 +401,34 @@ class _PlansListPageState extends State<PlansListPage> {
   // ------------------------------------------------------------
   Widget _buildUI(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Choose Your Plan",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            "Select the perfect plan for your entertainment",
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 24),
-          // Vertically stacked plan cards (same as Android)
+          const PlansPageHeader(),
+          const SizedBox(height: 18),
           ..._plans.asMap().entries.map((entry) {
             final index = entry.key;
             final plan = entry.value;
-            final isSelected = selectedPlan == plan;
             return Padding(
-              padding: EdgeInsets.only(bottom: index < _plans.length - 1 ? 10 : 0),
-              child: GestureDetector(
+              padding: EdgeInsets.only(bottom: index < _plans.length - 1 ? 14 : 0),
+              child: PlanCard(
+                plan: plan,
+                isSelected: selectedPlan == plan,
                 onTap: () {
+                  if (!context.mounted) return;
+                  setState(() => selectedPlan = plan);
+                },
+                onSubscribe: () {
                   if (!context.mounted) return;
                   setState(() => selectedPlan = plan);
                   _onPlanPressed(plan);
                 },
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeOut,
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: AppColors.colorBackground.withValues(alpha: 0.8),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: isSelected ? AppColors.colorPrimary : Colors.white.withValues(alpha: 0.2),
-                          width: isSelected ? 2.5 : 1.5,
-                        ),
-                        boxShadow: isSelected
-                            ? [
-                                BoxShadow(
-                                  color: AppColors.colorPrimary.withValues(alpha: 0.3),
-                                  blurRadius: 20,
-                                  spreadRadius: 2,
-                                  offset: const Offset(0, 8),
-                                ),
-                              ]
-                            : [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.3),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Badges row
-                          Row(
-                            children: [
-                              if (plan.isMostPopular)
-                                Container(
-                                  margin: const EdgeInsets.only(right: 6),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.colorPrimary,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Text(
-                                    "MOST POPULAR",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              if (plan.isBestValue)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.yellow, width: 1),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Text(
-                                    "BEST VALUE",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.yellow,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          if (plan.isMostPopular || plan.isBestValue) const SizedBox(height: 8),
-                          Text(
-                            plan.validity,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            "Select the perfect plan for your entertainment",
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          _buildFeatureItem("Two new releases every week"),
-                          const SizedBox(height: 6),
-                          _buildFeatureItem("Unlimited streaming"),
-                          const SizedBox(height: 6),
-                          _buildFeatureItem("Premium HD videos"),
-                          const SizedBox(height: 12),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              if (plan.originalCost != null) ...[
-                                Text(
-                                  "${plan.currency}${SubscriptionPlan.formatCost(plan.originalCost!)}",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white.withValues(alpha: 0.5),
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                              ],
-                              Text(
-                                "${plan.currency}${SubscriptionPlan.formatCost(plan.cost)}",
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (!context.mounted) return;
-                                setState(() => selectedPlan = plan);
-                                _onPlanPressed(plan);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: isSelected ? AppColors.colorPrimary : Colors.white.withValues(alpha: 0.1),
-                                padding: const EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                elevation: 0,
-                              ),
-                              child: Text(
-                                plan.buttonText,
-                                style: TextStyle(
-                                  color: isSelected ? Colors.black : Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
-    );
-  }
-
-  Widget _buildFeatureItem(String feature) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(3),
-          decoration: BoxDecoration(
-            color: AppColors.colorPrimary.withValues(alpha: 0.2),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.check,
-            color: AppColors.colorPrimary,
-            size: 14,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            feature,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-            ),
-          ),
-        ),
-      ],
     );
   }
 

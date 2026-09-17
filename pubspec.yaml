@@ -1,7 +1,7 @@
 name: butterfly
 description: "Butterfly OTT"
 publish_to: 'none'
-version: 3.3.0+33
+version: 3.3.0+37
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -113,7 +113,7 @@ flutter_native_splash:
   android: true
   ios: true
   web: true
-  fullscreen: true
+  fullscreen: false
   android_gravity: center
   ios_content_mode: center
   image: assets/images/butterfly-logo.png

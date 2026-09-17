@@ -69,7 +69,7 @@ void showWarningDialog(BaseItem baseItem, BuildContext context, VoidCallback onP
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange,
+                            backgroundColor: AppColors.colorSurfaceElevated,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -94,7 +94,7 @@ void showWarningDialog(BaseItem baseItem, BuildContext context, VoidCallback onP
                         const SizedBox(width: 20),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green.withValues(alpha: 0.8),
+                            backgroundColor: AppColors.colorPrimary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),

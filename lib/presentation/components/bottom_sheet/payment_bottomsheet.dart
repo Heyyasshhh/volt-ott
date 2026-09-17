@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
 import 'package:butterfly/providers/authentication_provider.dart';
 import 'package:provider/provider.dart';
@@ -284,61 +285,55 @@ class _PaymentBottomSheetWidgetState extends State<PaymentBottomSheetWidget> {
 
     return SafeArea(
       child: Container(
-        color: Colors.black,
+        decoration: const BoxDecoration(
+          color: AppColors.colorSurface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Flexible(
-                              child: Text(
-                                "",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.only(right: 8.0),
-                                child: Icon(
-                                  Icons.close,
-                                  color: Colors.white,
-                                  size: 22,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        ...widget.enabledMethods
-                            .where(paymentOptions.containsKey)
-                            .map((method) => paymentOptions[method]!()),
-                      ],
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 10, bottom: 6),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.white24,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 12, 4),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Choose payment',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close_rounded, color: Colors.white),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+              child: Column(
+                children: widget.enabledMethods
+                    .where(paymentOptions.containsKey)
+                    .map((method) => paymentOptions[method]!())
+                    .toList(),
+              ),
+            ),
           ],
         ),
       ),

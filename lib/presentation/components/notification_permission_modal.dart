@@ -183,7 +183,7 @@ class NotificationPermissionModal extends StatelessWidget {
                         child: const Text(
                           "Enable",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),

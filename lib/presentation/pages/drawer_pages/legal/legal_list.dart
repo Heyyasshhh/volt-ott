@@ -20,95 +20,83 @@ class _LegalListPageState extends State<LegalListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(color: AppColors.colorBackground),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
-        foregroundColor: Colors.white,
-        backgroundColor: AppColors.colorBackground,
-        title: const Text("Legal Information"),
-      ),
       backgroundColor: AppColors.colorBackground,
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      appBar: AppBar(
+        title: const Text('Legal Information'),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
         children: [
-          Container(
-            alignment: Alignment.center,
-            width: MediaQuery.of(context).size.width * 0.95,
-            child: Wrap(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    MoreWidget(
-                      text: "Terms of use",
-                      icon: Icons.contact_page,
-                      onPressed: () {
-                        if (PlatformUtils.isWeb) {
-                          _launchURL('https://butterflyott.com/legal/terms');
-                        } else {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => TermsAndConditionsPage(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    MoreWidget(
-                      text: "Privacy policy",
-                      icon: Icons.privacy_tip,
-                      onPressed: () {
-                        if (PlatformUtils.isWeb) {
-                          _launchURL(
-                              'https://butterflyott.com/legal/privacy-policy');
-                        } else {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => PrivacyPolicyPage(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    MoreWidget(
-                      text: "Refund policy",
-                      icon: Icons.account_balance,
-                      onPressed: () {
-                        if (PlatformUtils.isWeb) {
-                          _launchURL(
-                              'https://butterflyott.com/legal/refund-policy');
-                        } else {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => RefundPolicyPage(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    MoreWidget(
-                      text: "About US",
-                      icon: Icons.info_outline,
-                      onPressed: () {
-                        if (PlatformUtils.isWeb) {
-                          _launchURL(
-                              'https://butterflyott.com/legal/refund-policy');
-                        } else {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => AboutUsPage(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                )
-              ],
-            ),
+          MoreWidget(
+            text: 'Terms of use',
+            icon: Icons.contact_page_outlined,
+            onPressed: () {
+              if (PlatformUtils.isWeb) {
+                _launchURL('https://butterflyott.com/legal/terms');
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const TermsAndConditionsPage(),
+                  ),
+                );
+              }
+            },
+          ),
+          MoreWidget(
+            text: 'Privacy policy',
+            icon: Icons.privacy_tip_outlined,
+            onPressed: () {
+              if (PlatformUtils.isWeb) {
+                _launchURL('https://butterflyott.com/legal/privacy-policy');
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const PrivacyPolicyPage(),
+                  ),
+                );
+              }
+            },
+          ),
+          MoreWidget(
+            text: 'Refund policy',
+            icon: Icons.account_balance_outlined,
+            onPressed: () {
+              if (PlatformUtils.isWeb) {
+                _launchURL('https://butterflyott.com/legal/refund-policy');
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const RefundPolicyPage(),
+                  ),
+                );
+              }
+            },
+          ),
+          MoreWidget(
+            text: 'About Us',
+            icon: Icons.info_outline,
+            onPressed: () {
+              if (PlatformUtils.isWeb) {
+                _launchURL('https://butterflyott.com/legal/refund-policy');
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const AboutUsPage(),
+                  ),
+                );
+              }
+            },
+          ),
+          MoreWidget(
+            text: 'Grievance Redressal',
+            icon: Icons.gavel_rounded,
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const GrievancePage(),
+                ),
+              );
+            },
           ),
         ],
       ),

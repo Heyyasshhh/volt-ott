@@ -65,7 +65,7 @@ class _PolicyContentPageState extends State<PolicyContentPage> {
         child: _isLoading
             ? const Center(
                 child: CircularProgressIndicator(
-                  color: Colors.red,
+                  color: AppColors.colorPrimary,
                 ),
               )
             : _hasError
@@ -75,7 +75,7 @@ class _PolicyContentPageState extends State<PolicyContentPage> {
                       children: [
                         const Icon(
                           Icons.error_outline,
-                          color: Colors.red,
+                          color: AppColors.colorPrimary,
                           size: 48,
                         ),
                         const SizedBox(height: 16),
@@ -91,11 +91,14 @@ class _PolicyContentPageState extends State<PolicyContentPage> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        ElevatedButton(
+                          ElevatedButton(
                           onPressed: _loadContent,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
+                            backgroundColor: AppColors.colorPrimary,
                             foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                           child: const Text('Retry'),
                         ),
@@ -107,9 +110,10 @@ class _PolicyContentPageState extends State<PolicyContentPage> {
                     child: SelectableText(
                       _content ?? 'No content available',
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppColors.colorTextSecondary,
                         fontSize: 16,
                         height: 1.6,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),

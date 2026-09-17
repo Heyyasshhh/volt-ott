@@ -1,14 +1,27 @@
 package app.butterflyott.app
 
+import android.os.Bundle
+import android.view.WindowManager.LayoutParams
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
-import android.content.Intent;
-import android.view.WindowManager.LayoutParams
-
 
 class MainActivity : FlutterFragmentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        allowScreenshots()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        allowScreenshots()
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        window.addFlags(LayoutParams.FLAG_SECURE)
         super.configureFlutterEngine(flutterEngine)
+        allowScreenshots()
+    }
+
+    private fun allowScreenshots() {
+        window.clearFlags(LayoutParams.FLAG_SECURE)
     }
 }

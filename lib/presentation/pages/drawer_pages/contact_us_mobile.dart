@@ -5,7 +5,7 @@ import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/network/api_paths.dart';
 import 'package:butterfly/providers/authentication_provider.dart';
 import 'package:butterfly/services/network_service.dart';
-import 'package:butterfly/presentation/components/controls/buttons.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:butterfly/presentation/components/controls/text_input.dart';
 import 'package:butterfly/presentation/pages/drawer_pages/contact_us_success_page.dart';
 import 'package:provider/provider.dart';
@@ -93,15 +93,14 @@ class _ContactUsPageState extends State<ContactUsPage> {
     Provider.of<ContentProvider>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Contact Us", style: TextStyle(color: Colors.white)),
-        backgroundColor: AppColors.colorBackground,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
       backgroundColor: AppColors.colorBackground,
+      appBar: AppBar(
+        title: const Text("Contact Us"),
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(0, 12, 0, 32),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -190,8 +189,9 @@ class _ContactUsPageState extends State<ContactUsPage> {
                         padding:
                         const EdgeInsets.symmetric(horizontal: 15),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppColors.colorPrimary),
+                          borderRadius: BorderRadius.circular(16),
+                          color: AppColors.colorSurface,
+                          border: Border.all(color: AppColors.colorInputBorder),
                         ),
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -207,9 +207,10 @@ class _ContactUsPageState extends State<ContactUsPage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                SubmitButton(
-                  buttonText: "Submit Message",
+                GradientButton(
+                  label: "Submit Message",
                   isLoading: isSubmitting,
+                  margin: const EdgeInsets.symmetric(horizontal: 25),
                   onPressed: () async {
                     if (isSubmitting) return;
                     nameError = phoneError = emailError = subjectError = messageError = null;

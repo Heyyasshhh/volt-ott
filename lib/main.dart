@@ -80,11 +80,14 @@ void main() async {
     DeeplinkPendingHandler.instance.setPending(Map<String, dynamic>.from(params));
   });
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,
-    statusBarBrightness: Brightness.light,
+    statusBarBrightness: Brightness.dark,
+    systemNavigationBarColor: Color(0xFF07070C),
+    systemNavigationBarIconBrightness: Brightness.light,
+    systemNavigationBarDividerColor: Colors.transparent,
   ));
 
   if (!kIsWeb) {

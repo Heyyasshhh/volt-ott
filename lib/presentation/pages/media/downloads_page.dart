@@ -1,6 +1,5 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/presentation/components/media/downloaded_media_item.dart';
 import 'package:butterfly/providers/download_provider.dart';
@@ -53,41 +52,10 @@ class DownloadsPage extends StatelessWidget {
                         },
                       ),
                     )
-                  : BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          key: const ValueKey("empty-state"),
-                          children: [
-                            FaIcon(
-                              FontAwesomeIcons.download,
-                              size: 120,
-                              color: Colors.white.withValues(alpha: 0.5),
-                            ),
-                            const SizedBox(height: 24),
-                            const Text(
-                              "No Downloads Yet",
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              "Videos you download will appear here. Start watching to save them offline!",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  : const EmptyState(
+                      icon: Icons.download_rounded,
+                      title: 'No Downloads Yet',
+                      subtitle: 'Videos you download will appear here. Start watching to save them offline.',
                     ),
             );
           },

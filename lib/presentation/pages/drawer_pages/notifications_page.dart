@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/models/notification.dart';
 import 'package:butterfly/presentation/components/notification_item.dart';
@@ -29,31 +29,10 @@ class NotificationsPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: notifications.isEmpty
-            ? Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/images/no_notification.svg',
-                      width: 200,
-                      height: 200,
-                    ),
-                    const SizedBox(height: 24),
-                    const Text(
-                      "No new notifications",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                      child: Text(
-                        "News about our latest releases will come here",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white70, fontSize: 14),
-                      ),
-                    ),
-                  ],
-                ),
+            ? const EmptyState(
+                icon: Icons.notifications_none_rounded,
+                title: 'No new notifications',
+                subtitle: 'News about our latest releases will show up here.',
               )
             // List of real notifications
             : ListView.builder(

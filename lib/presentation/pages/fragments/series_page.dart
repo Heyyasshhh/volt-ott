@@ -5,7 +5,8 @@ import 'package:butterfly/presentation/components/media/media_item.dart';
 import 'package:butterfly/providers/content_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../../constants/colors.dart';
+import 'package:butterfly/constants/colors.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 
 class SeriesPage extends StatefulWidget {
   const SeriesPage({super.key});
@@ -92,9 +93,13 @@ class _SeriesPageState extends State<SeriesPage> {
                   ),
                 )
               else
-                Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  child: const Center(child: Text("No Tv Shows Found", style: TextStyle(color: Colors.white, fontSize: 18))),
+                const Padding(
+                  padding: EdgeInsets.only(top: 80),
+                  child: EmptyState(
+                    icon: Icons.tv_outlined,
+                    title: 'No TV shows found',
+                    subtitle: 'Try a different title or check back later.',
+                  ),
                 )
             ],
           ),

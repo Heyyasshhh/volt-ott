@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:butterfly/constants/colors.dart';
 import 'package:butterfly/platform_utils.dart';
-import 'package:butterfly/presentation/components/controls/buttons.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Shown when server requires a newer app version (compare by integer version code).
@@ -27,7 +27,8 @@ class ForceUpdatePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
-      body: SafeArea(
+      body: AppBackground(
+        child: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
@@ -97,8 +98,8 @@ class ForceUpdatePage extends StatelessWidget {
                   ],
                   if (!PlatformUtils.isWeb) ...[
                     const SizedBox(height: 32),
-                    SubmitButton(
-                      buttonText: 'Update',
+                    GradientButton(
+                      label: 'Update',
                       onPressed: () => openStore(),
                     ),
                   ],
@@ -106,6 +107,7 @@ class ForceUpdatePage extends StatelessWidget {
               ),
             ),
           ),
+        ),
         ),
       ),
     );

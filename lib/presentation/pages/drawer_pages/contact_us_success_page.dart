@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/presentation/components/controls/buttons.dart';
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 
 class ContactUsSuccessPage extends StatefulWidget {
   const ContactUsSuccessPage({super.key});
@@ -12,40 +12,44 @@ class ContactUsSuccessPage extends StatefulWidget {
 class _ContactUsSuccessPageState extends State<ContactUsSuccessPage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.colorBackground,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                height: 100,
-                "assets/images/butterfly-text.png",
-              ),
-              const Text(
-                "Thank you for contacting us",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
+    return Scaffold(
+      backgroundColor: AppColors.colorBackground,
+      body: AppBackground(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 28),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('assets/images/butterfly-logo.png', height: 72),
+                const SizedBox(height: 28),
+                const Text(
+                  'Thank you for contacting us',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: 13),
-              const Text(
-                "We will get back to you soon",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
+                const SizedBox(height: 10),
+                const Text(
+                  'We will get back to you soon.',
+                  style: TextStyle(
+                    color: AppColors.colorTextSecondary,
+                    fontSize: 15,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: 40),
-              SubmitButton(
-                buttonText: 'Back to home',
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+                const SizedBox(height: 32),
+                GradientButton(
+                  label: 'Back to home',
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

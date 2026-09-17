@@ -108,8 +108,8 @@ class _MoreInfoPageState extends State<MoreInfoPage> {
                     if (user == null)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        child: GestureDetector(
-                          onTap: () {
+                          child: GestureDetector(
+                            onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => const LoginPage(),
@@ -117,18 +117,18 @@ class _MoreInfoPageState extends State<MoreInfoPage> {
                             );
                           },
                           child: Container(
-                            height: 48,
+                            height: 52,
                             decoration: BoxDecoration(
-                              color: AppColors.colorPrimary,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(28),
+                              gradient: AppColors.primaryGradient,
                             ),
                             child: const Center(
                               child: Text(
                                 "Sign In",
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ),
@@ -398,7 +398,7 @@ class _MoreInfoPageState extends State<MoreInfoPage> {
                                               child: const Text(
                                                 "Logout",
                                                 style: TextStyle(
-                                                  color: Colors.black,
+                                                  color: Colors.white,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
                                                 ),

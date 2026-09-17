@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:river_player/river_player.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'package:butterfly/presentation/components/ui/app_widgets.dart';
 import '../../../platform_utils.dart';
 import '../../../providers/authentication_provider.dart';
 import '../../../video_js_stub.dart';
@@ -108,8 +109,9 @@ class _ReferAndEarnPageState extends State<ReferAndEarnPage> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1C1C1C),
-                  borderRadius: BorderRadius.circular(25),
+                  color: AppColors.colorSurface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppColors.colorInputBorder),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -205,28 +207,12 @@ class _ReferAndEarnPageState extends State<ReferAndEarnPage> {
                         // ),
                         // const SizedBox(width: 12),
                         Expanded(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.colorPrimary,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18),
-                              ),
-                            ),
+                          child: GradientButton(
+                            label: 'Share',
+                            icon: Icons.arrow_forward_rounded,
                             onPressed: () {
                               Share.share(shareText);
                             },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Text(
-                                  "Share",
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                SizedBox(width: 8),
-                                Icon(Icons.arrow_forward, color: Colors.black),
-                              ],
-                            ),
                           ),
                         ),
                       ],
@@ -327,24 +313,20 @@ class TotalPointsCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.transparent,
-        border: Border.all(color: AppColors.colorPrimary),
-        borderRadius: BorderRadius.circular(15),
+        color: AppColors.colorSurface,
+        border: Border.all(color: AppColors.colorInputBorder),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              const Text(
-                'Total Points Earned',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+          const Text(
+            'Total Points Earned',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.white,
+            ),
           ),
           Text(
             totalPoints.toString(),
@@ -372,31 +354,27 @@ class RemainingPointsCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.transparent,
-        border: Border.all(color: AppColors.colorPrimary),
-        borderRadius: BorderRadius.circular(15),
+        color: AppColors.colorSurface,
+        border: Border.all(color: AppColors.colorPrimary.withValues(alpha: 0.45)),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              const Text(
-                'Wallet Balance',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+          const Text(
+            'Wallet Balance',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.white,
+            ),
           ),
           Text(
             totalPoints.toString(),
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 22,
-              color: Colors.white,
+              color: AppColors.colorPrimary,
             ),
           )
         ],
@@ -404,3 +382,4 @@ class RemainingPointsCard extends StatelessWidget {
     );
   }
 }
+
