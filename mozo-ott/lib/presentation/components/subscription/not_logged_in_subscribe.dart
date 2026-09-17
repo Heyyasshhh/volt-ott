@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'package:mozo/constants/colors.dart';
+import 'package:mozo/presentation/components/ui/app_widgets.dart';
+import '../../pages/authentication/login_screen.dart';
+
+class NotLoggedInSubscribe extends StatelessWidget {
+  const NotLoggedInSubscribe({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.colorBackground,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        toolbarHeight: 72,
+        title: const PageHeader(title: 'Subscribe', showBack: true),
+      ),
+      body: AppBackground(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const EmptyState(
+                icon: Icons.lock_outline_rounded,
+                title: "You're not signed in",
+                subtitle: 'Sign in to subscribe and keep watching.',
+              ),
+              const SizedBox(height: 28),
+              GradientButton(
+                label: 'Sign In',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
