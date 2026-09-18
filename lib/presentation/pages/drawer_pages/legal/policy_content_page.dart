@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
+import 'package:volt/constants/colors.dart';
 
 class PolicyContentPage extends StatefulWidget {
   final String title;

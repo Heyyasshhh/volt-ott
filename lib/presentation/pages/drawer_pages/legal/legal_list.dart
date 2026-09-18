@@ -1,12 +1,12 @@
-import 'package:butterfly/presentation/pages/drawer_pages/legal/about_us_page.dart';
+import 'package:volt/presentation/pages/drawer_pages/legal/about_us_page.dart';
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/platform_utils.dart';
-import 'package:butterfly/presentation/components/controls/more_widget.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/legal/grievance.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/legal/privacy_policy_page.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/legal/refund_policy_page.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/legal/terms_and_conditions_page.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/platform_utils.dart';
+import 'package:volt/presentation/components/controls/more_widget.dart';
+import 'package:volt/presentation/pages/drawer_pages/legal/grievance.dart';
+import 'package:volt/presentation/pages/drawer_pages/legal/privacy_policy_page.dart';
+import 'package:volt/presentation/pages/drawer_pages/legal/refund_policy_page.dart';
+import 'package:volt/presentation/pages/drawer_pages/legal/terms_and_conditions_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LegalListPage extends StatefulWidget {

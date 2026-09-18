@@ -10,30 +10,30 @@ import 'package:flutter/services.dart';
 import 'package:flutter_deeplinkly/flutter_deeplinkly.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:butterfly/deeplink_pending_handler.dart';
-import 'package:butterfly/deep_links_handler.dart';
-import 'package:butterfly/presentation/main.dart';
-import 'package:butterfly/presentation/pages/authentication/force_update_page.dart';
-import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
-import 'package:butterfly/presentation/pages/payment/plans_list_page.dart';
+import 'package:volt/deeplink_pending_handler.dart';
+import 'package:volt/deep_links_handler.dart';
+import 'package:volt/presentation/main.dart';
+import 'package:volt/presentation/pages/authentication/force_update_page.dart';
+import 'package:volt/presentation/pages/authentication/login_screen.dart';
+import 'package:volt/presentation/pages/payment/plans_list_page.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:butterfly/providers/authentication_provider.dart';
-import 'package:butterfly/providers/content_provider.dart';
-import 'package:butterfly/providers/download_provider.dart';
-import 'package:butterfly/providers/home_page_provider.dart';
-import 'package:butterfly/providers/in_app_notification_provider.dart';
-import 'package:butterfly/providers/my_list_provider.dart';
-import 'package:butterfly/providers/reels_provider.dart';
-import 'package:butterfly/services/download_service.dart';
-import 'package:butterfly/services/hive_service.dart';
-import 'package:butterfly/services/notification_service.dart';
+import 'package:volt/providers/authentication_provider.dart';
+import 'package:volt/providers/content_provider.dart';
+import 'package:volt/providers/download_provider.dart';
+import 'package:volt/providers/home_page_provider.dart';
+import 'package:volt/providers/in_app_notification_provider.dart';
+import 'package:volt/providers/my_list_provider.dart';
+import 'package:volt/providers/reels_provider.dart';
+import 'package:volt/services/download_service.dart';
+import 'package:volt/services/hive_service.dart';
+import 'package:volt/services/notification_service.dart';
 import 'package:provider/provider.dart';
 
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'firebase_options.dart';
 import 'models/media/download_item.dart';
-import 'package:butterfly/video_js_bridge.dart';
+import 'package:volt/video_js_bridge.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -85,7 +85,7 @@ void main() async {
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,
     statusBarBrightness: Brightness.dark,
-    systemNavigationBarColor: Color(0xFF07070C),
+    systemNavigationBarColor: Color(0xFF030609),
     systemNavigationBarIconBrightness: Brightness.light,
     systemNavigationBarDividerColor: Colors.transparent,
   ));

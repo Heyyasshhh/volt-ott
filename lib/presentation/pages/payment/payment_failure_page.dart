@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/contact_us_page.dart';
-import 'package:butterfly/services/logging_service.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/presentation/pages/drawer_pages/contact_us_page.dart';
+import 'package:volt/services/logging_service.dart';
 
 import '../home_page.dart';
 
@@ -31,25 +32,22 @@ class _PaymentFailurePageState extends State<PaymentFailurePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('assets/images/butterfly-logo.png', height: 72),
+                CustomPaint(
+                  size: const Size(96, 96),
+                  painter: _FailureBoltPainter(),
+                ),
                 const SizedBox(height: 28),
-                const Text(
+                const Text('PAYMENT FAILED', style: AppTextStyles.eyebrow),
+                const SizedBox(height: 10),
+                Text(
                   'Payment failed',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: AppTextStyles.displayTitle.copyWith(fontSize: 32),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),
                 const Text(
                   'If any money was deducted from your account it will be refunded. Please contact support if you need help.',
-                  style: TextStyle(
-                    color: AppColors.colorTextSecondary,
-                    fontSize: 15,
-                    height: 1.45,
-                  ),
+                  style: AppTextStyles.meta,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
@@ -77,8 +75,9 @@ class _PaymentFailurePageState extends State<PaymentFailurePage> {
                   child: const Text(
                     'Back to home',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.colorSilver,
                       fontWeight: FontWeight.w700,
+                      letterSpacing: 1.2,
                     ),
                   ),
                 ),
@@ -89,4 +88,37 @@ class _PaymentFailurePageState extends State<PaymentFailurePage> {
       ),
     );
   }
+}
+
+class _FailureBoltPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = Offset(size.width / 2, size.height / 2);
+    canvas.drawCircle(
+      c,
+      size.width * 0.46,
+      Paint()
+        ..color = Colors.redAccent.withValues(alpha: 0.85)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.6,
+    );
+    final path = Path()
+      ..moveTo(size.width * 0.58, 14)
+      ..lineTo(size.width * 0.32, size.height * 0.48)
+      ..lineTo(size.width * 0.5, size.height * 0.48)
+      ..lineTo(size.width * 0.4, size.height - 14)
+      ..lineTo(size.width * 0.72, size.height * 0.42)
+      ..lineTo(size.width * 0.52, size.height * 0.42)
+      ..close();
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = AppColors.colorOrange
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.8,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

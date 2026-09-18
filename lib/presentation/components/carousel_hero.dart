@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/app_theme.dart';
-import 'package:butterfly/models/media/media_item.dart';
-import 'package:butterfly/models/user/user.dart';
-import 'package:butterfly/presentation/custom_controls/custom_controls_widget_slider.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/models/media/media_item.dart';
+import 'package:volt/models/user/user.dart';
+import 'package:volt/presentation/custom_controls/custom_controls_widget_slider.dart';
 import 'package:river_player/river_player.dart';
 
 class CarouselHeroItem extends StatefulWidget {
@@ -160,7 +159,7 @@ class CarouselHeroItemState extends State<CarouselHeroItem> {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/butterfly-text.png",
+                      BrandAssets.logo,
                       width: 200,
                     ),
                   ),
@@ -172,7 +171,7 @@ class CarouselHeroItemState extends State<CarouselHeroItem> {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "assets/images/butterfly-text.png",
+                      BrandAssets.logo,
                       width: 200,
                     ),
                   ),
@@ -185,97 +184,7 @@ class CarouselHeroItemState extends State<CarouselHeroItem> {
     return GestureDetector(
       behavior: HitTestBehavior.deferToChild,
       onTap: widget.onTap,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          child,
-          if (!_wantsTrailer)
-            Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.transparent,
-                      Colors.black.withValues(alpha: 0.88),
-                    ],
-                    stops: const [0.0, 0.42, 1.0],
-                  ),
-                ),
-              ),
-            ),
-          if (!_wantsTrailer)
-            Positioned(
-              left: 16,
-              right: 16,
-              bottom: 16,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'A BUTTERFLY ORIGINAL',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 10,
-                      letterSpacing: 1.6,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    widget.slide.title ?? '',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.displayTitle.copyWith(fontSize: 28),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    mediaMetaLine(widget.slide as BaseItem),
-                    style: AppTextStyles.meta,
-                  ),
-                  const SizedBox(height: 14),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: widget.onTap,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: const Row(
-                            children: [
-                              Icon(Icons.play_arrow_rounded, color: Colors.black, size: 22),
-                              SizedBox(width: 4),
-                              Text(
-                                'Watch Now',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      CircleIconButton(
-                        icon: Icons.add,
-                        size: 40,
-                        background: Colors.white.withValues(alpha: 0.12),
-                        onPressed: widget.onTap,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
+      child: child,
     );
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/presentation/age_popup.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
-import 'package:butterfly/presentation/pages/home_page.dart';
-import 'package:butterfly/presentation/pages/payment/payment_failure_page.dart';
-import 'package:butterfly/services/logging_service.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/presentation/age_popup.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/presentation/pages/home_page.dart';
+import 'package:volt/presentation/pages/payment/payment_failure_page.dart';
+import 'package:volt/services/logging_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/authentication_provider.dart';
@@ -89,29 +90,36 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/butterfly-logo.png', height: 72),
-                  const SizedBox(height: 28),
-                  const CircularProgressIndicator(color: AppColors.colorPrimary),
-                  const SizedBox(height: 28),
-                  const Text(
-                    'Confirming Your Payment',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
+                  SizedBox(
+                    width: 120,
+                    height: 120,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        CustomPaint(
+                          size: const Size(120, 120),
+                          painter: _SuccessRingPainter(),
+                        ),
+                        Image.asset(BrandAssets.logo, height: 48),
+                      ],
                     ),
+                  ),
+                  const SizedBox(height: 28),
+                  const Text('PAYMENT SUCCESSFUL', style: AppTextStyles.eyebrow),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Please wait',
+                    style: AppTextStyles.displayTitle.copyWith(fontSize: 32),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   const Text(
                     'Please do not press the back button. We will redirect you shortly.',
-                    style: TextStyle(
-                      color: AppColors.colorTextSecondary,
-                      fontSize: 15,
-                      height: 1.4,
-                    ),
+                    style: AppTextStyles.meta,
                     textAlign: TextAlign.center,
                   ),
+                  const SizedBox(height: 28),
+                  const EnergyProgress(value: 0.72),
                 ],
               ),
             ),
@@ -120,4 +128,30 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
       ),
     );
   }
+}
+
+class _SuccessRingPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = Offset(size.width / 2, size.height / 2);
+    canvas.drawCircle(
+      c,
+      size.width * 0.46,
+      Paint()
+        ..color = AppColors.colorOrange
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2,
+    );
+    canvas.drawCircle(
+      c,
+      size.width * 0.34,
+      Paint()
+        ..color = AppColors.colorAccent
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.2,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

@@ -1,5 +1,5 @@
-name: butterfly
-description: "Butterfly OTT"
+name: volt
+description: "VOLT OTT"
 publish_to: 'none'
 version: 3.3.0+37
 
@@ -81,15 +81,15 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/butterfly-logo.png"
+  image_path: "assets/images/volt-logo.png"
   remove_alpha_ios: true
-  adaptive_icon_background: "#07070C"
-  adaptive_icon_foreground: "assets/images/butterfly-logo.png"
+  adaptive_icon_background: "#030609"
+  adaptive_icon_foreground: "assets/images/volt-logo.png"
   web:
     generate: true
-    image_path: "assets/images/butterfly-logo.png"
-    background_color: "#07070C"
-    theme_color: "#07070C"
+    image_path: "assets/images/volt-logo.png"
+    background_color: "#030609"
+    theme_color: "#030609"
 # dart run flutter_native_splash:create
 flutter:
   assets:
@@ -98,6 +98,14 @@ flutter:
     - assets/fonts/
   uses-material-design: true
   fonts:
+    - family: Exo 2
+      fonts:
+        - asset: assets/fonts/Exo2.ttf
+        - asset: assets/fonts/Exo2-Italic.ttf
+          style: italic
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter.ttf
     - family: Mulish
       fonts:
         - asset: assets/fonts/Mulish-Regular.ttf
@@ -109,18 +117,18 @@ flutter:
           weight: 700
 
 flutter_native_splash:
-  color: "#07070C"
+  color: "#030609"
   android: true
   ios: true
   web: true
   fullscreen: false
   android_gravity: center
   ios_content_mode: center
-  image: assets/images/butterfly-logo.png
+  image: assets/images/volt-logo.png
   android_12:
-    color: "#07070C"
-    icon_background_color: "#07070C"
-    image: assets/images/butterfly-logo.png
+    color: "#030609"
+    icon_background_color: "#030609"
+    image: assets/images/volt-logo.png
 
 dependency_overrides:
   river_player:

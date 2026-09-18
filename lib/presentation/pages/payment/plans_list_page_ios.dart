@@ -3,14 +3,14 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/models/subscription_plan.dart';
-import 'package:butterfly/presentation/components/subscription/not_logged_in_subscribe.dart';
-import 'package:butterfly/presentation/components/subscription/plan_card.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
-import 'package:butterfly/presentation/pages/payment/payment_success_page.dart';
-import 'package:butterfly/presentation/pages/payment/plans_list_page_shimmer.dart';
-import 'package:butterfly/providers/authentication_provider.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/models/subscription_plan.dart';
+import 'package:volt/presentation/components/subscription/not_logged_in_subscribe.dart';
+import 'package:volt/presentation/components/subscription/plan_card.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/presentation/pages/payment/payment_success_page.dart';
+import 'package:volt/presentation/pages/payment/plans_list_page_shimmer.dart';
+import 'package:volt/providers/authentication_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlansListPage extends StatefulWidget {
@@ -414,6 +414,8 @@ class _PlansListPageState extends State<PlansListPage> {
               padding: EdgeInsets.only(bottom: index < _plans.length - 1 ? 14 : 0),
               child: PlanCard(
                 plan: plan,
+                index: index,
+                total: _plans.length,
                 isSelected: selectedPlan == plan,
                 onTap: () {
                   if (!context.mounted) return;

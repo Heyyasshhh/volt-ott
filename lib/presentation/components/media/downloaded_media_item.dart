@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:butterfly/models/media/download_item_wrapper.dart';
-import 'package:butterfly/presentation/components/bottom_sheet/download_bottomsheet.dart';
-import 'package:butterfly/presentation/pages/media/offline_video_player.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/models/media/download_item_wrapper.dart';
+import 'package:volt/presentation/components/bottom_sheet/download_bottomsheet.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/presentation/pages/media/offline_video_player.dart';
 
 class DownloadedMediaItem extends StatelessWidget {
   final DownloadItemWrapper wrapper;
@@ -29,75 +32,77 @@ class DownloadedMediaItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Unified layout: Poster on left, title and description on right
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      constraints: const BoxConstraints(maxHeight: 120),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.transparent,
-      ),
-      child: GestureDetector(
-        onTap: () => _handleTap(context),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+    final progress = wrapper.downloadedBaseItem.progress.clamp(0.0, 1.0);
+    final showProgress = progress > 0 && progress < 1;
+
+    return GestureDetector(
+      onTap: () => _handleTap(context),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Poster on the left (40% of width)
-            Expanded(
-              flex: 4,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Image.file(
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.file(
                     File(wrapper.downloadedBaseItem.posterPath),
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        color: Colors.grey[900],
-                        child: const Icon(
-                          Icons.image_not_supported,
-                          color: Colors.grey,
-                        ),
+                        color: AppColors.colorSurface,
+                        child: const Icon(Icons.image_not_supported, color: Colors.grey),
                       );
                     },
                   ),
-                ),
+                  const DecoratedBox(
+                    decoration: BoxDecoration(gradient: AppColors.cinemaWash),
+                  ),
+                  if (showProgress)
+                    Positioned(
+                      left: 12,
+                      right: 12,
+                      bottom: 12,
+                      child: EnergyProgress(value: progress),
+                    ),
+                  if (showProgress)
+                    Positioned(
+                      left: 12,
+                      bottom: 24,
+                      child: Text(
+                        '${(progress * 100).clamp(0, 100).toStringAsFixed(0)}%',
+                        style: const TextStyle(
+                          color: AppColors.colorSilver,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.6,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
-            const SizedBox(width: 12),
-            // Title and description on the right (60% of width)
-            Expanded(
-              flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      wrapper.downloadedBaseItem.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      wrapper.downloadedBaseItem.description,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
+            const SizedBox(height: 10),
+            Text(
+              wrapper.downloadedBaseItem.title.toUpperCase(),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: AppColors.colorSilver,
+                fontSize: 13,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.4,
+                fontFamily: AppTheme.displayFamily,
               ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              wrapper.downloadedBaseItem.description,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.meta,
             ),
           ],
         ),

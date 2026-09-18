@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:butterfly/constants/app_theme.dart';
-import 'package:butterfly/constants/text.dart';
-import 'package:butterfly/providers/authentication_provider.dart';
-import 'package:butterfly/services/notification_service.dart';
-import 'package:butterfly/presentation/pages/home_page.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/text.dart';
+import 'package:volt/providers/authentication_provider.dart';
+import 'package:volt/services/notification_service.dart';
+import 'package:volt/presentation/pages/home_page.dart';
 
 import '../main.dart';
 import '../platform_utils.dart';

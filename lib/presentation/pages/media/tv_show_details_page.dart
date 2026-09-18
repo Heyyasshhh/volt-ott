@@ -1,16 +1,16 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/app_theme.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/models/media/media_item.dart';
-import 'package:butterfly/presentation/components/media/episode_item.dart';
-import 'package:butterfly/presentation/components/media/media_item.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
-import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
-import 'package:butterfly/providers/my_list_provider.dart';
-import 'package:butterfly/presentation/pages/media/trailer_player.dart';
-import 'package:butterfly/trailer_player_stub.dart' if (dart.library.html) 'package:butterfly/presentation/pages/media/trailer_player_web.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/constants/layout.dart';
+import 'package:volt/models/media/media_item.dart';
+import 'package:volt/presentation/components/media/episode_item.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/presentation/components/ui/content_cards.dart';
+import 'package:volt/presentation/pages/authentication/login_screen.dart';
+import 'package:volt/providers/my_list_provider.dart';
+import 'package:volt/presentation/pages/media/trailer_player.dart';
+import 'package:volt/trailer_player_stub.dart' if (dart.library.html) 'package:volt/presentation/pages/media/trailer_player_web.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -37,6 +37,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
   final ScrollController _episodeScrollController = ScrollController();
   final ScrollController _mainScrollController = ScrollController();
   final GlobalKey _episodesSectionKey = GlobalKey();
+  final GlobalKey _highlightedEpisodeKey = GlobalKey();
 
   @override
   void initState() {
@@ -75,8 +76,6 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
   }
 
   void _scrollToHighlightedEpisode() {
-    final context = this.context;
-    // First scroll the main page so the Episodes section is visible
     final episodesContext = _episodesSectionKey.currentContext;
     if (episodesContext != null) {
       Scrollable.ensureVisible(
@@ -86,32 +85,15 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
         alignment: 0.15,
       );
     }
-    final contentProvider = Provider.of<ContentProvider>(context, listen: false);
-    final series = contentProvider.getMediaById(
-      widget.baseItem.id,
-      widget.baseItem.mediaType,
-    );
-    if (series == null || widget.highlightEpisodeId == null) return;
-    final seasonNum = selectedItem.split(" ").length > 1 ? selectedItem.split(" ")[1] : null;
-    if (seasonNum == null) return;
-    final forSeason = series.episodes.where(
-      (e) => e.seasonNumber.toString() == seasonNum,
-    ).toList();
-    final index = forSeason.indexWhere((e) => e.id == widget.highlightEpisodeId);
-    if (index < 0) return;
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    const padding = 32.0;
-    const spacing = 8.0;
-    final itemWidth = (screenWidth - padding - spacing) / 2;
-    final offset = 16.0 + index * (itemWidth + spacing);
-    // Scroll horizontal list after the page has scrolled so episodes are in view
     Future.delayed(const Duration(milliseconds: 450), () {
       if (!mounted) return;
-      if (_episodeScrollController.hasClients) {
-        _episodeScrollController.animateTo(
-          offset,
+      final highlightedContext = _highlightedEpisodeKey.currentContext;
+      if (highlightedContext != null) {
+        Scrollable.ensureVisible(
+          highlightedContext,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
+          alignment: 0.2,
         );
       }
     });
@@ -144,574 +126,438 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
       );
     }
 
+    final gutter = AppLayout.gutter(context);
+    final artUrl = displayItem.featuredPosterUrl.isNotEmpty
+        ? displayItem.featuredPosterUrl
+        : (displayItem.verticalPosterUrl.isNotEmpty ? displayItem.verticalPosterUrl : bestPortrait(displayItem));
+
+    Future<void> shareSeries() async {
+      setState(() => _isSharing = true);
+      try {
+        final url = await DeepLinklyLinkService.instance.generateLink(
+          context,
+          type: LinkType.series,
+          data: {
+            'slug': widget.baseItem.id,
+            'title': widget.baseItem.title,
+            'description': widget.baseItem.description,
+            'poster': widget.baseItem.verticalPosterUrl,
+          },
+        );
+        if (mounted) Share.share(url);
+      } finally {
+        if (mounted) setState(() => _isSharing = false);
+      }
+    }
+
+    void openTrailer() {
+      if (!isLoggedIn) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => LoginPage(next: TvShowDetailsPage(widget.baseItem)),
+          ),
+        );
+        return;
+      }
+      final trailerPlayer = kIsWeb ? TrailerVideoPlayerWeb(displayItem) : TrailerVideoPlayer(displayItem);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => trailerPlayer),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-        controller: _mainScrollController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: AppBackground(
+        child: Stack(
           children: [
-            // Vertical poster edge to edge with title overlay
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                // Poster image + bottom spacer so Stack height includes title row (for hit testing)
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: CachedNetworkImage(
-                        imageUrl: displayItem.verticalPosterUrl,
-                        fit: BoxFit.fitWidth,
-                        errorWidget: (context, url, error) => Container(
-                          color: Colors.grey[900],
-                          child: const Center(
-                            child: Icon(Icons.error, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                  ],
-                ),
-                // Black gradient at bottom for title visibility
-                Positioned(
-                  bottom: 40,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: 150,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withValues(alpha: 0.7),
-                          Colors.black,
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                // Title, classification, and age ratings stacked below poster
-                Positioned(
-                  bottom: 0,
-                  left: 16,
-                  right: 16,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title
-                      Text(
-                        displayItem.title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 21,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      // Age rating and classification in same row
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Row(
-                          children: [
-                            // Age rating capsule (first item, red)
-                            Builder(
-                              builder: (context) {
-                                String ageText = "";
-                                if (displayItem.ageRating != null && displayItem.ageLimit != null) {
-                                  ageText = "${displayItem.ageRating} ${displayItem.ageLimit}+";
-                                } else if (displayItem.ageRating != null) {
-                                  ageText = displayItem.ageRating!;
-                                } else if (displayItem.ageLimit != null) {
-                                  ageText = "${displayItem.ageLimit}+";
-                                }
-
-                                if (ageText.isEmpty) {
-                                  return const SizedBox.shrink();
-                                }
-
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.colorPrimary.withValues(alpha: 0.9),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    ageText,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            // Classification as simple text separated by pipe
-                            if (displayItem.categories.isNotEmpty) ...[
-                              const SizedBox(width: 6),
+            SingleChildScrollView(
+              controller: _mainScrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.78,
+                    width: double.infinity,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        NetworkPoster(url: artUrl),
+                        const DecoratedBox(decoration: BoxDecoration(gradient: AppColors.cinemaWash)),
+                        Positioned(
+                          left: gutter,
+                          right: gutter,
+                          bottom: 36,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                               Text(
-                                displayItem.categories.map((category) => category.trim()).join(" | "),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                ),
+                                'SERIES',
+                                style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorOrange),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                displayItem.title,
+                                style: AppTextStyles.displayTitle.copyWith(fontSize: 46, fontStyle: FontStyle.italic),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                mediaMetaLine(displayItem),
+                                style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorSilver, letterSpacing: 2.2, fontSize: 10),
                               ),
                             ],
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: _isSharing
-                                  ? null
-                                  : () async {
-                                      setState(() => _isSharing = true);
-                                      try {
-                                        final url = await DeepLinklyLinkService.instance.generateLink(
-                                          context,
-                                          type: LinkType.series,
-                                          data: {
-                                            'slug': widget.baseItem.id,
-                                            'title': widget.baseItem.title,
-                                            'description': widget.baseItem.description,
-                                            'poster': widget.baseItem.verticalPosterUrl,
-                                          },
-                                        );
-                                        if (mounted) Share.share(url);
-                                      } finally {
-                                        if (mounted) setState(() => _isSharing = false);
-                                      }
-                                    },
-                              child: SizedBox(
-                                width: 28,
-                                height: 28,
-                                child: _isSharing
-                                    ? const CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 2,
-                                      )
-                                    : Icon(
-                                        Icons.share,
-                                        color: Colors.white,
-                                        size: 28,
-                                      ),
-                              ),
-                            )
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(gutter, 8, gutter, 0),
+                    child: Column(
+                      children: [
+                        PlayCoreButton(
+                          onPressed: () {
+                            if (episodeList.isNotEmpty) {
+                              showBottomSheetOrNavigate(context, episodeList.first);
+                            }
+                          },
+                          size: 86,
+                          label: 'WATCH NOW',
+                        ),
+                        const SizedBox(height: 18),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            DetailAction(
+                              icon: myList.contains(displayItem.id) ? Icons.add_circle : Icons.add_circle_outline,
+                              label: 'My List',
+                              active: myList.contains(displayItem.id),
+                              onPressed: () => myList.toggle(displayItem.id),
+                            ),
+                            DetailAction(
+                              icon: Icons.movie_filter_outlined,
+                              label: 'Trailer',
+                              onPressed: displayItem.trailerUrl.isNotEmpty ? openTrailer : () {},
+                            ),
+                            DetailAction(
+                              icon: Icons.favorite_border,
+                              label: 'Like',
+                              onPressed: () {},
+                            ),
+                            DetailAction(
+                              icon: Icons.ios_share_rounded,
+                              label: 'Share',
+                              onPressed: _isSharing ? () {} : shareSeries,
+                            ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            // Content below poster (top: 20 keeps same visual gap as original 60 - 40 overflow)
-            Padding(
-              padding: const EdgeInsets.only(left: 16, top: 20, right: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(displayItem.title, style: AppTextStyles.displayTitle.copyWith(fontSize: 28)),
-                  const SizedBox(height: 8),
-                  Text(mediaMetaLine(displayItem), style: AppTextStyles.meta),
-                  const SizedBox(height: 16),
-                  GradientButton(
-                    label: 'Play',
-                    icon: Icons.play_arrow_rounded,
-                    onPressed: () {
-                      if (episodeList.isNotEmpty) {
-                        showBottomSheetOrNavigate(context, episodeList.first);
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      DetailAction(
-                        icon: myList.contains(displayItem.id) ? Icons.add_circle : Icons.add_circle_outline,
-                        label: 'My List',
-                        active: myList.contains(displayItem.id),
-                        onPressed: () => myList.toggle(displayItem.id),
-                      ),
-                      DetailAction(
-                        icon: Icons.favorite_border,
-                        label: 'Like',
-                        onPressed: () {},
-                      ),
-                      DetailAction(
-                        icon: Icons.ios_share_rounded,
-                        label: 'Share',
-                        onPressed: () async {
-                          setState(() => _isSharing = true);
-                          try {
-                            final url = await DeepLinklyLinkService.instance.generateLink(
-                              context,
-                              type: LinkType.series,
-                              data: {
-                                'slug': widget.baseItem.id,
-                                'title': widget.baseItem.title,
-                                'description': widget.baseItem.description,
-                                'poster': widget.baseItem.verticalPosterUrl,
-                              },
-                            );
-                            if (mounted) Share.share(url);
-                          } finally {
-                            if (mounted) setState(() => _isSharing = false);
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  // Line separator
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: Divider(
-                      color: Colors.white24,
-                      height: 1,
+                      ],
                     ),
                   ),
-                  // "Trailers and extras" text
-                  const Padding(
-                    padding: EdgeInsets.only(top: 16),
-                    child: Text(
-                      "Trailers and extras",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(gutter, 32, gutter, 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('STORYLINE', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorAccent)),
+                        const SizedBox(height: 10),
+                        Text(
+                          displayItem.description,
+                          style: AppTextStyles.editorial.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.colorSilver,
+                            height: 1.35,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  // Horizontal poster (small like media item) - opens trailer player (login required)
                   if (displayItem.trailerUrl.isNotEmpty)
                     Padding(
-                      padding: const EdgeInsets.only(top: 12),
+                      padding: EdgeInsets.fromLTRB(gutter, 8, gutter, 8),
                       child: GestureDetector(
-                        onTap: () {
-                          if (!isLoggedIn) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => LoginPage(next: TvShowDetailsPage(widget.baseItem)),
-                              ),
-                            );
-                            return;
-                          }
-                          final trailerPlayer = kIsWeb ? TrailerVideoPlayerWeb(displayItem) : TrailerVideoPlayer(displayItem);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => trailerPlayer),
-                          );
-                        },
+                        onTap: openTrailer,
                         child: SizedBox(
-                          width: 200,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: AspectRatio(
-                              aspectRatio: 16 / 9,
-                              child: CachedNetworkImage(
-                                imageUrl: displayItem.horizontalPosterUrl,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF1F1F1F),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: const Center(
-                                    child: Icon(Icons.play_circle, color: Colors.white, size: 50),
-                                  ),
+                          height: 120,
+                          child: ChromeFrame(
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                NetworkPoster(url: bestLandscape(displayItem)),
+                                Container(color: Colors.black.withValues(alpha: 0.28)),
+                                const Center(
+                                  child: Icon(Icons.play_circle_outline, color: AppColors.colorOrange, size: 42),
                                 ),
-                                errorWidget: (context, url, error) => Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF1F1F1F),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: const Center(
-                                    child: Icon(Icons.play_circle, color: Colors.white, size: 50),
-                                  ),
-                                ),
-                              ),
+                              ],
                             ),
                           ),
                         ),
                       ),
                     ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            // Episodes section (keyed so we can scroll to it for deeplink highlight)
-            Padding(
-              key: _episodesSectionKey,
-              padding: const EdgeInsets.only(left: 16, top: 8, right: 16),
-              child: const Text(
-                "Episodes:",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                ),
-              ),
-            ),
-            if (episodeList.isNotEmpty)
-              Builder(
-                builder: (context) {
-                  final screenWidth = MediaQuery.of(context).size.width;
-                  final padding = 32.0; // 16px on each side
-                  final spacing = 8.0; // spacing between items (matches tile gap)
-                  final itemWidth = (screenWidth - padding - spacing) / 2;
-
-                  return SizedBox(
-                    height: 180,
-                    child: ListView.builder(
-                      controller: _episodeScrollController,
-                      scrollDirection: Axis.horizontal,
-                      primary: false,
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: episodeList.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: itemWidth,
-                          margin: EdgeInsets.only(
-                            right: index == episodeList.length - 1 ? 8 : spacing,
-                          ),
-                          child: EpisodeItem(
-                            baseItem: episodeList[index],
-                            isHighlighted: episodeList[index].id == widget.highlightEpisodeId,
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-              )
-            else
-              Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 30, bottom: 30),
-                child: Center(
-                  child: Text(
-                    "Coming Soon",
-                    style: const TextStyle(color: Colors.white60, fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            // Separator below episodes
-            const Padding(
-              padding: EdgeInsets.only(left: 16, right: 16, top: 24, bottom: 24),
-              child: Divider(
-                color: Colors.white24,
-                height: 1,
-              ),
-            ),
-            // Storyline section
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Storyline",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  Padding(
+                    key: _episodesSectionKey,
+                    padding: EdgeInsets.fromLTRB(gutter, 28, gutter, 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('SEASONS', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorOrange)),
+                        const SizedBox(height: 8),
+                        Text('Episodes', style: AppTextStyles.sectionTitle),
+                      ],
                     ),
                   ),
+                  if (seasonList.isNotEmpty) _seasonTimeline(),
                   const SizedBox(height: 12),
-                  Text(
-                    displayItem.description,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      height: 1.5,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Show Detail section
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Show Detail",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  // Cast and Director - each with aligned label and value
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Cast row
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(
-                            width: 70,
-                            child: Text(
-                              "Cast:",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                              ),
+                  if (episodeList.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: gutter),
+                      child: Column(
+                        children: List.generate(episodeList.length, (index) {
+                          final episode = episodeList[index];
+                          final highlighted = episode.id == widget.highlightEpisodeId;
+                          return KeyedSubtree(
+                            key: highlighted ? _highlightedEpisodeKey : ValueKey(episode.id),
+                            child: EpisodeItem(
+                              baseItem: episode,
+                              isHighlighted: highlighted,
                             ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Text(
-                              _getCastNames(displayItem),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                              ),
-                            ),
-                          ),
-                        ],
+                          );
+                        }),
                       ),
-                      const SizedBox(height: 8),
-                      // Director row
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(
-                            width: 70,
-                            child: Text(
-                              "Director:",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Text(
-                              _getDirectorName(displayItem),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                              ),
-                            ),
-                          ),
-                        ],
+                    )
+                  else
+                    const Padding(
+                      padding: EdgeInsets.only(left: 16, right: 16, top: 30, bottom: 30),
+                      child: Center(
+                        child: Text(
+                          "Coming Soon",
+                          style: TextStyle(color: Colors.white60, fontSize: 18),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            // Separator
-            const Padding(
-              padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 24),
-              child: Divider(
-                color: Colors.white24,
-                height: 1,
-              ),
-            ),
-            // More like this section
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "More like this",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
                     ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 18),
+                    child: LightningDivider(),
                   ),
-                  const SizedBox(height: 12),
-                  // Suggested series
-                  Builder(
-                    builder: (context) {
-                      final suggestedSeries = _getSuggestedSeries(displayItem, contentProvider);
-                      if (suggestedSeries.isEmpty) {
-                        return const Text(
-                          "No suggestions available",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                          ),
-                        );
-                      }
-
-                      final screenWidth = MediaQuery.of(context).size.width;
-                      final padding = 32.0; // 16px on each side
-                      final spacing = 8.0; // spacing between items (matches tile gap)
-                      final itemWidth = (screenWidth - padding - spacing) / 2.2; // 2.2 items visible
-                      final itemHeight = itemWidth * (3 / 2); // Vertical poster aspect ratio 2:3
-
-                      return SizedBox(
-                        height: itemHeight,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          primary: false,
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: suggestedSeries.length,
-                          itemBuilder: (context, index) {
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(gutter, 0, gutter, 16),
+                    child: _seriesCast(displayItem),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(gutter, 8, gutter, 36),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('RELATED', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorAccent)),
+                        const SizedBox(height: 8),
+                        const Text('More like this', style: AppTextStyles.sectionTitle),
+                        const SizedBox(height: 16),
+                        Builder(
+                          builder: (context) {
+                            final suggestedSeries = _getSuggestedSeries(displayItem, contentProvider);
+                            if (suggestedSeries.isEmpty) {
+                              return const Text(
+                                "No suggestions available",
+                                style: TextStyle(color: Colors.white, fontSize: 11),
+                              );
+                            }
                             return SizedBox(
-                              width: itemWidth,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  right: index == suggestedSeries.length - 1 ? 0 : 8,
-                                ),
-                                child: MediaItem(
-                                  baseItem: suggestedSeries[index],
-                                ),
+                              height: 230,
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: suggestedSeries.length,
+                                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                                itemBuilder: (context, index) {
+                                  final item = suggestedSeries[index];
+                                  switch (index % 4) {
+                                    case 0:
+                                      return ChargePoster(item: item, width: 148, height: 220, style: ChargePosterStyle.portrait);
+                                    case 1:
+                                      return ChargePoster(item: item, width: 210, height: 132, style: ChargePosterStyle.landscape, wide: true);
+                                    case 2:
+                                      return ChargePoster(item: item, width: 118, height: 172, style: ChargePosterStyle.core, circle: true);
+                                    default:
+                                      return ChargePoster(item: item, width: 128, height: 196, style: ChargePosterStyle.strip, vault: true);
+                                  }
+                                },
                               ),
                             );
                           },
                         ),
-                      );
-                    },
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 4,
+              left: 8,
+              child: CircleIconButton(
+                icon: Icons.arrow_back_ios_new_rounded,
+                size: 40,
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 4,
+              right: 8,
+              child: CircleIconButton(
+                icon: myList.contains(displayItem.id) ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                size: 40,
+                iconColor: myList.contains(displayItem.id) ? AppColors.colorPrimary : Colors.white,
+                onPressed: () => myList.toggle(displayItem.id),
+              ),
+            ),
           ],
         ),
-          ),
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 4,
-            left: 8,
-            child: CircleIconButton(
-              icon: Icons.arrow_back_ios_new_rounded,
-              size: 40,
-              onPressed: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+
+  Widget _seasonTimeline() {
+    return SizedBox(
+      height: 86,
+      child: ListView.separated(
+        padding: EdgeInsets.symmetric(horizontal: AppLayout.gutter(context)),
+        scrollDirection: Axis.horizontal,
+        itemCount: seasonList.length,
+        separatorBuilder: (_, __) => const SizedBox(
+          width: 18,
+          child: Center(child: EnergyTrail(height: 2)),
+        ),
+        itemBuilder: (context, index) {
+          final label = seasonList[index];
+          final selected = label == selectedItem;
+          return GestureDetector(
+            onTap: () => setState(() => selectedItem = label),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 220),
+                  width: selected ? 22 : 12,
+                  height: selected ? 22 : 12,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: selected ? AppColors.primaryGradient : null,
+                    border: Border.all(color: selected ? AppColors.colorOrange : AppColors.colorAccent, width: 1.4),
+                    boxShadow: selected
+                        ? [
+                            BoxShadow(
+                              color: AppColors.colorOrange.withValues(alpha: 0.45),
+                              blurRadius: 12,
+                            ),
+                          ]
+                        : null,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  label.toUpperCase(),
+                  style: TextStyle(
+                    color: selected ? AppColors.colorOrange : AppColors.colorTextMuted,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.8,
+                  ),
+                ),
+              ],
             ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _seriesCast(BaseItem displayItem) {
+    final members = <CastMember>[];
+    if (displayItem.castAndCrew != null) {
+      final castGroup = displayItem.castAndCrew!.firstWhere(
+        (group) => group.role.toLowerCase() == 'cast',
+        orElse: () => CastAndCrew(role: '', members: []),
+      );
+      members.addAll(castGroup.members);
+    }
+
+    if (members.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('DETAILS', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorGold)),
+          const SizedBox(height: 8),
+          const Text('Show Detail', style: AppTextStyles.sectionTitle),
+          const SizedBox(height: 12),
+          Text(
+            'CAST  /  ${_getCastNames(displayItem)}',
+            style: AppTextStyles.meta.copyWith(letterSpacing: 0.8),
           ),
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 4,
-            right: 8,
-            child: CircleIconButton(
-              icon: myList.contains(displayItem.id) ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-              size: 40,
-              iconColor: myList.contains(displayItem.id) ? AppColors.colorPrimary : Colors.white,
-              onPressed: () => myList.toggle(displayItem.id),
-            ),
+          const SizedBox(height: 8),
+          Text(
+            'DIRECTOR  /  ${_getDirectorName(displayItem)}',
+            style: AppTextStyles.meta.copyWith(letterSpacing: 0.8),
           ),
         ],
-      ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('CAST', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorGold)),
+        const SizedBox(height: 8),
+        const Text('Cast', style: AppTextStyles.sectionTitle),
+        const SizedBox(height: 14),
+        SizedBox(
+          height: 196,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: members.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 14),
+            itemBuilder: (context, index) {
+              final member = members[index];
+              final photo = member.profilePictureUrl ?? '';
+              return SizedBox(
+                width: 104,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 148,
+                      width: 104,
+                      child: ClipPath(
+                        clipper: const DiagonalClipper(cut: 14),
+                        child: photo.isEmpty
+                            ? Container(
+                                color: AppColors.colorSurface,
+                                child: const Icon(Icons.person_outline, color: AppColors.colorSilver),
+                              )
+                            : NetworkPoster(url: photo),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      member.name.toUpperCase(),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.eyebrow.copyWith(fontSize: 9, color: AppColors.colorSilver, letterSpacing: 1.4),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          'DIRECTOR  /  ${_getDirectorName(displayItem).toUpperCase()}',
+          style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorTextMuted),
+        ),
+      ],
     );
   }
 

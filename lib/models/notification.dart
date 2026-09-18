@@ -1,6 +1,6 @@
 // models/notification_model.dart
 
-import 'package:butterfly/models/media/media_item.dart';
+import 'package:volt/models/media/media_item.dart';
 
 enum NotificationType {
   info,
@@ -26,7 +26,7 @@ class NotificationModel {
     this.baseItem,
     this.baseItemId,
     required this.type,
-  }) : image = image ?? 'assets/images/butterfly-512.png';
+  }) : image = image ?? 'assets/images/volt-logo.png';
 
   factory NotificationModel.fromMap(Map<String, dynamic> map) {
     return NotificationModel(

@@ -1,20 +1,20 @@
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/presentation/components/media/media_tile_web.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/notifications_page.dart';
-import 'package:butterfly/presentation/pages/payment/plans_list_page.dart';
-import 'package:butterfly/providers/content_provider.dart';
-import 'package:butterfly/providers/in_app_notification_provider.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/constants/layout.dart';
+import 'package:volt/models/media/media_item.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/presentation/components/ui/content_cards.dart';
+import 'package:volt/presentation/pages/drawer_pages/notifications_page.dart';
+import 'package:volt/presentation/pages/payment/plans_list_page.dart';
+import 'package:volt/providers/authentication_provider.dart';
+import 'package:volt/providers/content_provider.dart';
+import 'package:volt/providers/in_app_notification_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../providers/authentication_provider.dart';
 import '../../components/bottom_sheet/media_bottomsheet.dart';
 import '../authentication/login_screen.dart';
 
@@ -27,360 +27,251 @@ class SectionsPageWeb extends StatefulWidget {
   State<SectionsPageWeb> createState() => _SectionsPageWebState();
 }
 
-double _getAspectRatio(BuildContext context) {
-  double width = MediaQuery.of(context).size.width;
-  if (width > 1200) return 2.5; // PCs
-  if (width > 600) return 1.8; // Tablets
-  return 1; // Phones
-}
-
-double _getViewportFraction(BuildContext context) {
-  double width = MediaQuery.of(context).size.width;
-  if (width > 1200) return 0.32;
-  if (width > 600) return 0.32;
-  return 0.72;
-}
-
 class _SectionsPageWebState extends State<SectionsPageWeb> {
-  int dotPosition = 0;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
+  int _current = 0;
+  final PageController _pageController = PageController();
+
+  static bool _isAbsoluteImageUrl(String url) {
+    if (url.isEmpty) return false;
+    final uri = Uri.tryParse(url);
+    return uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https') && uri.host.isNotEmpty;
+  }
+
+  void _preloadAdjacentPosters(int currentIndex) {
+    final slides = Provider.of<ContentProvider>(context, listen: false).getPosters();
+    if (slides.isEmpty) return;
+    if (currentIndex > 0) {
+      final url = slides[currentIndex - 1].getFeaturedPosterUrl();
+      if (_isAbsoluteImageUrl(url)) {
+        precacheImage(CachedNetworkImageProvider(url), context);
+      }
+    }
+    if (currentIndex < slides.length - 1) {
+      final url = slides[currentIndex + 1].getFeaturedPosterUrl();
+      if (_isAbsoluteImageUrl(url)) {
+        precacheImage(CachedNetworkImageProvider(url), context);
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final slides = Provider.of<ContentProvider>(context, listen: false).getPosters();
+      if (slides.isNotEmpty) _preloadAdjacentPosters(0);
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final contentProvider = Provider.of<ContentProvider>(context);
-    final inAppNotificationProvider =
-        Provider.of<InAppNotificationProvider>(context);
+    final inAppNotificationProvider = Provider.of<InAppNotificationProvider>(context);
     final authenticationProvider = Provider.of<AuthenticationProvider>(context);
     final user = authenticationProvider.getUser();
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
-    final double appBarHeight = kToolbarHeight + statusBarHeight;
+    final slides = contentProvider.getPosters();
+    BaseItem? featured;
+    if (slides.isNotEmpty) {
+      featured = slides[_current.clamp(0, slides.length - 1)];
+    } else if (contentProvider.getMovies().isNotEmpty) {
+      featured = contentProvider.getMovies().first;
+    } else if (contentProvider.getSeries().isNotEmpty) {
+      featured = contentProvider.getSeries().first;
+    }
+    final loading = contentProvider.getStatus() == Status.fetching;
+    final sections = contentProvider.getSections().skip(1).toList();
 
     return Scaffold(
       extendBody: true,
-      extendBodyBehindAppBar: true,
       backgroundColor: AppColors.colorBackground,
       key: _key,
       onDrawerChanged: widget.onDrawerChanged,
-      body: Stack(
-        children: [
-          RefreshIndicator(
-            onRefresh: () =>
-                Provider.of<ContentProvider>(context, listen: false).init(),
-            color: AppColors.colorPrimary,
-            backgroundColor: AppColors.colorBackground,
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: contentProvider.getStatus() == Status.fetching
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: kToolbarHeight),
-                        const SizedBox(height: 10),
-                        CarouselSlider(
-                          options: CarouselOptions(
-                            initialPage: 0,
-                            aspectRatio: _getAspectRatio(context),
-                            viewportFraction: _getViewportFraction(context),
-                            enlargeCenterPage: true,
-                            autoPlay: false,
-                          ),
-                          items: [1].map((_) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return AspectRatio(
-                                  aspectRatio: _getAspectRatio(context),
-                                  child: Stack(
-                                    fit: StackFit.expand,
-                                    children: [
-                                      Shimmer.fromColors(
-                                        baseColor: const Color(0xFF1F1F1F),
-                                        highlightColor: Colors.grey[800]!,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFF1F1F1F),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                        ),
-                                      ),
-                                      Center(
-                                        child: Image.asset(
-                                          "assets/images/butterfly-text.png",
-                                          width: 200,
-                                        ),
-                                      ),
-                                    ],
+      body: AppBackground(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Provider.of<ContentProvider>(context, listen: false).init();
+            if (mounted) {
+              setState(() => _current = 0);
+              if (_pageController.hasClients) _pageController.jumpToPage(0);
+            }
+          },
+          color: AppColors.colorOrange,
+          backgroundColor: AppColors.colorBackground,
+          child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+              SliverToBoxAdapter(
+                child: Stack(
+                  children: [
+                    if (loading || featured == null)
+                      SizedBox(
+                        height: MediaQuery.sizeOf(context).height * 0.62,
+                        child: Center(child: Image.asset(BrandAssets.logo, width: 180)),
+                      )
+                    else
+                      SizedBox(
+                        height: AppLayout.isDesktop(context) ? 720 : MediaQuery.sizeOf(context).height * 0.78,
+                        child: PageView.builder(
+                          controller: _pageController,
+                          itemCount: slides.isEmpty ? 1 : slides.length,
+                          onPageChanged: (index) {
+                            setState(() => _current = index);
+                            _preloadAdjacentPosters(index);
+                          },
+                          itemBuilder: (context, index) {
+                            final slide = slides.isEmpty ? featured! : slides[index];
+                            return NowPlayingHero(
+                              item: slide,
+                              onPlay: () => showBottomSheetOrNavigate(context, slide),
+                              media: NetworkPoster(url: bestLandscape(slide)),
+                            );
+                          },
+                        ),
+                      ),
+                    SafeArea(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(AppLayout.gutter(context), 4, AppLayout.gutter(context), 0),
+                        child: Row(
+                          children: [
+                            CircleIconButton(
+                              icon: Icons.menu,
+                              size: 40,
+                              onPressed: () => _key.currentState?.openDrawer(),
+                            ),
+                            const SizedBox(width: 12),
+                            const BrandWordmark(fontSize: 24),
+                            const Spacer(),
+                            if (user != null && user.userSubscription == null)
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => PlansListPage()));
+                                },
+                                child: Container(
+                                  height: 32,
+                                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                                  alignment: Alignment.center,
+                                  decoration: const BoxDecoration(
+                                    gradient: AppColors.primaryGradient,
                                   ),
+                                  child: const Text(
+                                    'SUBSCRIBE',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: 1.6,
+                                      color: Color(0xFF030609),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            if (user == null)
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => LoginPage()));
+                                },
+                                child: Container(
+                                  height: 32,
+                                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: AppColors.colorSilver.withValues(alpha: 0.5)),
+                                  ),
+                                  child: const Text(
+                                    'LOGIN',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: 1.6,
+                                      color: AppColors.colorSilver,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            const SizedBox(width: 8),
+                            Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                CircleIconButton(
+                                  icon: Icons.notifications_none_rounded,
+                                  size: 40,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (_) => NotificationsPage()),
+                                    );
+                                  },
+                                ),
+                                if (inAppNotificationProvider.getNotifications().isNotEmpty)
+                                  Positioned(
+                                    right: 2,
+                                    top: 2,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(2),
+                                      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                                      decoration: const BoxDecoration(
+                                        color: AppColors.colorOrange,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Text(
+                                        inAppNotificationProvider.getNotifications().length.toString(),
+                                        style: const TextStyle(
+                                          color: Color(0xFF030609),
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(width: 8),
+                            CircleIconButton(
+                              icon: Icons.ios_share_rounded,
+                              size: 40,
+                              onPressed: () {
+                                Share.share(
+                                  contentProvider.getShareUrl(),
+                                  subject: contentProvider.getShareText(),
                                 );
                               },
-                            );
-                          }).toList(),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        const ShimmerTile(),
-                        const ShimmerTile(),
-                        const ShimmerTileHorizontal(),
-                        const ShimmerTile(),
-                        SizedBox(height: kBottomNavigationBarHeight + 50),
-                      ],
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: kToolbarHeight),
-                        if (contentProvider.getPosters().isNotEmpty)
-                          const SizedBox(height: kToolbarHeight + 10),
-                        if (contentProvider.getPosters().isEmpty)
-                          const SizedBox(height: kToolbarHeight),
-                        if (contentProvider.getPosters().isEmpty &&
-                            (contentProvider.getMovies().isEmpty ||
-                                contentProvider.getSeries().isEmpty))
-                          const SizedBox(height: 10),
-                        if (contentProvider.getPosters().isEmpty &&
-                            (contentProvider.getMovies().isEmpty ||
-                                contentProvider.getSeries().isEmpty))
-                          CarouselSlider(
-                            options: CarouselOptions(
-                              initialPage: 0,
-                              aspectRatio: _getAspectRatio(context),
-                              viewportFraction: _getViewportFraction(context),
-                              enlargeCenterPage: true,
-                              autoPlay: true,
-                              autoPlayInterval: const Duration(seconds: 7),
-                            ),
-                            items: [1].map((slide) {
-                              return Builder(
-                                builder: (BuildContext context) {
-                                  return AspectRatio(
-                                    aspectRatio: 1,
-                                    child: Shimmer.fromColors(
-                                      baseColor: Colors.grey[400]!,
-                                      highlightColor: Colors.grey[100]!,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey,
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            }).toList(),
-                          )
-                        else if (contentProvider.getPosters().isEmpty)
-                          Container()
-                        else
-                          CarouselSlider(
-                            options: CarouselOptions(
-                              initialPage: 0,
-                              aspectRatio: _getAspectRatio(context),
-                              viewportFraction: _getViewportFraction(context),
-                              enlargeCenterPage: true,
-                              autoPlay: true,
-                              autoPlayInterval: const Duration(seconds: 7),
-                            ),
-                            items: contentProvider.getPosters().map((slide) {
-                              return Builder(
-                                builder: (BuildContext context) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      showBottomSheetOrNavigate(context, slide);
-                                    },
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: CachedNetworkImage(
-                                        useOldImageOnUrlChange: false,
-                                        imageUrl: slide.featuredPosterUrl,
-                                        placeholder: (context, url) =>
-                                            Shimmer.fromColors(
-                                          baseColor: Colors.grey[400]!,
-                                          highlightColor: Colors.grey[100]!,
-                                          child: Container(color: Colors.grey),
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            Shimmer.fromColors(
-                                          baseColor: Colors.grey[400]!,
-                                          highlightColor: Colors.grey[100]!,
-                                          child: Container(color: Colors.grey),
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            }).toList(),
-                          ),
-                        const SizedBox(height: 8),
-                        if (contentProvider.getMovies().isEmpty &&
-                            contentProvider.getSeries().isEmpty)
-                          const Column(children: [
-                            ShimmerTile(),
-                            ShimmerTile(),
-                            ShimmerTileHorizontal(),
-                            ShimmerTile(),
-                          ])
-                        else
-                          Column(
-                            children: contentProvider
-                                .getSections()
-                                .skip(1)
-                                .map((section) {
-                              return MediaTileWeb(section);
-                            }).toList(),
-                          ),
-                        SizedBox(height: kBottomNavigationBarHeight + 50),
-                        // if (PlatformUtils.isWeb) FooterWithBadges(),
-                      ],
-                    ),
-            ),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: ClipRRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                child: Container(
-                  height: appBarHeight,
-                  color: AppColors.colorBackground.withValues(alpha: 0.9),
-                  child: AppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    iconTheme: const IconThemeData(color: Colors.white),
-                    foregroundColor: Colors.white,
-                    automaticallyImplyLeading: false,
-                    shadowColor: Colors.transparent,
-                    surfaceTintColor: Colors.transparent,
-                    centerTitle: true,
-                    title:
-                        Image.asset("assets/images/butterfly-text.png", width: 135),
-                    leading: IconButton(
-                      icon:
-                          const Icon(Icons.menu, color: Colors.white, size: 25),
-                      onPressed: () => _key.currentState?.openDrawer(),
-                    ),
-                    actions: [
-                      if (user != null && user.userSubscription == null)
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => PlansListPage()));
-                          },
-                          child: Container(
-                            width: 100,
-                            height: 28,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF2EB193),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "Subscribe!",
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.white),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ),
-                      if (user == null)
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => LoginPage()));
-                          },
-                          child: Container(
-                            width: 80,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF2EB193),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.white),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ),
-                      const SizedBox(width: 5),
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.notifications_rounded,
-                                color: Colors.white),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => NotificationsPage()),
-                              );
-                            },
-                          ),
-                          if (inAppNotificationProvider
-                              .getNotifications()
-                              .isNotEmpty)
-                            Positioned(
-                              right: 4,
-                              top: 4,
-                              child: Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth: 16,
-                                  minHeight: 16,
-                                ),
-                                child: Text(
-                                  inAppNotificationProvider
-                                      .getNotifications()
-                                      .length
-                                      .toString(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                        ],
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.ios_share_rounded,
-                            color: Colors.white),
-                        onPressed: () {
-                          Share.share(
-                            contentProvider.getShareUrl(),
-                            subject: contentProvider.getShareText(),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ),
+              if (loading)
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 48),
+                    child: Center(child: CircularProgressIndicator(color: AppColors.colorAccent)),
+                  ),
+                )
+              else
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      if (index >= sections.length) {
+                        return const SizedBox(height: kBottomNavigationBarHeight + 50);
+                      }
+                      return DiscoveryRow(section: sections[index], visualIndex: index);
+                    },
+                    childCount: sections.length + 1,
+                  ),
+                ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -396,63 +287,38 @@ class FooterWithBadges extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
+    return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-      color: Colors.transparent,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // LEFT: Copyright Text
           Flexible(
             flex: 2,
             child: Text(
-              '© 2025 VOOVI DIGITAL PRIVATE LIMITED. All Rights Reserved. All videos and shows on this platform are trademarks of, and all related images and content are the property of, Voovi Digital. Duplication and copy of this is strictly prohibited. All rights reserved.',
-              style: TextStyle(fontSize: 12, color: Colors.grey[300]),
+              '© ${DateTime.now().year} VOOVI DIGITAL PRIVATE LIMITED. All Rights Reserved. All videos and shows on this platform are trademarks of, and all related images and content are the property of, Voovi Digital. Duplication and copy of this is strictly prohibited. All rights reserved.',
+              style: AppTextStyles.meta.copyWith(fontSize: 12),
               textAlign: TextAlign.left,
             ),
           ),
-
-          // CENTER: Empty space
           const Spacer(flex: 1),
-
-          // RIGHT: App download section
           Flexible(
             flex: 1,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Download Butterfly Apps',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+                Text('Download VOLT', style: AppTextStyles.editorial.copyWith(fontSize: 16)),
                 const SizedBox(height: 10),
                 Wrap(
                   spacing: 10,
                   alignment: WrapAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () => _launchUrl(
-                        "https://play.google.com/store/apps/details?id=app.butterflyott.app",
-                      ),
-                      child: Image.asset(
-                        'assets/images/google-play.webp',
-                        width: 140,
-                        height: 50,
-                      ),
+                      onTap: () => _launchUrl("https://play.google.com/store/apps/details?id=app.butterflyott.app"),
+                      child: Image.asset('assets/images/google-play.webp', width: 140, height: 50),
                     ),
                     GestureDetector(
                       onTap: () => _launchUrl("http://apps.apple.com/app/a/id"),
-                      child: Image.asset(
-                        'assets/images/apple.webp',
-                        width: 140,
-                        height: 50,
-                      ),
+                      child: Image.asset('assets/images/apple.webp', width: 140, height: 50),
                     ),
                   ],
                 ),

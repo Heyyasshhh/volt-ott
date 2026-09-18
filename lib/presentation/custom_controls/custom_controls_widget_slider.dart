@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/models/media/media_item.dart';
-import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
-import 'package:butterfly/presentation/pages/media/movie_details_page.dart';
-import 'package:butterfly/presentation/pages/media/tv_show_details_page.dart';
-import 'package:butterfly/presentation/pages/payment/plans_list_page.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/models/media/media_item.dart';
+import 'package:volt/presentation/pages/authentication/login_screen.dart';
+import 'package:volt/presentation/pages/media/movie_details_page.dart';
+import 'package:volt/presentation/pages/media/tv_show_details_page.dart';
+import 'package:volt/presentation/pages/payment/plans_list_page.dart';
 import 'package:river_player/src/configuration/better_player_controls_configuration.dart';
 import 'package:river_player/src/controls/better_player_clickable_widget.dart';
 import 'package:river_player/src/controls/better_player_controls_state.dart';
@@ -82,28 +83,27 @@ class _CustomControlsWidgetSliderState extends BetterPlayerControlsState<CustomC
       child: Container(
         color: Colors.black.withOpacity(0.65), // dim background
         alignment: Alignment.center,
-        child: Column(
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.lock_outline_rounded, size: 42, color: Colors.white),
+            const Icon(Icons.lock_outline_rounded, size: 42, color: AppColors.colorOrange),
             const SizedBox(height: 8),
             const Text(
               "To watch more",
               style: TextStyle(
-                color: Colors.white70,
+                color: AppColors.colorSilver,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
+                fontStyle: FontStyle.italic,
               ),
             ),
             const SizedBox(height: 5),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
+                backgroundColor: AppColors.colorOrange,
+                foregroundColor: const Color(0xFF030609),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                shape: const StadiumBorder(),
               ),
               onPressed: () {
                 if (!widget.data['is_logged_in']) {
@@ -146,10 +146,18 @@ class _CustomControlsWidgetSliderState extends BetterPlayerControlsState<CustomC
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        child: Icon(
-          isMuted ? _controlsConfiguration.unMuteIcon : _controlsConfiguration.muteIcon,
-          color: _controlsConfiguration.iconsColor,
-          size: 22,
+        child: Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.colorHairline),
+          ),
+          child: Icon(
+            isMuted ? _controlsConfiguration.unMuteIcon : _controlsConfiguration.muteIcon,
+            color: AppColors.colorSilver,
+            size: 18,
+          ),
         ),
       ),
     );
@@ -158,20 +166,13 @@ class _CustomControlsWidgetSliderState extends BetterPlayerControlsState<CustomC
   // ----------------------------- UI COMPONENTS -----------------------------
 
   Widget _buildTopLeftRated() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white, width: 1),
-        borderRadius: BorderRadius.circular(8),
-        color: Colors.transparent,
-      ),
-      child: Text(
-        'Rated ${widget.data['rating']}',
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-        ),
+    return Text(
+      'RATED ${widget.data['rating']}',
+      style: const TextStyle(
+        color: AppColors.colorOrange,
+        fontSize: 11,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 1.8,
       ),
     );
   }
@@ -190,10 +191,18 @@ class _CustomControlsWidgetSliderState extends BetterPlayerControlsState<CustomC
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        child: Icon(
-          isPlaying ? Icons.pause : Icons.play_arrow,
-          color: _controlsConfiguration.iconsColor,
-          size: 22,
+        child: Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.colorOrange, width: 1.4),
+          ),
+          child: Icon(
+            isPlaying ? Icons.pause : Icons.play_arrow,
+            color: AppColors.colorOrange,
+            size: 18,
+          ),
         ),
       ),
     );
@@ -208,10 +217,18 @@ class _CustomControlsWidgetSliderState extends BetterPlayerControlsState<CustomC
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        child: Icon(
-          _betterPlayerController?.isFullScreen == true ? Icons.fullscreen_exit : Icons.fullscreen,
-          color: _controlsConfiguration.iconsColor,
-          size: 22,
+        child: Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.colorHairline),
+          ),
+          child: Icon(
+            _betterPlayerController?.isFullScreen == true ? Icons.fullscreen_exit : Icons.fullscreen,
+            color: AppColors.colorSilver,
+            size: 18,
+          ),
         ),
       ),
     );

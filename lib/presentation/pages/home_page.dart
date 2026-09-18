@@ -1,25 +1,23 @@
-import 'dart:ui';
-
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/platform_utils.dart';
-import 'package:butterfly/presentation/pages/fragments/search_page.dart';
-import 'package:butterfly/presentation/pages/fragments/sections_page.dart';
-import 'package:butterfly/presentation/pages/fragments/my_list_page.dart';
-import 'package:butterfly/presentation/pages/media/downloads_page.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/profile_page.dart';
-import 'package:butterfly/presentation/components/notification_permission_modal.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
-import 'package:butterfly/providers/content_provider.dart';
-import 'package:butterfly/providers/home_page_provider.dart';
-import 'package:butterfly/services/notification_service.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/platform_utils.dart';
+import 'package:volt/presentation/pages/fragments/search_page.dart';
+import 'package:volt/presentation/pages/fragments/sections_page.dart';
+import 'package:volt/presentation/pages/fragments/my_list_page.dart';
+import 'package:volt/presentation/pages/media/downloads_page.dart';
+import 'package:volt/presentation/pages/drawer_pages/profile_page.dart';
+import 'package:volt/presentation/components/notification_permission_modal.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/providers/content_provider.dart';
+import 'package:volt/providers/home_page_provider.dart';
+import 'package:volt/services/notification_service.dart';
 import 'package:provider/provider.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'fragments/sections_page_web.dart';
 
@@ -45,13 +43,11 @@ class _HomePageState extends State<HomePage> {
     } else {
       FacebookAppEvents().setAdvertiserTracking(enabled: true);
     }
-    // Consume pending push notification (e.g. app opened from killed state by notification tap)
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (mounted) {
         await NotificationService().tryConsume(context);
       }
     });
-    // Show notification permission modal if needed (for users already logged in)
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(milliseconds: 800));
       if (mounted) {
@@ -97,7 +93,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final contentProvider = Provider.of<ContentProvider>(context);
-    precacheImage(const AssetImage("assets/images/butterfly-text.png"), context);
+    precacheImage(const AssetImage(BrandAssets.logo), context);
     for (var movie in contentProvider.getMovies()) {
       if (_isAbsoluteImageUrl(movie.verticalPosterUrl)) {
         precacheImage(CachedNetworkImageProvider(movie.verticalPosterUrl), context);
@@ -123,123 +119,44 @@ class _HomePageState extends State<HomePage> {
           }
           final shouldExit = await showDialog<bool>(
             context: context,
-            barrierColor: Colors.black.withValues(alpha: 0.7),
+            barrierColor: Colors.black.withValues(alpha: 0.72),
             builder: (context) {
-              return Dialog(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                    child: Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: AppColors.colorBackground.withValues(alpha: 0.95),
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(
-                          color: AppColors.colorPrimary.withValues(alpha: 0.3),
-                          width: 1.5,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.5),
-                            blurRadius: 20,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: AppColors.colorPrimary.withValues(alpha: 0.2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const FaIcon(
-                              FontAwesomeIcons.circleXmark,
-                              color: AppColors.colorPrimary,
-                              size: 32,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            "Exit App?",
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          const Text(
-                            "Are you sure you want to leave?",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white70,
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    Navigator.pop(context, false);
-                                  },
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 14),
-                                    side: BorderSide(
-                                      color: Colors.white.withValues(alpha: 0.3),
-                                      width: 1.5,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    "Cancel",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pop(context, true);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.colorPrimary,
-                                    padding: const EdgeInsets.symmetric(vertical: 14),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    elevation: 0,
-                                  ),
-                                  child: const Text(
-                                    "Exit",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+              return GlassDialog(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.bolt, color: AppColors.colorOrange, size: 36),
+                    const SizedBox(height: 18),
+                    Text('Exit App?', style: AppTextStyles.displayTitle.copyWith(fontSize: 26)),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Are you sure you want to leave?',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.meta,
                     ),
-                  ),
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: MetallicButton(
+                              label: 'Stay',
+                              onPressed: () => Navigator.pop(context, false),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: GradientButton(
+                            label: 'Exit',
+                            height: 48,
+                            onPressed: () => Navigator.pop(context, true),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               );
             },

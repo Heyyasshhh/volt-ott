@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/providers/content_provider.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/providers/content_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:river_player/river_player.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
 import '../../../platform_utils.dart';
 import '../../../providers/authentication_provider.dart';
 import '../../../video_js_stub.dart';

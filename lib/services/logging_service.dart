@@ -1,7 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:butterfly/platform_utils.dart';
+import 'package:volt/platform_utils.dart';
 import '../js_stub.dart' if (dart.library.js_interop) '../js_context_web.dart' as js;
 
 class LoggingService {

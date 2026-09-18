@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/legal/policy_content_page.dart';
-import 'package:butterfly/providers/content_provider.dart';
+import 'package:volt/presentation/pages/drawer_pages/legal/policy_content_page.dart';
+import 'package:volt/providers/content_provider.dart';
 import 'package:provider/provider.dart';
 
 class PrivacyPolicyPage extends StatelessWidget {

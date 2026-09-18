@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/models/media/media_item.dart';
-import 'package:butterfly/presentation/components/controls/text_input.dart';
-import 'package:butterfly/presentation/components/media/media_item.dart';
-import 'package:butterfly/providers/content_provider.dart';
+import 'package:volt/models/media/media_item.dart';
+import 'package:volt/presentation/components/controls/text_input.dart';
+import 'package:volt/presentation/components/media/media_item.dart';
+import 'package:volt/providers/content_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constants/colors.dart';

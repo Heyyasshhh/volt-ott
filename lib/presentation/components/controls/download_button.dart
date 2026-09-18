@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/models/media/media_item.dart';
-import 'package:butterfly/providers/authentication_provider.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/models/media/media_item.dart';
+import 'package:volt/providers/authentication_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/download_provider.dart';
 

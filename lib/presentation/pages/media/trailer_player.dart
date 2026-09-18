@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:butterfly/models/media/media_item.dart';
-import 'package:butterfly/presentation/custom_controls/custom_controls_widget.dart';
+import 'package:volt/models/media/media_item.dart';
+import 'package:volt/presentation/custom_controls/custom_controls_widget.dart';
 import 'package:river_player/river_player.dart';
 
 class TrailerVideoPlayer extends StatefulWidget {

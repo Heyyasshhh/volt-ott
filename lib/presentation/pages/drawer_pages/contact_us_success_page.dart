@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
 
 class ContactUsSuccessPage extends StatefulWidget {
   const ContactUsSuccessPage({super.key});
@@ -21,24 +22,19 @@ class _ContactUsSuccessPageState extends State<ContactUsSuccessPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('assets/images/butterfly-logo.png', height: 72),
+                Image.asset(BrandAssets.logo, height: 64),
                 const SizedBox(height: 28),
-                const Text(
+                const Text('MESSAGE SENT', style: AppTextStyles.eyebrow),
+                const SizedBox(height: 10),
+                Text(
                   'Thank you for contacting us',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: AppTextStyles.displayTitle.copyWith(fontSize: 30),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
                 const Text(
                   'We will get back to you soon.',
-                  style: TextStyle(
-                    color: AppColors.colorTextSecondary,
-                    fontSize: 15,
-                  ),
+                  style: AppTextStyles.meta,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),

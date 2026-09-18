@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:butterfly/constants/colors.dart';
+import 'package:volt/constants/colors.dart';
 
 class MoreWidget extends StatefulWidget {
   final String text;
@@ -27,56 +27,43 @@ class _MoreWidgetState extends State<MoreWidget> {
       color: Colors.transparent,
       child: InkWell(
         onTap: widget.onPressed,
-        borderRadius: BorderRadius.circular(12),
         child: Container(
-          height: 56,
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
+          decoration: const BoxDecoration(
+            border: Border(bottom: BorderSide(color: AppColors.colorHairline)),
           ),
           child: Row(
             children: [
-              Container(
-                width: 42,
-                height: 42,
-                decoration: const BoxDecoration(
-                  color: AppColors.colorSurfaceElevated,
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: widget.svgIconPath != null
-                    ? SvgPicture.asset(
-                        widget.svgIconPath!,
-                        width: 20,
-                        height: 20,
-                        colorFilter: const ColorFilter.mode(
-                          Colors.white,
-                          BlendMode.srcIn,
-                        ),
-                      )
-                    : Icon(
-                        widget.icon,
-                        color: Colors.white,
-                        size: 20,
+              widget.svgIconPath != null
+                  ? SvgPicture.asset(
+                      widget.svgIconPath!,
+                      width: 18,
+                      height: 18,
+                      colorFilter: const ColorFilter.mode(
+                        AppColors.colorAccent,
+                        BlendMode.srcIn,
                       ),
-              ),
-              const SizedBox(width: 14),
+                    )
+                  : Icon(
+                      widget.icon,
+                      color: AppColors.colorAccent,
+                      size: 18,
+                    ),
+              const SizedBox(width: 16),
               Expanded(
                 child: Text(
                   widget.text,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
               const Icon(
-                Icons.chevron_right_rounded,
+                Icons.arrow_forward,
                 color: AppColors.colorTextMuted,
-                size: 22,
+                size: 16,
               ),
             ],
           ),

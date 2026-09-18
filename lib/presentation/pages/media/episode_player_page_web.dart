@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/models/media/media_item.dart';
-import 'package:butterfly/providers/content_provider.dart';
-import 'package:butterfly/video_js_bridge.dart';
+import 'package:volt/models/media/media_item.dart';
+import 'package:volt/providers/content_provider.dart';
+import 'package:volt/video_js_bridge.dart';
 import 'package:provider/provider.dart';
 
 class EpisodePlayerPageWeb extends StatefulWidget {

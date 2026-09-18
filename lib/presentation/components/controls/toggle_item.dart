@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/providers/content_provider.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/providers/content_provider.dart';
 import 'package:provider/provider.dart';
 
 class ToggleSwitchWidget extends StatelessWidget {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/app_theme.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/network/api_paths.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
-import 'package:butterfly/providers/authentication_provider.dart';
-import 'package:butterfly/services/network_service.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/network/api_paths.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/providers/authentication_provider.dart';
+import 'package:volt/services/network_service.dart';
 import 'package:provider/provider.dart';
 
 class AppSettingsPage extends StatefulWidget {
@@ -27,69 +27,89 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
 
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
-      appBar: AppBar(
-        title: const Text('App Settings'),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
-        children: [
-          const Text('Playback', style: AppTextStyles.sectionTitle),
-          const SizedBox(height: 12),
-          _SettingsSwitchRow(
-            label: 'Notifications From Us',
-            value: _notifications,
-            onChanged: (value) => setState(() => _notifications = value),
-          ),
-          const SizedBox(height: 10),
-          _SettingsSwitchRow(
-            label: 'Play Background Music',
-            value: _backgroundMusic,
-            onChanged: (value) => setState(() => _backgroundMusic = value),
-          ),
-          const SizedBox(height: 24),
-          const Text('Downloads', style: AppTextStyles.sectionTitle),
-          const SizedBox(height: 12),
-          _SettingsSwitchRow(
-            label: 'Download Only On Wifi',
-            value: _wifiOnly,
-            onChanged: (value) => setState(() => _wifiOnly = value),
-          ),
-          const SizedBox(height: 10),
-          SurfaceCard(
-            onTap: _showQualitySheet,
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Text(
-                    'Default Download Quality',
-                    style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Text(_downloadQuality, style: AppTextStyles.meta),
-                const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.colorTextMuted),
-              ],
-            ),
-          ),
-          if (isLoggedIn) ...[
-            const SizedBox(height: 32),
-            SurfaceCard(
-              borderColor: Colors.redAccent.withValues(alpha: 0.45),
-              onTap: () => _confirmDelete(authenticationProvider),
-              child: const Row(
+      body: AppBackground(
+        child: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+            children: [
+              Row(
                 children: [
-                  Icon(Icons.delete_forever_rounded, color: Colors.redAccent),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Permanently Delete My Account',
-                      style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700),
-                    ),
+                  CircleIconButton(
+                    icon: Icons.arrow_back_ios_new_rounded,
+                    size: 40,
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
+                  const SizedBox(width: 12),
+                  Text('SETTINGS', style: AppTextStyles.displayTitle.copyWith(fontSize: 28)),
                 ],
               ),
-            ),
-          ],
-        ],
+              const SizedBox(height: 10),
+              const EnergyTrail(height: 1.4),
+              const SizedBox(height: 28),
+              const _SettingsHeading(label: 'PLAYBACK'),
+              _SettingsSwitchRow(
+                label: 'Notifications From Us',
+                value: _notifications,
+                onChanged: (value) => setState(() => _notifications = value),
+              ),
+              _SettingsSwitchRow(
+                label: 'Play Background Music',
+                value: _backgroundMusic,
+                onChanged: (value) => setState(() => _backgroundMusic = value),
+              ),
+              const SizedBox(height: 28),
+              const _SettingsHeading(label: 'DOWNLOADS'),
+              _SettingsSwitchRow(
+                label: 'Download Only On Wifi',
+                value: _wifiOnly,
+                onChanged: (value) => setState(() => _wifiOnly = value),
+              ),
+              InkWell(
+                onTap: _showQualitySheet,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Default Download Quality',
+                          style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      Text(_downloadQuality.toUpperCase(), style: AppTextStyles.seeAll),
+                      const SizedBox(width: 6),
+                      const Icon(Icons.arrow_forward, color: AppColors.colorTextMuted, size: 16),
+                    ],
+                  ),
+                ),
+              ),
+              const ChromeRule(width: double.infinity, thickness: 1),
+              if (isLoggedIn) ...[
+                const SizedBox(height: 32),
+                const _SettingsHeading(label: 'ACCOUNT'),
+                InkWell(
+                  onTap: () => _confirmDelete(authenticationProvider),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete_forever_rounded, color: Colors.redAccent, size: 20),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: Text(
+                            'Permanently Delete My Account',
+                            style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const ChromeRule(width: double.infinity, thickness: 1, orange: true),
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -197,6 +217,26 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
   }
 }
 
+class _SettingsHeading extends StatelessWidget {
+  final String label;
+  const _SettingsHeading({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: AppTextStyles.editorial.copyWith(fontSize: 22)),
+          const SizedBox(height: 10),
+          const ChromeRule(width: double.infinity, thickness: 1),
+        ],
+      ),
+    );
+  }
+}
+
 class _SettingsSwitchRow extends StatelessWidget {
   final String label;
   final bool value;
@@ -210,22 +250,33 @@ class _SettingsSwitchRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SurfaceCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
-            ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+                ),
+              ),
+              Switch(
+                value: value,
+                activeTrackColor: AppColors.colorOrange,
+                inactiveTrackColor: AppColors.colorAccent.withValues(alpha: 0.35),
+                thumbColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) return AppColors.colorSilver;
+                  return AppColors.colorAccent;
+                }),
+                onChanged: onChanged,
+              ),
+            ],
           ),
-          Switch(
-            value: value,
-            activeTrackColor: AppColors.colorPrimary,
-            onChanged: onChanged,
-          ),
-        ],
-      ),
+        ),
+        const ChromeRule(width: double.infinity, thickness: 1),
+      ],
     );
   }
 }

@@ -4,8 +4,8 @@ import 'package:background_downloader/background_downloader.dart';
 import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:butterfly/models/media/download_item.dart';
-import 'package:butterfly/services/media_service.dart';
+import 'package:volt/models/media/download_item.dart';
+import 'package:volt/services/media_service.dart';
 
 typedef ProgressCallback = void Function(double progress);
 typedef SuccessCallback = void Function();

@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:butterfly/models/notification.dart';
-import 'package:butterfly/models/user/user.dart';
-import 'package:butterfly/network/api_paths.dart';
-import 'package:butterfly/services/authentication_service.dart';
-import 'package:butterfly/services/media_service.dart';
-import 'package:butterfly/services/network_service.dart';
+import 'package:volt/models/notification.dart';
+import 'package:volt/models/user/user.dart';
+import 'package:volt/network/api_paths.dart';
+import 'package:volt/services/authentication_service.dart';
+import 'package:volt/services/media_service.dart';
+import 'package:volt/services/network_service.dart';
 
 typedef OnSuccessCallback = void Function(User user);
 typedef OnFailureCallback = void Function(dynamic error);

@@ -2,19 +2,22 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/models/media/media_item.dart';
-import 'package:butterfly/network/api_paths.dart';
-import 'package:butterfly/platform_utils.dart';
-import 'package:butterfly/presentation/components/media/episode_item.dart';
-import 'package:butterfly/providers/content_provider.dart';
-import 'package:butterfly/services/network_service.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/constants/layout.dart';
+import 'package:volt/models/media/media_item.dart';
+import 'package:volt/network/api_paths.dart';
+import 'package:volt/platform_utils.dart';
+import 'package:volt/presentation/components/media/episode_item.dart';
+import 'package:volt/providers/content_provider.dart';
+import 'package:volt/services/network_service.dart';
 import 'package:provider/provider.dart';
 import 'package:river_player/river_player.dart';
 
 import '../../components/controls/expandable_text.dart';
+import '../../components/ui/app_widgets.dart';
 import '../../custom_controls/custom_controls_widget.dart';
-import 'package:butterfly/video_js_bridge.dart';
+import 'package:volt/video_js_bridge.dart';
 
 class EpisodeDetailsPage extends StatefulWidget {
   final BaseItem baseItem;
@@ -230,82 +233,89 @@ class _EpisodeDetailsPageState extends State<EpisodeDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final gutter = AppLayout.gutter(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Watch Episode",
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: AppColors.colorBackground,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
       backgroundColor: AppColors.colorBackground,
-      body: SingleChildScrollView(
-        child: SafeArea(
+      body: AppBackground(
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: PlatformUtils.isWeb
-                    ? _videoJsController != null
-                        ? VideoJsWidget(
-                            videoJsController: _videoJsController!,
-                            height: MediaQuery.of(context).size.height,
-                            width: MediaQuery.of(context).size.width,
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: widget.baseItem.horizontalPosterUrl,
-                          )
-                    : _betterPlayerController != null
-                        ? BetterPlayer(
-                            controller: _betterPlayerController!,
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: widget.baseItem.horizontalPosterUrl,
-                          ),
+              Stack(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: PlatformUtils.isWeb
+                        ? _videoJsController != null
+                            ? VideoJsWidget(
+                                videoJsController: _videoJsController!,
+                                height: MediaQuery.of(context).size.height,
+                                width: MediaQuery.of(context).size.width,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: widget.baseItem.horizontalPosterUrl,
+                              )
+                        : _betterPlayerController != null
+                            ? BetterPlayer(
+                                controller: _betterPlayerController!,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: widget.baseItem.horizontalPosterUrl,
+                              ),
+                  ),
+                  Positioned(
+                    top: MediaQuery.of(context).padding.top + 4,
+                    left: 8,
+                    child: CircleIconButton(
+                      icon: Icons.arrow_back_ios_new_rounded,
+                      size: 40,
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                ],
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 10, top: 15),
-                child: Text(
-                  widget.baseItem.title,
-                  style: const TextStyle(color: AppColors.colorPrimary, fontSize: 22, fontWeight: FontWeight.w600),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, top: 0),
-                child: Text(
-                  "Season ${widget.baseItem.seasonNumber} Episode ${widget.baseItem.episodeNumber}",
-                  style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, top: 8, right: 10),
+                padding: EdgeInsets.fromLTRB(gutter, 22, gutter, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      'EPISODE',
+                      style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorOrange),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      widget.baseItem.title,
+                      style: AppTextStyles.displayTitle.copyWith(fontSize: 34, fontStyle: FontStyle.italic),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'SEASON ${widget.baseItem.seasonNumber}  /  EPISODE ${widget.baseItem.episodeNumber}',
+                      style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorSilver, letterSpacing: 2.2),
+                    ),
+                    const SizedBox(height: 16),
                     ExpandableTextWidget(
                       text: widget.baseItem.description,
-                      style: const TextStyle(color: Colors.white),
+                      style: AppTextStyles.editorial.copyWith(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.colorSilver,
+                        height: 1.35,
+                      ),
                     ),
-                  ],
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 16, top: 10, right: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Episodes:",
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 21),
-                    ),
+                    const SizedBox(height: 24),
+                    const LightningDivider(),
+                    const SizedBox(height: 18),
+                    Text('EPISODES', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorAccent)),
+                    const SizedBox(height: 8),
+                    const Text('Episodes', style: AppTextStyles.sectionTitle),
+                    const SizedBox(height: 12),
                   ],
                 ),
               ),
               if (episodeList.isNotEmpty)
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: gutter),
                   child: ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -317,7 +327,7 @@ class _EpisodeDetailsPageState extends State<EpisodeDetailsPage> {
                 )
               else
                 const Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20, top: 30),
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 40),
                   child: Center(
                     child: Text(
                       "Congratulations, you've seen all the available episodes, more episodes might be coming soon",
@@ -325,7 +335,8 @@ class _EpisodeDetailsPageState extends State<EpisodeDetailsPage> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                )
+                ),
+              const SizedBox(height: 32),
             ],
           ),
         ),

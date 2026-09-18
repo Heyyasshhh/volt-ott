@@ -13,14 +13,14 @@ import 'package:flutter_cashfree_pg_sdk/api/cfsession/cfsession.dart';
 import 'package:flutter_cashfree_pg_sdk/utils/cfenums.dart';
 import 'package:flutter_cashfree_pg_sdk/utils/cfexceptions.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/constants/text.dart';
-import 'package:butterfly/models/subscription_plan.dart';
-import 'package:butterfly/presentation/components/subscription/plan_card.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
-import 'package:butterfly/presentation/pages/payment/payment_failure_page.dart';
-import 'package:butterfly/presentation/pages/payment/payment_success_page.dart';
-import 'package:butterfly/providers/authentication_provider.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/constants/text.dart';
+import 'package:volt/models/subscription_plan.dart';
+import 'package:volt/presentation/components/subscription/plan_card.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/presentation/pages/payment/payment_failure_page.dart';
+import 'package:volt/presentation/pages/payment/payment_success_page.dart';
+import 'package:volt/providers/authentication_provider.dart';
 import 'package:payu_checkoutpro_flutter/PayUConstantKeys.dart';
 import 'package:payu_checkoutpro_flutter/payu_checkoutpro_flutter.dart';
 import 'package:provider/provider.dart';
@@ -418,6 +418,8 @@ class _PlansListPageState extends State<PlansListPage> implements PayUCheckoutPr
                         padding: EdgeInsets.only(bottom: index < _plans.length - 1 ? 14 : 0),
                         child: PlanCard(
                           plan: plan,
+                          index: index,
+                          total: _plans.length,
                           isSelected: selectedPlan == plan,
                           onTap: () {
                             if (!context.mounted) return;

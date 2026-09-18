@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:butterfly/platform_utils.dart';
+import 'package:volt/platform_utils.dart';
 
 class CrashlyticsLogger {
   static final FirebaseCrashlytics _crashlytics = FirebaseCrashlytics.instance;

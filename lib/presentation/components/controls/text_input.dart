@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
+import 'package:volt/constants/colors.dart';
 
 class TextInput extends StatelessWidget {
   final TextEditingController? controller;
@@ -49,20 +49,17 @@ class TextInput extends StatelessWidget {
           cursorColor: AppColors.colorPrimary,
           maxLines: max(1, max(minLines, maxLines)),
           decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(16)),
-              borderSide: const BorderSide(color: AppColors.colorInputBorder),
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: AppColors.colorHairline),
             ),
-            errorBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16)),
+            errorBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.redAccent),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(16)),
-              borderSide: const BorderSide(color: AppColors.colorPrimary),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: AppColors.colorAccent, width: 1.6),
             ),
-            filled: true,
-            fillColor: AppColors.colorInputFill,
+            filled: false,
+            fillColor: Colors.transparent,
             counterText: "",
             hintText: hintText,
             floatingLabelBehavior: FloatingLabelBehavior.always,

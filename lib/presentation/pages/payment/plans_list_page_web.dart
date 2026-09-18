@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/models/subscription_plan.dart';
-import 'package:butterfly/presentation/pages/payment/payment_success_page.dart';
-import 'package:butterfly/presentation/pages/payment/plans_list_page_shimmer.dart';
-import 'package:butterfly/providers/authentication_provider.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/models/subscription_plan.dart';
+import 'package:volt/presentation/components/subscription/not_logged_in_subscribe.dart';
+import 'package:volt/presentation/components/subscription/plan_card.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/presentation/pages/payment/payment_success_page.dart';
+import 'package:volt/presentation/pages/payment/plans_list_page_shimmer.dart';
+import 'package:volt/providers/authentication_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/user/user.dart';
 import '../../../network/api_paths.dart';
 import '../../../razorpay_js.dart';
 import '../../../services/network_service.dart';
-import '../authentication/login_screen.dart';
 
 class PlansListPage extends StatefulWidget {
   const PlansListPage({super.key});
@@ -39,203 +41,70 @@ class _PlansListPageState extends State<PlansListPage> {
     final authenticationProvider = Provider.of<AuthenticationProvider>(context);
     final user = authenticationProvider.getUser();
     if (user == null) {
-      return Scaffold(
-        backgroundColor: AppColors.colorBackground,
-        body: Center(
-          child: Column(
-            children: [
-              const SizedBox(height: 70),
-              const Text(
-                "Oops!, you are not logged in",
-                style: TextStyle(color: Colors.white, fontSize: 26),
-              ),
-              const SizedBox(height: 2),
-              const Text(
-                "Login and Enjoy",
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
-                    ),
-                  );
-                },
-                child: Container(
-                  height: 45,
-                  width: 170,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: AppColors.colorPrimary,
-                  ),
-                  child: const Text(
-                    "Login Now",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      );
+      return const NotLoggedInSubscribe();
     }
 
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
       appBar: AppBar(
         backgroundColor: AppColors.colorBackground,
-        title: const Text("Subscribe Now"),
+        title: const Text("Subscribe"),
         foregroundColor: Colors.white,
       ),
-      body: SafeArea(
-        child: FutureBuilder(
-          future: authenticationProvider.getPlansListAndEnabledMethods(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              List<SubscriptionPlan> allPlans = snapshot.data?['plans'];
+      body: AppBackground(
+        child: SafeArea(
+          child: FutureBuilder(
+            future: authenticationProvider.getPlansListAndEnabledMethods(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<SubscriptionPlan> allPlans = snapshot.data?['plans'];
 
-              // Show all plans regardless of subscription state
-              _plans = allPlans;
-              if (selectedPlan == null) {
-                if (_plans.length > 1) {
-                  selectedPlan = _plans[1];
+                // Show all plans regardless of subscription state
+                _plans = allPlans;
+                if (selectedPlan == null) {
+                  if (_plans.length > 1) {
+                    selectedPlan = _plans[1];
+                  }
                 }
+                return ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
+                  itemCount: _plans.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return const Padding(
+                        padding: EdgeInsets.only(bottom: 18),
+                        child: PlansPageHeader(),
+                      );
+                    }
+                    final plan = _plans[index - 1];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 14),
+                      child: PlanCard(
+                        plan: plan,
+                        index: index - 1,
+                        total: _plans.length,
+                        isSelected: selectedPlan == plan,
+                        onTap: () async {
+                          setState(() {
+                            selectedPlan = plan;
+                          });
+                          _showPlanPopup(user, plan);
+                        },
+                        onSubscribe: () {
+                          setState(() {
+                            selectedPlan = plan;
+                          });
+                          _showPlanPopup(user, plan);
+                        },
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return const PlansListPageShimmer();
               }
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: _plans.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        final plan = _plans[index];
-                        final isSelected = selectedPlan == plan;
-
-                        return GestureDetector(
-                          onTap: () async {
-                            setState(() {
-                              selectedPlan = plan;
-                            });
-                            _showPlanPopup(user, plan);
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(16.0),
-                            margin: const EdgeInsets.symmetric(
-                              vertical: 8.0,
-                              horizontal: 10.0,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: isSelected
-                                  ? LinearGradient(
-                                      colors: [Colors.orange.shade400, Colors.orange.shade600],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    )
-                                  : LinearGradient(
-                                      colors: [AppColors.colorBackground, AppColors.colorBackground],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                              border: Border.all(
-                                color: isSelected ? Colors.orange : Colors.grey.shade800,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(18),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: isSelected ? Colors.orange.withValues(alpha: 0.4) : Colors.black.withValues(alpha: 0.2),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  plan.validity,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                const Text(
-                                  "Select the perfect plan for your entertainment",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "${plan.currency}${plan.cost}",
-                                      style: const TextStyle(
-                                        fontSize: 26,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    if (plan.originalCost != null) const SizedBox(width: 10),
-                                    if (plan.originalCost != null)
-                                      Text(
-                                        "${plan.currency}${plan.originalCost}",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
-                                          decoration: TextDecoration.lineThrough,
-                                          decorationColor: Colors.white,
-                                          decorationThickness: 2.0,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                const Text(
-                                  "New web series release every week",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                const Text(
-                                  "Unlimited streaming",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                const Text(
-                                  "HD + (2k) Quality",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              );
-            } else {
-              return const PlansListPageShimmer();
-            }
-          },
+            },
+          ),
         ),
       ),
     );

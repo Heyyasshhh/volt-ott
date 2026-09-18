@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/models/media/media_item.dart';
-import 'package:butterfly/presentation/components/bottom_sheet/media_bottomsheet.dart';
-import 'package:butterfly/presentation/components/media/media_item.dart';
-import 'package:butterfly/presentation/pages/media/trailer_player.dart';
-import 'package:butterfly/presentation/pages/media/trailer_player_web.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/models/media/media_item.dart';
+import 'package:volt/presentation/components/bottom_sheet/media_bottomsheet.dart';
+import 'package:volt/presentation/components/media/media_item.dart';
+import 'package:volt/presentation/pages/media/trailer_player.dart';
+import 'package:volt/presentation/pages/media/trailer_player_web.dart';
 import 'package:shimmer/shimmer.dart';
 
 String _firstLine(String description) {

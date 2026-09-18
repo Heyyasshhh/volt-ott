@@ -2,10 +2,11 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:butterfly/models/media/media_item.dart';
-import 'package:butterfly/presentation/pages/media/episode_details_page.dart';
-import 'package:butterfly/episode_player_stub.dart' if (dart.library.html) 'package:butterfly/presentation/pages/media/episode_player_page_web.dart';
-import 'package:butterfly/presentation/pages/media/episode_player_page.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/models/media/media_item.dart';
+import 'package:volt/presentation/pages/media/episode_details_page.dart';
+import 'package:volt/episode_player_stub.dart' if (dart.library.html) 'package:volt/presentation/pages/media/episode_player_page_web.dart';
+import 'package:volt/presentation/pages/media/episode_player_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:river_player/src/configuration/better_player_controls_configuration.dart';
 import 'package:river_player/src/controls/better_player_clickable_widget.dart';
@@ -271,7 +272,6 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    // 👈 LEFT SIDE: Back button + Rating + Hello World
                     Positioned(
                       left: 12,
                       top: 6,
@@ -296,9 +296,10 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
                               Text(
                                 widget.data['genres'] ?? '',
                                 style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.colorSilver,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1.4,
                                 ),
                               ),
                             ],
@@ -306,8 +307,6 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
                         ],
                       ),
                     ),
-
-                    // 👈 CENTER: Title + Subtitle
                     if (_betterPlayerController!.isFullScreen)
                       Center(
                         child: Column(
@@ -317,8 +316,9 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
                               widget.data['title'] ?? '',
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                fontStyle: FontStyle.italic,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -327,8 +327,6 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
                       )
                     else
                       const SizedBox(),
-
-                    // 👈 RIGHT: PiP + More buttons
                     Positioned(
                       right: 8,
                       top: 4,
@@ -393,20 +391,13 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
     final age = widget.data['age_rating'] ?? '';
     if (age.isEmpty) return const SizedBox();
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white, width: 1),
-        borderRadius: BorderRadius.circular(8),
-        color: Colors.black54,
-      ),
-      child: Text(
-        'Rated $age',
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-        ),
+    return Text(
+      'RATED $age',
+      style: const TextStyle(
+        color: AppColors.colorOrange,
+        fontSize: 10,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 1.8,
       ),
     );
   }
@@ -418,9 +409,18 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
       },
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Icon(
-          _controlsConfiguration.overflowMenuIcon,
-          color: _controlsConfiguration.iconsColor,
+        child: Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.colorHairline),
+          ),
+          child: Icon(
+            _controlsConfiguration.overflowMenuIcon,
+            color: AppColors.colorSilver,
+            size: 18,
+          ),
         ),
       ),
     );
@@ -436,6 +436,7 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
       onEnd: _onPlayerHide,
       child: Container(
         height: _controlsConfiguration.controlBarHeight + 20.0,
+        color: Colors.transparent,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -477,9 +478,18 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
             height: _controlsConfiguration.controlBarHeight,
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Center(
-              child: Icon(
-                _betterPlayerController!.isFullScreen ? _controlsConfiguration.fullscreenDisableIcon : _controlsConfiguration.fullscreenEnableIcon,
-                color: _controlsConfiguration.iconsColor,
+              child: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.colorHairline),
+                ),
+                child: Icon(
+                  _betterPlayerController!.isFullScreen ? _controlsConfiguration.fullscreenDisableIcon : _controlsConfiguration.fullscreenEnableIcon,
+                  color: AppColors.colorSilver,
+                  size: 18,
+                ),
               ),
             ),
           ),
@@ -494,7 +504,7 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
     }
     return Center(
       child: AnimatedOpacity(
-        opacity: controlsNotVisible ? 0.0 : 0.1,
+        opacity: 0.0,
         duration: _controlsConfiguration.controlsHideTime,
         child: _buildMiddleRow(),
       ),
@@ -535,10 +545,18 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
 
   Widget _buildSkipButton() {
     return _buildHitAreaClickableButton(
-      icon: Icon(
-        _controlsConfiguration.skipBackIcon,
-        size: 30,
-        color: _controlsConfiguration.iconsColor,
+      icon: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: AppColors.colorHairline),
+        ),
+        child: Icon(
+          _controlsConfiguration.skipBackIcon,
+          size: 22,
+          color: AppColors.colorSilver,
+        ),
       ),
       onClicked: skipBack,
     );
@@ -546,10 +564,18 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
 
   Widget _buildForwardButton() {
     return _buildHitAreaClickableButton(
-      icon: Icon(
-        _controlsConfiguration.skipForwardIcon,
-        size: 30,
-        color: _controlsConfiguration.iconsColor,
+      icon: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: AppColors.colorHairline),
+        ),
+        child: Icon(
+          _controlsConfiguration.skipForwardIcon,
+          size: 22,
+          color: AppColors.colorSilver,
+        ),
       ),
       onClicked: skipForward,
     );
@@ -611,17 +637,24 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
   Widget _buildReplayButton(VideoPlayerController controller) {
     final bool isFinished = isVideoFinished(_latestValue);
     return _buildHitAreaClickableButton(
-      icon: isFinished
-          ? Icon(
-              Icons.replay,
-              size: 42,
-              color: _controlsConfiguration.iconsColor,
-            )
-          : Icon(
-              controller.value.isPlaying ? _controlsConfiguration.pauseIcon : _controlsConfiguration.playIcon,
-              size: 42,
-              color: _controlsConfiguration.iconsColor,
-            ),
+      icon: Container(
+        width: 64,
+        height: 64,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: AppColors.colorOrange, width: 2),
+          boxShadow: [
+            BoxShadow(color: AppColors.colorOrange.withValues(alpha: 0.35), blurRadius: 16),
+          ],
+        ),
+        child: Icon(
+          isFinished
+              ? Icons.replay
+              : (controller.value.isPlaying ? _controlsConfiguration.pauseIcon : _controlsConfiguration.playIcon),
+          size: 32,
+          color: AppColors.colorOrange,
+        ),
+      ),
       onClicked: () {
         if (isFinished) {
           if (_latestValue != null && _latestValue!.isPlaying) {
@@ -696,9 +729,18 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
           child: Container(
             height: _controlsConfiguration.controlBarHeight,
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Icon(
-              (_latestValue != null && _latestValue!.volume > 0) ? _controlsConfiguration.muteIcon : _controlsConfiguration.unMuteIcon,
-              color: _controlsConfiguration.iconsColor,
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.colorHairline),
+              ),
+              child: Icon(
+                (_latestValue != null && _latestValue!.volume > 0) ? _controlsConfiguration.muteIcon : _controlsConfiguration.unMuteIcon,
+                color: AppColors.colorSilver,
+                size: 18,
+              ),
             ),
           ),
         ),
@@ -714,9 +756,18 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
         height: double.infinity,
         margin: const EdgeInsets.symmetric(horizontal: 4),
         padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Icon(
-          controller.value.isPlaying ? _controlsConfiguration.pauseIcon : _controlsConfiguration.playIcon,
-          color: _controlsConfiguration.iconsColor,
+        child: Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.colorOrange, width: 1.4),
+          ),
+          child: Icon(
+            controller.value.isPlaying ? _controlsConfiguration.pauseIcon : _controlsConfiguration.playIcon,
+            color: AppColors.colorOrange,
+            size: 18,
+          ),
         ),
       ),
     );
@@ -941,20 +992,16 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
     return Positioned(
       bottom: bottom,
       right: right,
-      child: ElevatedButton.icon(
+        child: ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          // white pill
-          foregroundColor: Colors.black,
-          // icon / text colour
+          backgroundColor: AppColors.colorOrange,
+          foregroundColor: const Color(0xFF030609),
           padding: const EdgeInsets.symmetric(
             horizontal: 18,
             vertical: 10,
           ),
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8), // “square rounded”
-          ),
+          elevation: 0,
+          shape: const StadiumBorder(),
         ),
         icon: const Icon(Icons.play_arrow_rounded, size: 20),
         label: const Text(
@@ -993,20 +1040,16 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
     return Positioned(
       bottom: bottom,
       right: right,
-      child: ElevatedButton.icon(
+        child: ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          // white pill
-          foregroundColor: Colors.black,
-          // icon / text colour
+          backgroundColor: AppColors.colorOrange,
+          foregroundColor: const Color(0xFF030609),
           padding: const EdgeInsets.symmetric(
             horizontal: 18,
             vertical: 10,
           ),
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8), // “square rounded”
-          ),
+          elevation: 0,
+          shape: const StadiumBorder(),
         ),
         icon: const Icon(Icons.play_arrow_rounded, size: 20),
         label: const Text(
@@ -1039,10 +1082,10 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
             cancelAndRestartTimer();
           },
           colors: BetterPlayerProgressColors(
-              playedColor: _controlsConfiguration.progressBarPlayedColor,
-              handleColor: _controlsConfiguration.progressBarHandleColor,
-              bufferedColor: _controlsConfiguration.progressBarBufferedColor,
-              backgroundColor: _controlsConfiguration.progressBarBackgroundColor),
+              playedColor: AppColors.colorElectric,
+              handleColor: AppColors.colorOrange,
+              bufferedColor: AppColors.colorAccent.withValues(alpha: 0.28),
+              backgroundColor: Colors.white.withValues(alpha: 0.16)),
         ),
       ),
     );
@@ -1062,7 +1105,8 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
     }
 
     return CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation<Color>(_controlsConfiguration.loadingColor),
+      strokeWidth: 2.2,
+      valueColor: const AlwaysStoppedAnimation<Color>(AppColors.colorElectric),
     );
   }
 }

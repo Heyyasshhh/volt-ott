@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
-import 'package:butterfly/providers/authentication_provider.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/presentation/pages/authentication/login_screen.dart';
+import 'package:volt/providers/authentication_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/subscription_plan.dart';
 import '../payment_option.dart';
+import '../ui/app_widgets.dart';
 
 class PaymentBottomSheetWidget extends StatefulWidget {
   final SubscriptionPlan plan;
@@ -25,6 +27,19 @@ class PaymentBottomSheetWidget extends StatefulWidget {
 }
 
 class _PaymentBottomSheetWidgetState extends State<PaymentBottomSheetWidget> {
+  String _categoryFor(String method) {
+    switch (method) {
+      case 'juspay':
+      case 'razorpay':
+      case 'cashfree':
+        return 'UPI';
+      case 'stripe':
+        return 'CARD';
+      default:
+        return 'OTHER';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authenticationProvider = Provider.of<AuthenticationProvider>(context);
@@ -41,7 +56,7 @@ class _PaymentBottomSheetWidgetState extends State<PaymentBottomSheetWidget> {
     // Map of available payment options
     final Map<String, Widget Function()> paymentOptions = {
       'juspay': () => PaymentOption(
-            imagePath: "assets/images/butterfly-512.png",
+            imagePath: "assets/images/volt-logo.png",
             methodName: "Pay Via UPI / Cards / Wallet",
             methods: Row(
               children: [
@@ -117,7 +132,7 @@ class _PaymentBottomSheetWidgetState extends State<PaymentBottomSheetWidget> {
         },
       ),
       'cashfree': () => PaymentOption(
-        imagePath: "assets/images/butterfly-512.png",
+        imagePath: "assets/images/volt-logo.png",
         methodName: "Pay Via Cashfree",
         methods: Row(
           children: [
@@ -283,39 +298,24 @@ class _PaymentBottomSheetWidgetState extends State<PaymentBottomSheetWidget> {
           ),
     };
 
+    final enabled = widget.enabledMethods.where(paymentOptions.containsKey).toList();
+
     return SafeArea(
       child: Container(
-        decoration: const BoxDecoration(
-          color: AppColors.colorSurface,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
+        color: AppColors.colorBackground,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: 10, bottom: 6),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
+            const EnergyTrail(height: 2, orange: true),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 12, 4),
+              padding: const EdgeInsets.fromLTRB(20, 16, 12, 4),
               child: Row(
                 children: [
                   const Expanded(
                     child: Text(
-                      'Choose payment',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                      ),
+                      'Complete payment',
+                      style: AppTextStyles.editorial,
                     ),
                   ),
                   IconButton(
@@ -326,12 +326,50 @@ class _PaymentBottomSheetWidgetState extends State<PaymentBottomSheetWidget> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+              child: Text(
+                '${widget.plan.name.isNotEmpty ? widget.plan.name : widget.plan.validity}  ·  ${widget.plan.currency}${SubscriptionPlan.formatCost(widget.plan.cost)}',
+                style: AppTextStyles.meta,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Column(
-                children: widget.enabledMethods
-                    .where(paymentOptions.containsKey)
-                    .map((method) => paymentOptions[method]!())
-                    .toList(),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (var i = 0; i < enabled.length; i++) ...[
+                    if (i == 0 || _categoryFor(enabled[i]) != _categoryFor(enabled[i - 1]))
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12, bottom: 4, left: 4),
+                        child: Text(_categoryFor(enabled[i]), style: AppTextStyles.eyebrow),
+                      ),
+                    paymentOptions[enabled[i]]!(),
+                  ],
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 4, 20, 8),
+              child: Text(
+                'PAY AND START WATCHING',
+                style: TextStyle(
+                  color: AppColors.colorOrange,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.8,
+                  fontSize: 11,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Text(
+                'SECURE PAYMENT   ·   CANCEL ANYTIME',
+                style: TextStyle(
+                  color: AppColors.colorTextMuted,
+                  fontSize: 10,
+                  letterSpacing: 1.6,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ],

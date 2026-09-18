@@ -1,21 +1,22 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/presentation/components/controls/more_widget.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/profile_page.dart';
-import 'package:butterfly/presentation/pages/payment/plans_list_page.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/contact_us_page.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/legal/privacy_policy_page.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/legal/terms_and_conditions_page.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/legal/refund_policy_page.dart';
-import 'package:butterfly/presentation/pages/drawer_pages/legal/about_us_page.dart';
-import 'package:butterfly/models/user/user.dart';
-import 'package:butterfly/providers/authentication_provider.dart';
-import 'package:butterfly/providers/content_provider.dart';
-import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/presentation/components/controls/more_widget.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/presentation/pages/drawer_pages/profile_page.dart';
+import 'package:volt/presentation/pages/payment/plans_list_page.dart';
+import 'package:volt/presentation/pages/drawer_pages/contact_us_page.dart';
+import 'package:volt/presentation/pages/drawer_pages/legal/privacy_policy_page.dart';
+import 'package:volt/presentation/pages/drawer_pages/legal/terms_and_conditions_page.dart';
+import 'package:volt/presentation/pages/drawer_pages/legal/refund_policy_page.dart';
+import 'package:volt/presentation/pages/drawer_pages/legal/about_us_page.dart';
+import 'package:volt/models/user/user.dart';
+import 'package:volt/providers/authentication_provider.dart';
+import 'package:volt/providers/content_provider.dart';
+import 'package:volt/presentation/pages/authentication/login_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -28,7 +29,7 @@ class MoreInfoPage extends StatefulWidget {
 
 class _MoreInfoPageState extends State<MoreInfoPage> {
   String _appVersion = '';
-  String _timing = 'Mon - Sat, 10:00 AM - 6:00 PM IST'; // Replace with actual timing
+  final String _timing = 'Mon - Sat, 10:00 AM - 6:00 PM IST'; // Replace with actual timing
 
   @override
   void initState() {
@@ -51,458 +52,317 @@ class _MoreInfoPageState extends State<MoreInfoPage> {
 
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Top Card with Logo and Phone
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: AppColors.colorBackground.withValues(alpha: 0.8),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: AppColors.colorPrimary.withValues(alpha: 0.3),
-                      width: 1.5,
+      body: AppBackground(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const BrandMark(height: 48),
+                const SizedBox(height: 10),
+                Text('VOLT', style: AppTextStyles.displayTitle.copyWith(fontSize: 32)),
+                if (user != null) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    _getUserContactInfo(user),
+                    style: AppTextStyles.meta,
+                  ),
+                ],
+                const SizedBox(height: 16),
+                const EnergyTrail(height: 1.4, orange: true),
+                const SizedBox(height: 18),
+                if (user == null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: GradientButton(
+                      label: 'Sign In',
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+                      },
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
                   ),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        "assets/images/butterfly-text.png",
-                        height: 60,
-                      ),
-                      // Only show phone/email when logged in
-                      if (user != null) ...[
-                        const SizedBox(height: 12),
-                        Text(
-                          _getUserContactInfo(user),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+                if (user == null) ...[
+                  MoreWidget(
+                    text: "Privacy Policy",
+                    svgIconPath: 'assets/images/icons/privacy.svg',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => PrivacyPolicyPage(),
                         ),
-                      ],
-                    ],
+                      );
+                    },
                   ),
-                ),
-              ),
-
-              // List of Items
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    // Sign In Button (only when logged out)
-                    if (user == null)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                          child: GestureDetector(
-                            onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const LoginPage(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            height: 52,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(28),
-                              gradient: AppColors.primaryGradient,
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "Sign In",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ),
+                  MoreWidget(
+                    text: "Terms and Conditions",
+                    svgIconPath: 'assets/images/icons/terms.svg',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => TermsAndConditionsPage(),
                         ),
-                      ),
-                    // Only show these when logged out
-                    if (user == null) ...[
-                      MoreWidget(
-                        text: "Privacy Policy",
-                        svgIconPath: 'assets/images/icons/privacy.svg',
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => PrivacyPolicyPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      MoreWidget(
-                        text: "Terms and Conditions",
-                        svgIconPath: 'assets/images/icons/terms.svg',
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => TermsAndConditionsPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      MoreWidget(
-                        text: "Refund Policy",
-                        svgIconPath: 'assets/images/icons/refund.svg',
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => RefundPolicyPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      MoreWidget(
-                        text: "About Us",
-                        svgIconPath: 'assets/images/icons/about.svg',
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const AboutUsPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ] else ...[
-                      // Show all items when logged in
-                      MoreWidget(
-                        text: "Profile",
-                        svgIconPath: 'assets/images/icons/profile.svg',
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const ProfilePage(),
-                            ),
-                          );
-                        },
-                      ),
-                      MoreWidget(
-                        text: "Subscription",
-                        svgIconPath: 'assets/images/icons/subscription.svg',
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const PlansListPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      MoreWidget(
-                        text: "Help and Support",
-                        icon: Icons.help_outline,
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ContactUsPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      MoreWidget(
-                        text: "Privacy Policy",
-                        svgIconPath: 'assets/images/icons/privacy.svg',
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => PrivacyPolicyPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      MoreWidget(
-                        text: "Terms and Conditions",
-                        svgIconPath: 'assets/images/icons/terms.svg',
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => TermsAndConditionsPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      MoreWidget(
-                        text: "Refund Policy",
-                        svgIconPath: 'assets/images/icons/refund.svg',
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => RefundPolicyPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      MoreWidget(
-                        text: "About Us",
-                        svgIconPath: 'assets/images/icons/about.svg',
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const AboutUsPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      MoreWidget(
-                        text: "Rate Us",
-                        icon: FontAwesomeIcons.rankingStar.data,
-                        onPressed: () {
-                          InAppReview.instance.openStoreListing();
-                        },
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Logout Button
-              if (user != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: GestureDetector(
-                    onTap: () {
+                      );
+                    },
+                  ),
+                  MoreWidget(
+                    text: "Refund Policy",
+                    svgIconPath: 'assets/images/icons/refund.svg',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => RefundPolicyPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  MoreWidget(
+                    text: "About Us",
+                    svgIconPath: 'assets/images/icons/about.svg',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AboutUsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ] else ...[
+                  MoreWidget(
+                    text: "Profile",
+                    svgIconPath: 'assets/images/icons/profile.svg',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ProfilePage(),
+                        ),
+                      );
+                    },
+                  ),
+                  MoreWidget(
+                    text: "Subscription",
+                    svgIconPath: 'assets/images/icons/subscription.svg',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const PlansListPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  MoreWidget(
+                    text: "Help and Support",
+                    icon: Icons.help_outline,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ContactUsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  MoreWidget(
+                    text: "Privacy Policy",
+                    svgIconPath: 'assets/images/icons/privacy.svg',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => PrivacyPolicyPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  MoreWidget(
+                    text: "Terms and Conditions",
+                    svgIconPath: 'assets/images/icons/terms.svg',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => TermsAndConditionsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  MoreWidget(
+                    text: "Refund Policy",
+                    svgIconPath: 'assets/images/icons/refund.svg',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => RefundPolicyPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  MoreWidget(
+                    text: "About Us",
+                    svgIconPath: 'assets/images/icons/about.svg',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AboutUsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  MoreWidget(
+                    text: "Rate Us",
+                    icon: FontAwesomeIcons.rankingStar.data,
+                    onPressed: () {
+                      InAppReview.instance.openStoreListing();
+                    },
+                  ),
+                ],
+                const SizedBox(height: 24),
+                if (user != null)
+                  ProfileMenuTile(
+                    icon: Icons.logout_rounded,
+                    label: 'Logout',
+                    iconColor: AppColors.colorOrange,
+                    labelColor: AppColors.colorOrange,
+                    showChevron: false,
+                    onPressed: () {
                       showDialog(
                         context: context,
                         barrierColor: Colors.black.withValues(alpha: 0.7),
                         builder: (BuildContext context) {
-                          return Dialog(
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(24),
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                                child: Container(
-                                  padding: const EdgeInsets.all(24),
+                          return GlassDialog(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
-                                    color: AppColors.colorBackground.withValues(alpha: 0.95),
-                                    borderRadius: BorderRadius.circular(24),
-                                    border: Border.all(
-                                      color: AppColors.colorPrimary.withValues(alpha: 0.3),
-                                      width: 1.5,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.5),
-                                        blurRadius: 20,
-                                        spreadRadius: 2,
-                                      ),
-                                    ],
+                                    color: AppColors.colorPrimary.withValues(alpha: 0.2),
+                                    shape: BoxShape.circle,
                                   ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(16),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.colorPrimary.withValues(alpha: 0.2),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const FaIcon(
-                                          FontAwesomeIcons.rightFromBracket,
-                                          color: AppColors.colorPrimary,
-                                          size: 32,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      const Text(
-                                        "Logout?",
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 12),
-                                      const Text(
-                                        "Are you sure you want to log out?",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.white70,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 24),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: OutlinedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context, false);
-                                              },
-                                              style: OutlinedButton.styleFrom(
-                                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                                side: BorderSide(
-                                                  color: Colors.white.withValues(alpha: 0.3),
-                                                  width: 1.5,
-                                                ),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12),
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                "Cancel",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 12),
-                                          Expanded(
-                                            child: ElevatedButton(
-                                              onPressed: () async {
-                                                await authenticationProvider.logout();
-                                                final loginConfig = contentProvider.getLoginConfigConfirm();
-                                                contentProvider.removeContinueWatching();
-                                                if (!context.mounted) return;
-                                                Navigator.of(context).pop();
-                                                if (loginConfig == 'B' || loginConfig == 'C') {
-                                                  Navigator.of(context).pushAndRemoveUntil(
-                                                    MaterialPageRoute(
-                                                      builder: (context) => LoginPage(),
-                                                    ),
-                                                    (_) => false,
-                                                  );
-                                                }
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: AppColors.colorPrimary,
-                                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12),
-                                                ),
-                                                elevation: 0,
-                                              ),
-                                              child: const Text(
-                                                "Logout",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                  child: const FaIcon(
+                                    FontAwesomeIcons.rightFromBracket,
+                                    color: AppColors.colorPrimary,
+                                    size: 32,
                                   ),
                                 ),
-                              ),
+                                const SizedBox(height: 20),
+                                const Text(
+                                  "Logout?",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                const Text(
+                                  "Are you sure you want to log out?",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white70,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: OutlinedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          side: BorderSide(
+                                            color: Colors.white.withValues(alpha: 0.3),
+                                            width: 1.5,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () async {
+                                          await authenticationProvider.logout();
+                                          final loginConfig = contentProvider.getLoginConfigConfirm();
+                                          contentProvider.removeContinueWatching();
+                                          if (!context.mounted) return;
+                                          Navigator.of(context).pop();
+                                          if (loginConfig == 'B' || loginConfig == 'C') {
+                                            Navigator.of(context).pushAndRemoveUntil(
+                                              MaterialPageRoute(
+                                                builder: (context) => LoginPage(),
+                                              ),
+                                              (_) => false,
+                                            );
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: AppColors.colorPrimary,
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                          elevation: 0,
+                                        ),
+                                        child: const Text(
+                                          "Logout",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           );
                         },
                       );
                     },
-                    child: Container(
-                      height: 48,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: Colors.red.withValues(alpha: 0.5),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: const Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.logout, color: Colors.red, size: 20),
-                            SizedBox(width: 8),
-                            Text(
-                              "Logout",
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  ),
+                const SizedBox(height: 24),
+                const Text('GET IN TOUCH', style: AppTextStyles.eyebrow),
+                const SizedBox(height: 12),
+                const ChromeRule(width: double.infinity, thickness: 1),
+                const SizedBox(height: 14),
+                if (contentProvider.getSupportEmail().isNotEmpty)
+                  _buildContactRow(Icons.email, "Email:", contentProvider.getSupportEmail(), isClickable: true),
+                if (contentProvider.getSupportEmail().isNotEmpty && contentProvider.getSupportPhoneNumber().isNotEmpty)
+                  const SizedBox(height: 12),
+                if (contentProvider.getSupportPhoneNumber().isNotEmpty)
+                  _buildContactRow(Icons.phone, "Phone:", contentProvider.getSupportPhoneNumber(), isClickable: true),
+                if (contentProvider.getSupportPhoneNumber().isNotEmpty)
+                  const SizedBox(height: 12),
+                _buildContactRow(Icons.access_time, "Timing:", _timing, isClickable: false),
+                const SizedBox(height: 24),
+                Center(
+                  child: Text(
+                    _appVersion,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.5),
+                      fontSize: 14,
                     ),
                   ),
                 ),
-
-              const SizedBox(height: 10),
-
-              // Footer - Get in Touch
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppColors.colorBackground.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: AppColors.colorPrimary.withValues(alpha: 0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Get in Touch",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      if (contentProvider.getSupportEmail().isNotEmpty)
-                        _buildContactRow(Icons.email, "Email:", contentProvider.getSupportEmail(), isClickable: true),
-                      if (contentProvider.getSupportEmail().isNotEmpty && contentProvider.getSupportPhoneNumber().isNotEmpty)
-                        const SizedBox(height: 12),
-                      if (contentProvider.getSupportPhoneNumber().isNotEmpty)
-                        _buildContactRow(Icons.phone, "Phone:", contentProvider.getSupportPhoneNumber(), isClickable: true),
-                      if (contentProvider.getSupportPhoneNumber().isNotEmpty)
-                        const SizedBox(height: 12),
-                      _buildContactRow(Icons.access_time, "Timing:", _timing, isClickable: false),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // App Version
-              Text(
-                _appVersion,
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.5),
-                  fontSize: 14,
-                ),
-              ),
-
-              const SizedBox(height: 20),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -513,7 +373,7 @@ class _MoreInfoPageState extends State<MoreInfoPage> {
     Widget content = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: AppColors.colorPrimary, size: 20),
+        Icon(icon, color: AppColors.colorOrange, size: 18),
         const SizedBox(width: 12),
         Expanded(
           child: RichText(
@@ -530,7 +390,7 @@ class _MoreInfoPageState extends State<MoreInfoPage> {
                 TextSpan(
                   text: ' $value',
                   style: TextStyle(
-                    color: isClickable ? AppColors.colorPrimary : Colors.white70,
+                    color: isClickable ? AppColors.colorAccent : Colors.white70,
                     decoration: isClickable ? TextDecoration.underline : null,
                   ),
                 ),
@@ -588,4 +448,3 @@ class _MoreInfoPageState extends State<MoreInfoPage> {
     return '+91 1234567890';
   }
 }
-

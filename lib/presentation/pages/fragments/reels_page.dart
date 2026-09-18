@@ -1,13 +1,14 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:butterfly/models/media/reel_item.dart';
-import 'package:butterfly/presentation/pages/media/movie_details_page.dart';
-import 'package:butterfly/presentation/pages/media/tv_show_details_page.dart';
-import 'package:butterfly/episode_player_stub.dart' if (dart.library.html) 'package:butterfly/presentation/pages/media/episode_player_page_web.dart';
-import 'package:butterfly/presentation/pages/media/episode_player_page.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/models/media/reel_item.dart';
+import 'package:volt/presentation/pages/media/movie_details_page.dart';
+import 'package:volt/presentation/pages/media/tv_show_details_page.dart';
+import 'package:volt/episode_player_stub.dart' if (dart.library.html) 'package:volt/presentation/pages/media/episode_player_page_web.dart';
+import 'package:volt/presentation/pages/media/episode_player_page.dart';
 import 'package:flutter/foundation.dart';
-import 'package:butterfly/providers/content_provider.dart';
-import 'package:butterfly/providers/reels_provider.dart';
+import 'package:volt/providers/content_provider.dart';
+import 'package:volt/providers/reels_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 import 'package:video_player/video_player.dart';
@@ -157,7 +158,7 @@ class _ReelsPageState extends State<ReelsPage> {
     if (minis.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(
-          color: Colors.pink,
+          color: AppColors.colorAccent,
         ),
       );
     }

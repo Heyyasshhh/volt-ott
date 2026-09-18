@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/platform_utils.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/constants/layout.dart';
+import 'package:volt/platform_utils.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Shown when server requires a newer app version (compare by integer version code).
@@ -32,72 +34,61 @@ class ForceUpdatePage extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppLayout.gutter(context),
+                vertical: 24,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.system_update_alt,
-                    size: 80,
-                    color: AppColors.colorPrimary,
+                  const BrandWordmark(fontSize: 22),
+                  const SizedBox(height: 36),
+                  Text('UPDATE REQUIRED', style: AppTextStyles.eyebrow),
+                  const SizedBox(height: 12),
+                  Text(
+                    'A NEW VERSION\nIS AVAILABLE',
+                    style: AppTextStyles.displayTitle.copyWith(fontSize: 44),
                   ),
-                  const SizedBox(height: 24),
-                  const Text(
-                    'Update required',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 14),
+                  const EnergyTrail(orange: true),
+                  const SizedBox(height: 18),
                   Text(
                     'A new version of the app is available. Please update to continue.',
-                    style: TextStyle(
-                      color: AppColors.colorHint,
-                      fontSize: 16,
-                    ),
-                    textAlign: TextAlign.center,
+                    style: AppTextStyles.meta.copyWith(fontSize: 15),
                   ),
                   if (hasReleaseNotes) ...[
-                    const SizedBox(height: 24),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.06),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: AppColors.colorPrimary.withValues(alpha: 0.3),
+                    const SizedBox(height: 28),
+                    CustomPaint(
+                      painter: const _UpdateFramePainter(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "WHAT'S NEW",
+                              style: AppTextStyles.eyebrow.copyWith(
+                                color: AppColors.colorOrange,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              releaseNotes!,
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                                height: 1.4,
+                                fontFamily: AppTheme.fontFamily,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "What's new",
-                            style: TextStyle(
-                              color: AppColors.colorPrimary,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            releaseNotes!,
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                              height: 1.4,
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ],
                   if (!PlatformUtils.isWeb) ...[
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 36),
                     GradientButton(
                       label: 'Update',
                       onPressed: () => openStore(),
@@ -112,4 +103,37 @@ class ForceUpdatePage extends StatelessWidget {
       ),
     );
   }
+}
+
+class _UpdateFramePainter extends CustomPainter {
+  const _UpdateFramePainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const cut = 12.0;
+    final path = Path()
+      ..moveTo(cut, 0)
+      ..lineTo(size.width, 0)
+      ..lineTo(size.width, size.height - cut)
+      ..lineTo(size.width - cut, size.height)
+      ..lineTo(0, size.height)
+      ..lineTo(0, cut)
+      ..close();
+    canvas.drawPath(
+      path,
+      Paint()..color = AppColors.colorMidnight.withValues(alpha: 0.6),
+    );
+    canvas.drawPath(
+      path,
+      Paint()
+        ..shader = const LinearGradient(
+          colors: [Color(0xFF008CFF), Color(0xFFD9DDE3), Color(0xFFFF6A00)],
+        ).createShader(Offset.zero & size)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.1,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

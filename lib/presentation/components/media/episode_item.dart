@@ -1,16 +1,18 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:butterfly/services/deeplinkly_service.dart';
+import 'package:volt/services/deeplinkly_service.dart';
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/models/media/media_item.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/models/media/media_item.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:provider/provider.dart';
-import 'package:butterfly/providers/authentication_provider.dart';
-import 'package:butterfly/providers/download_provider.dart';
-import 'package:butterfly/providers/content_provider.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/providers/authentication_provider.dart';
+import 'package:volt/providers/download_provider.dart';
+import 'package:volt/providers/content_provider.dart';
 import '../bottom_sheet/media_bottomsheet.dart';
 import '../bottom_sheet/download_bottomsheet.dart';
 
@@ -83,127 +85,195 @@ class _EpisodeItemState extends State<EpisodeItem> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    final episodeNo = widget.baseItem.episodeNumber;
+    final progress = widget.baseItem.getPercentageWatched().clamp(0.0, 1.0);
+    final numberLabel = episodeNo > 0 ? episodeNo.toString().padLeft(2, '0') : '•';
+
     return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: () => showBottomSheetOrNavigate(context, widget.baseItem),
-            child: AnimatedBuilder(
-              animation: _heartbeatScale,
-              builder: (context, child) {
-                final scale = widget.isHighlighted ? _heartbeatScale.value : 1.0;
-                return Transform.scale(
-                  scale: scale,
-                  alignment: Alignment.center,
-                  child: child,
-                );
-              },
-              child: Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: CachedNetworkImage(
-                  imageUrl: widget.baseItem.horizontalPosterUrl,
-                  fit: BoxFit.cover,
-                  placeholder: (ctx, url) => Shimmer.fromColors(
-                    baseColor: const Color(0xFF1F1F1F),
-                    highlightColor: Colors.grey[800]!,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1F1F1F),
-                        borderRadius: BorderRadius.circular(12),
+      padding: const EdgeInsets.only(bottom: 18),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              width: 42,
+              child: Column(
+                children: [
+                  Container(
+                    width: 28,
+                    height: 28,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: widget.isHighlighted ? AppColors.colorOrange : AppColors.colorAccent,
+                        width: 1.4,
+                      ),
+                      gradient: widget.isHighlighted ? AppColors.primaryGradient : null,
+                    ),
+                    child: Text(
+                      numberLabel,
+                      style: TextStyle(
+                        color: widget.isHighlighted ? const Color(0xFF030609) : AppColors.colorSilver,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        fontFamily: AppTheme.displayFamily,
                       ),
                     ),
                   ),
-                  errorWidget: (ctx, url, err) => Shimmer.fromColors(
-                    baseColor: const Color(0xFF1F1F1F),
-                    highlightColor: Colors.grey[800]!,
+                  Expanded(
                     child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1F1F1F),
-                        borderRadius: BorderRadius.circular(12),
+                      width: 2,
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [AppColors.colorAccent, Color(0x00008CFF)],
+                        ),
                       ),
                     ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: GestureDetector(
+                onTap: () => showBottomSheetOrNavigate(context, widget.baseItem),
+                child: AnimatedBuilder(
+                  animation: _heartbeatScale,
+                  builder: (context, child) {
+                    final scale = widget.isHighlighted ? _heartbeatScale.value : 1.0;
+                    return Transform.scale(
+                      scale: scale,
+                      alignment: Alignment.centerLeft,
+                      child: child,
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 132,
+                            child: ChromeFrame(
+                              inset: 3,
+                              child: AspectRatio(
+                                aspectRatio: 16 / 9,
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.baseItem.horizontalPosterUrl,
+                                  fit: BoxFit.cover,
+                                  placeholder: (ctx, url) => Shimmer.fromColors(
+                                    baseColor: const Color(0xFF1F1F1F),
+                                    highlightColor: Colors.grey[800]!,
+                                    child: Container(color: const Color(0xFF1F1F1F)),
+                                  ),
+                                  errorWidget: (ctx, url, err) => Shimmer.fromColors(
+                                    baseColor: const Color(0xFF1F1F1F),
+                                    highlightColor: Colors.grey[800]!,
+                                    child: Container(color: const Color(0xFF1F1F1F)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.baseItem.title,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: AppTextStyles.editorial.copyWith(fontSize: 16),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  _formatDuration(widget.baseItem.lengthSeconds),
+                                  style: AppTextStyles.eyebrow.copyWith(
+                                    color: AppColors.colorTextMuted,
+                                    fontSize: 9,
+                                    letterSpacing: 1.6,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: _isSharing
+                                          ? null
+                                          : () async {
+                                              setState(() => _isSharing = true);
+                                              try {
+                                                final url = await DeepLinklyLinkService.instance.generateLink(
+                                                  context,
+                                                  type: LinkType.episode,
+                                                  data: {
+                                                    'slug': widget.baseItem.id,
+                                                    'title': widget.baseItem.title,
+                                                    'description': widget.baseItem.description,
+                                                    'poster': widget.baseItem.verticalPosterUrl,
+                                                  },
+                                                );
+                                                if (mounted) Share.share(url);
+                                              } finally {
+                                                if (mounted) setState(() => _isSharing = false);
+                                              }
+                                            },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(color: AppColors.colorHairline),
+                                        ),
+                                        child: SizedBox(
+                                          width: 18,
+                                          height: 18,
+                                          child: _isSharing
+                                              ? const CircularProgressIndicator(
+                                                  color: Colors.white,
+                                                  strokeWidth: 2,
+                                                )
+                                              : const Icon(Icons.share, color: Colors.white, size: 16),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    if (widget.baseItem.mediaType == MediaType.episode && widget.baseItem.isDownloadable)
+                                      _EpisodeDownloadButton(baseItem: widget.baseItem),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (widget.baseItem.description.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          widget.baseItem.description,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.meta.copyWith(fontSize: 12, height: 1.4),
+                        ),
+                      ],
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 8,
+                        child: EnergyProgress(value: progress),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-          ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            widget.baseItem.title,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            style: const TextStyle(fontSize: 13, color: Colors.white),
-          ),
-          // Duration and download button row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                _formatDuration(widget.baseItem.lengthSeconds),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: const TextStyle(fontSize: 8, color: Colors.white60),
-              ),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: _isSharing
-                        ? null
-                        : () async {
-                            setState(() => _isSharing = true);
-                            try {
-                              final url = await DeepLinklyLinkService.instance.generateLink(
-                                context,
-                                type: LinkType.episode,
-                                data: {
-                                  'slug': widget.baseItem.id,
-                                  'title': widget.baseItem.title,
-                                  'description': widget.baseItem.description,
-                                  'poster': widget.baseItem.verticalPosterUrl,
-                                },
-                              );
-                              if (mounted) Share.share(url);
-                            } finally {
-                              if (mounted) setState(() => _isSharing = false);
-                            }
-                          },
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      margin: EdgeInsets.only(top: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: _isSharing
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              )
-                            : Icon(Icons.share, color: Colors.white, size: 18),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 3),
-                  if (widget.baseItem.mediaType == MediaType.episode &&
-                      widget.baseItem.isDownloadable)
-                    _EpisodeDownloadButton(baseItem: widget.baseItem),
-                ],
-              )
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

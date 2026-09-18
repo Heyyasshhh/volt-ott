@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:butterfly/models/user/user.dart';
-import 'package:butterfly/network/api_paths.dart';
-import 'package:butterfly/platform_utils.dart';
-import 'package:butterfly/services/network_service.dart';
-import 'package:butterfly/web_stub.dart' if (dart.library.html) 'package:web/web.dart' as web;
+import 'package:volt/models/user/user.dart';
+import 'package:volt/network/api_paths.dart';
+import 'package:volt/platform_utils.dart';
+import 'package:volt/services/network_service.dart';
+import 'package:volt/web_stub.dart' if (dart.library.html) 'package:web/web.dart' as web;
 
 class AuthenticationService {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();

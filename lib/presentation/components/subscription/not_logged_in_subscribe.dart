@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
 import '../../pages/authentication/login_screen.dart';
 
 class NotLoggedInSubscribe extends StatelessWidget {

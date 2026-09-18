@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:butterfly/models/subscription_plan.dart';
-import 'package:butterfly/models/user/user.dart';
-import 'package:butterfly/models/user/user_subscription.dart';
-import 'package:butterfly/network/api_paths.dart';
-import 'package:butterfly/services/authentication_service.dart';
-import 'package:butterfly/services/network_service.dart';
+import 'package:volt/models/subscription_plan.dart';
+import 'package:volt/models/user/user.dart';
+import 'package:volt/models/user/user_subscription.dart';
+import 'package:volt/network/api_paths.dart';
+import 'package:volt/services/authentication_service.dart';
+import 'package:volt/services/network_service.dart';
 
 typedef OnSuccessCallback = void Function(User user);
 typedef OnFailureCallback = void Function(dynamic error);

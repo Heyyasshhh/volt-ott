@@ -1,10 +1,8 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/app_theme.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/models/subscription_plan.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/models/subscription_plan.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
 
 class PlansPageHeader extends StatelessWidget {
   const PlansPageHeader({super.key});
@@ -14,35 +12,23 @@ class PlansPageHeader extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'MEMBERSHIP',
-          style: TextStyle(
-            color: AppColors.colorPrimary,
-            fontSize: 11,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 2.2,
-          ),
-        ),
-        SizedBox(height: 6),
-        Text(
-          'Pick a pass',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 32,
-            fontWeight: FontWeight.w800,
-            fontStyle: FontStyle.italic,
-            letterSpacing: -0.8,
-            height: 1.05,
-          ),
-        ),
+        Text('MEMBERSHIP', style: AppTextStyles.eyebrow),
+        SizedBox(height: 8),
+        Text('Choose a plan', style: AppTextStyles.displayTitle),
         SizedBox(height: 8),
         Text(
-          'One pass. The full Butterfly library, unlimited in HD.',
+          'Select a membership and start watching.',
           style: AppTextStyles.meta,
         ),
       ],
     );
   }
+}
+
+String voltPowerLabel(SubscriptionPlan plan, int index, int total) {
+  if (plan.isMostPopular) return 'MOST POPULAR';
+  if (plan.isBestValue) return 'BEST VALUE';
+  return 'PLAN';
 }
 
 class PromoCodeBar extends StatelessWidget {
@@ -72,11 +58,11 @@ class PromoCodeBar extends StatelessWidget {
     if (!expanded && appliedCouponCode == null) {
       return GestureDetector(
         onTap: onExpand,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
-          child: const Row(
+        child: const Padding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Row(
             children: [
-              Icon(Icons.confirmation_number_outlined, color: AppColors.colorPrimary, size: 18),
+              Icon(Icons.confirmation_number_outlined, color: AppColors.colorOrange, size: 18),
               SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -91,7 +77,7 @@ class PromoCodeBar extends StatelessWidget {
               Text(
                 'ADD',
                 style: TextStyle(
-                  color: AppColors.colorPrimary,
+                  color: AppColors.colorOrange,
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 1.2,
@@ -103,95 +89,89 @@ class PromoCodeBar extends StatelessWidget {
       );
     }
 
-    return Container(
-      padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
-      decoration: BoxDecoration(
-        color: AppColors.colorSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.colorInputBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: controller,
+                cursorColor: AppColors.colorOrange,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontFamily: AppTheme.displayFamily,
+                  fontWeight: FontWeight.w700,
+                ),
+                textCapitalization: TextCapitalization.characters,
+                decoration: const InputDecoration(
+                  hintText: 'PROMO CODE',
+                  hintStyle: TextStyle(color: AppColors.colorHint, fontSize: 14, letterSpacing: 2),
+                  border: InputBorder.none,
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.colorHairline),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.colorAccent, width: 1.6),
+                  ),
+                ),
+                onSubmitted: (_) => onApply(),
+              ),
+            ),
+            const SizedBox(width: 10),
+            SizedBox(
+              width: 96,
+              child: GradientButton(
+                label: 'Apply',
+                height: 48,
+                isLoading: loading,
+                onPressed: loading ? null : onApply,
+              ),
+            ),
+          ],
+        ),
+        if (appliedCouponCode != null) ...[
+          const SizedBox(height: 10),
           Row(
             children: [
+              const Icon(Icons.check_circle_rounded, color: AppColors.colorOrange, size: 16),
+              const SizedBox(width: 6),
               Expanded(
-                child: Container(
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: AppColors.colorInputFill,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: AppColors.colorInputBorder),
-                  ),
-                  child: TextField(
-                    controller: controller,
-                    cursorColor: AppColors.colorPrimary,
-                    style: const TextStyle(color: Colors.white, fontSize: 15),
-                    textCapitalization: TextCapitalization.characters,
-                    decoration: const InputDecoration(
-                      hintText: 'Promo code',
-                      hintStyle: TextStyle(color: AppColors.colorHint, fontSize: 15),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                    ),
-                    onSubmitted: (_) => onApply(),
+                child: Text(
+                  couponMessage ?? 'Promo applied',
+                  style: const TextStyle(
+                    color: AppColors.colorOrange,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
-              SizedBox(
-                width: 96,
-                child: GradientButton(
-                  label: 'Apply',
-                  height: 48,
-                  isLoading: loading,
-                  onPressed: loading ? null : onApply,
+              GestureDetector(
+                onTap: onClear,
+                child: const Text(
+                  'Remove',
+                  style: TextStyle(
+                    color: AppColors.colorTextSecondary,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
           ),
-          if (appliedCouponCode != null) ...[
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                const Icon(Icons.check_circle_rounded, color: AppColors.colorPrimary, size: 16),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    couponMessage ?? 'Promo applied',
-                    style: const TextStyle(
-                      color: AppColors.colorPrimary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: onClear,
-                  child: const Text(
-                    'Remove',
-                    style: TextStyle(
-                      color: AppColors.colorTextSecondary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ],
+        ] else if (couponMessage != null) ...[
+          const SizedBox(height: 8),
+          Text(
+            couponMessage!,
+            style: const TextStyle(
+              color: AppColors.colorOrange,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
             ),
-          ] else if (couponMessage != null) ...[
-            const SizedBox(height: 8),
-            Text(
-              couponMessage!,
-              style: const TextStyle(
-                color: AppColors.colorPrimary,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+          ),
         ],
-      ),
+      ],
     );
   }
 }
@@ -202,6 +182,8 @@ class PlanCard extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onSubscribe;
   final List<String> features;
+  final int index;
+  final int total;
 
   const PlanCard({
     super.key,
@@ -214,6 +196,8 @@ class PlanCard extends StatelessWidget {
       'Unlimited streaming',
       'Premium HD',
     ],
+    this.index = 0,
+    this.total = 1,
   });
 
   @override
@@ -221,185 +205,78 @@ class PlanCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedSize(
-        duration: const Duration(milliseconds: 280),
+        duration: const Duration(milliseconds: 320),
         curve: Curves.easeOutCubic,
         alignment: Alignment.topCenter,
-        child: isSelected ? _HeroPass(plan: plan, features: features, onSubscribe: onSubscribe) : _TicketPass(plan: plan),
+        child: isSelected
+            ? _EnergyCore(
+                plan: plan,
+                features: features,
+                onSubscribe: onSubscribe,
+                powerLabel: voltPowerLabel(plan, index, total),
+              )
+            : _DormantCore(
+                plan: plan,
+                powerLabel: voltPowerLabel(plan, index, total),
+              ),
       ),
     );
   }
 }
 
-({String number, String unit, String shortUnit}) _splitValidity(String validity) {
+({String number, String unit}) _splitValidity(String validity) {
   final match = RegExp(r'^(\d+)\s*(.*)$').firstMatch(validity.trim());
   if (match == null || (match.group(1) ?? '').isEmpty) {
-    return (number: '•', unit: validity.toUpperCase(), shortUnit: 'PASS');
+    return (number: '•', unit: validity.toUpperCase());
   }
   final unit = (match.group(2) ?? '').trim();
-  final upper = unit.toUpperCase();
-  String short;
-  if (upper.startsWith('MONTH')) {
-    short = 'MOS';
-  } else if (upper.startsWith('YEAR') || upper.startsWith('YR')) {
-    short = 'YR';
-  } else if (upper.startsWith('WEEK')) {
-    short = 'WKS';
-  } else if (upper.startsWith('DAY')) {
-    short = 'DAYS';
-  } else if (upper.isEmpty) {
-    short = 'PASS';
-  } else {
-    short = upper.length <= 4 ? upper : upper.substring(0, 3);
-  }
-  return (number: match.group(1)!, unit: unit.isEmpty ? 'Pass' : unit, shortUnit: short);
+  return (number: match.group(1)!, unit: unit.isEmpty ? 'PASS' : unit);
 }
 
-class _TicketPass extends StatelessWidget {
+class _DormantCore extends StatelessWidget {
   final SubscriptionPlan plan;
+  final String powerLabel;
 
-  const _TicketPass({required this.plan});
+  const _DormantCore({required this.plan, required this.powerLabel});
 
   @override
   Widget build(BuildContext context) {
-    final parts = _splitValidity(plan.validity);
-    const stubWidth = 78.0;
-
-    return SizedBox(
-      height: 108,
-      child: Stack(
-        clipBehavior: Clip.none,
+    return Container(
+      height: 92,
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.colorHairline),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Row(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.colorSurface,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.colorInputBorder),
-            ),
-            child: Row(
+          CustomPaint(
+            size: const Size(42, 42),
+            painter: _CoreRingPainter(active: false),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: stubWidth,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: AppColors.colorSurfaceElevated,
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(19)),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          parts.number,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w800,
-                            height: 1,
-                            letterSpacing: -1,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          parts.shortUnit,
-                          style: const TextStyle(
-                            color: AppColors.colorPrimary,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 1.6,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 1,
-                  height: 108,
-                  child: CustomPaint(
-                    painter: _DashedLinePainter(color: Colors.white.withValues(alpha: 0.12)),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                plan.name.isNotEmpty ? plan.name : plan.validity,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                            ),
-                            if (plan.isMostPopular)
-                              const _MiniTag(label: 'HOT', color: AppColors.colorPrimary)
-                            else if (plan.isBestValue)
-                              const _MiniTag(label: 'VALUE', color: AppColors.colorGold),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          plan.validity,
-                          style: AppTextStyles.meta,
-                        ),
-                        const Spacer(),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            if (plan.originalCost != null) ...[
-                              Text(
-                                '${plan.currency}${SubscriptionPlan.formatCost(plan.originalCost!)}',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.colorTextMuted,
-                                  decoration: TextDecoration.lineThrough,
-                                  decorationColor: AppColors.colorTextMuted,
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                            ],
-                            Text(
-                              '${plan.currency}${SubscriptionPlan.formatCost(plan.cost)}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                                height: 1,
-                                letterSpacing: -0.4,
-                              ),
-                            ),
-                            const Spacer(),
-                            const Icon(
-                              Icons.arrow_forward_rounded,
-                              color: AppColors.colorTextMuted,
-                              size: 18,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                Text(powerLabel, style: AppTextStyles.eyebrow),
+                const SizedBox(height: 4),
+                Text(
+                  plan.name.isNotEmpty ? plan.name : plan.validity,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
             ),
           ),
-          Positioned(
-            left: stubWidth - 8,
-            top: -8,
-            child: _Notch(),
-          ),
-          Positioned(
-            left: stubWidth - 8,
-            bottom: -8,
-            child: _Notch(),
+          Text(
+            '${plan.currency}${SubscriptionPlan.formatCost(plan.cost)}',
+            style: AppTextStyles.chrome,
           ),
         ],
       ),
@@ -407,15 +284,17 @@ class _TicketPass extends StatelessWidget {
   }
 }
 
-class _HeroPass extends StatelessWidget {
+class _EnergyCore extends StatelessWidget {
   final SubscriptionPlan plan;
   final List<String> features;
   final VoidCallback onSubscribe;
+  final String powerLabel;
 
-  const _HeroPass({
+  const _EnergyCore({
     required this.plan,
     required this.features,
     required this.onSubscribe,
+    required this.powerLabel,
   });
 
   @override
@@ -424,179 +303,224 @@ class _HeroPass extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.colorOrange.withValues(alpha: 0.7)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.colorPrimary.withValues(alpha: 0.28),
+            color: AppColors.colorOrange.withValues(alpha: 0.22),
             blurRadius: 28,
-            offset: const Offset(0, 14),
+            offset: const Offset(0, 12),
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFF2A1224),
-                    Color(0xFF14121C),
-                    Color(0xFF1A1230),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              right: -28,
-              top: -36,
-              child: Text(
-                parts.number,
-                style: TextStyle(
-                  fontSize: 168,
-                  fontWeight: FontWeight.w800,
-                  height: 1,
-                  color: AppColors.colorPrimary.withValues(alpha: 0.10),
-                ),
-              ),
-            ),
-            Positioned(
-              left: -40,
-              bottom: -50,
-              child: Container(
-                width: 180,
-                height: 180,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.colorPrimaryDark.withValues(alpha: 0.28),
-                ),
-              ),
-            ),
-            Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: AppColors.colorPrimary.withValues(alpha: 0.45), width: 1.2),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      if (plan.isMostPopular)
-                        const _PassBadge(label: 'MOST POPULAR', gradient: true)
-                      else if (plan.isBestValue)
-                        const _PassBadge(label: 'BEST VALUE', gold: true)
-                      else
-                        const _PassBadge(label: 'PASS'),
-                      const Spacer(),
-                      Container(
-                        width: 28,
-                        height: 28,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: AppColors.primaryGradient,
-                        ),
-                        child: const Icon(Icons.check_rounded, size: 16, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 18),
-                  Text(
-                    plan.name.isNotEmpty ? plan.name : plan.validity,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(painter: _CoreGlowPainter()),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CustomPaint(
+                      size: const Size(54, 54),
+                      painter: _CoreRingPainter(active: true),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        parts.number,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 52,
-                          fontWeight: FontWeight.w800,
-                          height: 0.95,
-                          letterSpacing: -2,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          parts.unit.toUpperCase(),
-                          style: const TextStyle(
-                            color: AppColors.colorPrimary,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 1.4,
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (plan.originalCost != null)
-                            Text(
-                              '${plan.currency}${SubscriptionPlan.formatCost(plan.originalCost!)}',
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: AppColors.colorTextMuted,
-                                decoration: TextDecoration.lineThrough,
-                                decorationColor: AppColors.colorTextMuted,
-                              ),
-                            ),
+                          Text(powerLabel, style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorOrange)),
+                          const SizedBox(height: 4),
                           Text(
-                            '${plan.currency}${SubscriptionPlan.formatCost(plan.cost)}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.w800,
-                              height: 1.05,
-                              letterSpacing: -0.6,
-                            ),
+                            plan.name.isNotEmpty ? plan.name : plan.validity,
+                            style: AppTextStyles.editorial.copyWith(fontSize: 22),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 1,
-                    child: CustomPaint(
-                      painter: _DashedLinePainter(
-                        color: Colors.white.withValues(alpha: 0.16),
-                        axis: Axis.horizontal,
+                    ),
+                    if (plan.isMostPopular)
+                      Text('MOST POPULAR', style: AppTextStyles.seeAll)
+                    else if (plan.isBestValue)
+                      Text('BEST VALUE', style: AppTextStyles.seeAll.copyWith(color: AppColors.colorAccent)),
+                  ],
+                ),
+                const SizedBox(height: 18),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      parts.number,
+                      style: AppTextStyles.displayTitle.copyWith(fontSize: 56),
+                    ),
+                    const SizedBox(width: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        parts.unit.toUpperCase(),
+                        style: const TextStyle(
+                          color: AppColors.colorOrange,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.8,
+                        ),
                       ),
                     ),
+                    const Spacer(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        if (plan.originalCost != null)
+                          Text(
+                            '${plan.currency}${SubscriptionPlan.formatCost(plan.originalCost!)}',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.colorTextMuted,
+                              decoration: TextDecoration.lineThrough,
+                              decorationColor: AppColors.colorTextMuted,
+                            ),
+                          ),
+                        Text(
+                          '${plan.currency}${SubscriptionPlan.formatCost(plan.cost)}',
+                          style: const TextStyle(
+                            color: AppColors.colorSilver,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w800,
+                            height: 1.05,
+                            fontFamily: AppTheme.displayFamily,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const EnergyTrail(height: 1.6, orange: true),
+                const SizedBox(height: 14),
+                ...features.map(
+                  (feature) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.bolt, color: AppColors.colorAccent, size: 14),
+                        const SizedBox(width: 8),
+                        Text(feature, style: AppTextStyles.meta),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 14),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: features.map((feature) => _FeatureChip(label: feature)).toList(),
-                  ),
-                  const SizedBox(height: 18),
-                  GradientButton(
-                    label: plan.buttonText,
-                    height: 50,
-                    onPressed: onSubscribe,
-                  ),
-                ],
+                ),
+                const SizedBox(height: 10),
+                GradientButton(
+                  label: 'Subscribe',
+                  height: 50,
+                  onPressed: onSubscribe,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CoreRingPainter extends CustomPainter {
+  final bool active;
+  _CoreRingPainter({required this.active});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = Offset(size.width / 2, size.height / 2);
+    final orange = Paint()
+      ..color = active ? AppColors.colorOrange : AppColors.colorHairline
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = active ? 2 : 1.1;
+    final blue = Paint()
+      ..color = active ? AppColors.colorAccent : AppColors.colorTextMuted
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.1;
+    canvas.drawCircle(c, size.width * 0.46, orange);
+    canvas.drawCircle(c, size.width * 0.32, blue);
+    if (active) {
+      canvas.drawCircle(c, 4, Paint()..color = AppColors.colorElectric);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _CoreRingPainter oldDelegate) => oldDelegate.active != active;
+}
+
+class _CoreGlowPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final glow = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          AppColors.colorOrange.withValues(alpha: 0.16),
+          AppColors.colorAccent.withValues(alpha: 0.08),
+          Colors.transparent,
+        ],
+      ).createShader(Rect.fromCircle(center: Offset(size.width * 0.18, size.height * 0.2), radius: 180));
+    canvas.drawRect(Offset.zero & size, glow);
+    final blue = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          AppColors.colorAccent.withValues(alpha: 0.14),
+          Colors.transparent,
+        ],
+      ).createShader(Rect.fromCircle(center: Offset(size.width * 0.9, size.height * 0.85), radius: 160));
+    canvas.drawRect(Offset.zero & size, blue);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class BillingPowerMeter extends StatelessWidget {
+  final bool yearly;
+  final ValueChanged<bool> onChanged;
+
+  const BillingPowerMeter({
+    super.key,
+    required this.yearly,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onChanged(!yearly),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            Text(
+              'MONTHLY',
+              style: TextStyle(
+                color: yearly ? AppColors.colorTextMuted : AppColors.colorOrange,
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 2.2,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: CustomPaint(
+                size: const Size(double.infinity, 10),
+                painter: _MeterPainter(value: yearly ? 1 : 0),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'YEARLY',
+              style: TextStyle(
+                color: yearly ? AppColors.colorAccent : AppColors.colorTextMuted,
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 2.2,
               ),
             ),
           ],
@@ -606,144 +530,25 @@ class _HeroPass extends StatelessWidget {
   }
 }
 
-class _Notch extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 16,
-      height: 16,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: AppColors.colorBackground,
-        border: Border.all(color: AppColors.colorInputBorder, width: 1),
-      ),
-    );
-  }
-}
-
-class _MiniTag extends StatelessWidget {
-  final String label;
-  final Color color;
-
-  const _MiniTag({required this.label, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.16),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: color,
-          fontSize: 9,
-          fontWeight: FontWeight.w800,
-          letterSpacing: 0.6,
-        ),
-      ),
-    );
-  }
-}
-
-class _PassBadge extends StatelessWidget {
-  final String label;
-  final bool gradient;
-  final bool gold;
-
-  const _PassBadge({
-    required this.label,
-    this.gradient = false,
-    this.gold = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        gradient: gradient ? AppColors.primaryGradient : null,
-        color: gold ? AppColors.colorGold.withValues(alpha: 0.16) : (gradient ? null : Colors.white.withValues(alpha: 0.08)),
-        borderRadius: BorderRadius.circular(8),
-        border: gold ? Border.all(color: AppColors.colorGold.withValues(alpha: 0.5)) : null,
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w800,
-          letterSpacing: 0.8,
-          color: gold ? AppColors.colorGold : Colors.white,
-        ),
-      ),
-    );
-  }
-}
-
-class _FeatureChip extends StatelessWidget {
-  final String label;
-
-  const _FeatureChip({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
-
-class _DashedLinePainter extends CustomPainter {
-  final Color color;
-  final Axis axis;
-
-  _DashedLinePainter({
-    required this.color,
-    this.axis = Axis.vertical,
-  });
+class _MeterPainter extends CustomPainter {
+  final double value;
+  _MeterPainter({required this.value});
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 1.2
-      ..style = PaintingStyle.stroke;
-
-    const dash = 5.0;
-    const gap = 4.0;
-    if (axis == Axis.vertical) {
-      var y = 10.0;
-      final x = size.width / 2;
-      while (y < size.height - 10) {
-        canvas.drawLine(Offset(x, y), Offset(x, math.min(y + dash, size.height - 10)), paint);
-        y += dash + gap;
-      }
-    } else {
-      var x = 0.0;
-      final y = size.height / 2;
-      while (x < size.width) {
-        canvas.drawLine(Offset(x, y), Offset(math.min(x + dash, size.width), y), paint);
-        x += dash + gap;
-      }
-    }
+    final y = size.height / 2;
+    final bg = Paint()
+      ..color = AppColors.colorHairline
+      ..strokeWidth = 1.4;
+    canvas.drawLine(Offset(0, y), Offset(size.width, y), bg);
+    final t = size.width * (0.12 + value * 0.76);
+    canvas.drawCircle(
+      Offset(t, y),
+      5,
+      Paint()..color = value > 0.5 ? AppColors.colorAccent : AppColors.colorOrange,
+    );
   }
 
   @override
-  bool shouldRepaint(covariant _DashedLinePainter oldDelegate) => oldDelegate.color != color;
+  bool shouldRepaint(covariant _MeterPainter oldDelegate) => oldDelegate.value != value;
 }

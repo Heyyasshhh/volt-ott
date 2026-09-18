@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
+import 'package:volt/constants/colors.dart';
 
 class SubmitButton extends StatelessWidget {
   final String buttonText;
@@ -29,7 +29,6 @@ class SubmitButton extends StatelessWidget {
             width: buttonWidth,
             margin: const EdgeInsets.symmetric(horizontal: 25),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(28),
               gradient: isLoading ? null : AppColors.primaryGradient,
               color: isLoading ? AppColors.colorPrimary.withValues(alpha: 0.7) : null,
               boxShadow: isLoading
@@ -49,12 +48,17 @@ class SubmitButton extends StatelessWidget {
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(CupertinoColors.white),
+                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF030609)),
                       ),
                     )
                   : Text(
-                      buttonText,
-                      style: const TextStyle(color: CupertinoColors.white, fontSize: 17),
+                      buttonText.toUpperCase(),
+                      style: const TextStyle(
+                        color: Color(0xFF030609),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 2,
+                      ),
                     ),
             ),
           ),
@@ -79,16 +83,14 @@ class PlayButton extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: 460),
         height: 60,
         width: 60,
-        decoration: const BoxDecoration(
-          color: AppColors.colorPrimary,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(17),
-              bottomLeft: Radius.circular(17),
-              topRight: Radius.circular(17)),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: AppColors.primaryGradient,
+          border: Border.all(color: AppColors.colorAccent.withValues(alpha: 0.6)),
         ),
         child: const Icon(
           Icons.play_arrow_rounded,
-          color: Colors.white,
+          color: Color(0xFF030609),
         ),
       ),
     );

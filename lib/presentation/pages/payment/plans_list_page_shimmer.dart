@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/presentation/components/subscription/plan_card.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/presentation/components/subscription/plan_card.dart';
 
 class PlansListPageShimmer extends StatelessWidget {
   const PlansListPageShimmer({super.key});
 
-  static const _shimmerBase = Color(0xFF1A1A24);
-  static const _shimmerHighlight = Color(0xFF2A2A36);
+  static const _shimmerBase = Color(0xFF071426);
+  static const _shimmerHighlight = Color(0xFF0B2B55);
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +24,11 @@ class PlansListPageShimmer extends StatelessWidget {
             highlightColor: _shimmerHighlight,
             child: Column(
               children: [
-                _ticket(),
+                _core(expanded: true),
                 const SizedBox(height: 14),
-                _ticket(),
+                _core(),
                 const SizedBox(height: 14),
-                _ticket(),
+                _core(),
               ],
             ),
           ),
@@ -37,58 +37,37 @@ class PlansListPageShimmer extends StatelessWidget {
     );
   }
 
-  Widget _ticket() {
+  Widget _core({bool expanded = false}) {
     return Container(
-      height: 108,
+      height: expanded ? 220 : 92,
       decoration: BoxDecoration(
-        color: AppColors.colorSurface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.colorInputBorder),
+        border: Border.all(color: AppColors.colorHairline),
       ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 78,
-            decoration: const BoxDecoration(
-              color: _shimmerBase,
-              borderRadius: BorderRadius.horizontal(left: Radius.circular(19)),
+            width: expanded ? 54 : 42,
+            height: expanded ? 54 : 42,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.colorAccent),
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 14),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 14,
-                    width: 140,
-                    decoration: BoxDecoration(
-                      color: _shimmerBase,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    height: 10,
-                    width: 90,
-                    decoration: BoxDecoration(
-                      color: _shimmerBase,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(height: 10, width: 88, color: _shimmerBase),
+                const SizedBox(height: 10),
+                Container(height: 16, width: 140, color: _shimmerBase),
+                if (expanded) ...[
                   const Spacer(),
-                  Container(
-                    height: 18,
-                    width: 72,
-                    decoration: BoxDecoration(
-                      color: _shimmerBase,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
+                  Container(height: 44, width: double.infinity, color: _shimmerBase),
                 ],
-              ),
+              ],
             ),
           ),
         ],

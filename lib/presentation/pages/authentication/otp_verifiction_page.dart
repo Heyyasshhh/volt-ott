@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/network/api_paths.dart';
-import 'package:butterfly/presentation/pages/authentication/login_screen.dart';
-import 'package:butterfly/presentation/pages/home_page.dart';
-import 'package:butterfly/services/logging_service.dart';
-import 'package:butterfly/services/network_service.dart';
-import 'package:butterfly/presentation/components/ui/app_widgets.dart';
-import 'package:butterfly/presentation/components/controls/timer_widget.dart';
-import 'package:butterfly/providers/authentication_provider.dart';
+import 'package:volt/constants/app_theme.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/constants/layout.dart';
+import 'package:volt/network/api_paths.dart';
+import 'package:volt/presentation/pages/authentication/login_screen.dart';
+import 'package:volt/presentation/pages/home_page.dart';
+import 'package:volt/services/logging_service.dart';
+import 'package:volt/services/network_service.dart';
+import 'package:volt/presentation/components/ui/app_widgets.dart';
+import 'package:volt/presentation/components/controls/timer_widget.dart';
+import 'package:volt/providers/authentication_provider.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_auth/smart_auth.dart';
@@ -58,6 +60,12 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
   @override
   Widget build(BuildContext context) {
     final authenticationProvider = Provider.of<AuthenticationProvider>(context);
+    const pinText = TextStyle(
+      fontSize: 24,
+      color: Colors.white,
+      fontWeight: FontWeight.w600,
+      fontFamily: AppTheme.displayFamily,
+    );
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
       body: AppBackground(
@@ -69,35 +77,27 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                 minHeight: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                padding: EdgeInsets.symmetric(horizontal: AppLayout.gutter(context)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-              Image.asset('assets/images/butterfly-logo.png', height: 64),
-              const SizedBox(height: 24),
-              const Text(
-                "Enter OTP",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
+              const BrandWordmark(fontSize: 22),
+              const SizedBox(height: 32),
+              Text('VERIFY OTP', style: AppTextStyles.eyebrow),
+              const SizedBox(height: 12),
               Text(
-                "We sent a code to\n${widget.phoneNumber}",
-                style: const TextStyle(
-                  color: AppColors.colorTextSecondary,
-                  fontSize: 15,
-                  height: 1.4,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
+                "Enter OTP",
+                style: AppTextStyles.displayTitle.copyWith(fontSize: 42),
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: 10),
+              const ChromeRule(width: 48, thickness: 1.4, orange: true),
+              const SizedBox(height: 16),
+              Text(
+                "An OTP was sent to\n${widget.phoneNumber}",
+                style: AppTextStyles.meta.copyWith(height: 1.5),
+              ),
+              const SizedBox(height: 40),
               Form(
                 key: formKey,
                 child: Pinput(
@@ -107,18 +107,15 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                   defaultPinTheme: PinTheme(
                     width: 56,
                     height: 56,
-                    textStyle: const TextStyle(
-                      fontSize: 24,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                      color: AppColors.colorInputBorder,
-                      width: 1.5,
-                    ),
-                    color: AppColors.colorInputFill,
+                    textStyle: pinText,
+                    decoration: const BoxDecoration(
+                      color: AppColors.colorInputFill,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: AppColors.colorAccent,
+                          width: 1.6,
+                        ),
+                      ),
                     ),
                   ),
                   separatorBuilder: (index) => const SizedBox(width: 12),
@@ -140,64 +137,57 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                         margin: const EdgeInsets.only(bottom: 9),
                         width: 22,
                         height: 2,
-                        color: Colors.white,
+                        color: AppColors.colorOrange,
                       ),
                     ],
                   ),
                   focusedPinTheme: PinTheme(
                     width: 56,
                     height: 56,
-                    textStyle: const TextStyle(
-                      fontSize: 24,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: AppColors.colorPrimary,
-                        width: 2,
-                      ),
+                    textStyle: pinText,
+                    decoration: const BoxDecoration(
                       color: AppColors.colorInputFill,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: AppColors.colorOrange,
+                          width: 2,
+                        ),
+                      ),
                     ),
                   ),
                   submittedPinTheme: PinTheme(
                     width: 56,
                     height: 56,
-                    textStyle: const TextStyle(
-                      fontSize: 24,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: AppColors.colorInputBorder,
-                        width: 1.5,
-                      ),
+                    textStyle: pinText,
+                    decoration: const BoxDecoration(
                       color: AppColors.colorInputFill,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: AppColors.colorAccent,
+                          width: 1.6,
+                        ),
+                      ),
                     ),
                   ),
                   errorPinTheme: PinTheme(
                     width: 56,
                     height: 56,
-                    textStyle: const TextStyle(
-                      fontSize: 24,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    textStyle: pinText,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.redAccent,
-                        width: 1.5,
-                      ),
                       color: Colors.redAccent.withValues(alpha: 0.1),
+                      border: const Border(
+                        bottom: BorderSide(
+                          color: Colors.redAccent,
+                          width: 1.6,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 36),
+              const EnergyTrail(orange: true),
+              const SizedBox(height: 24),
               GradientButton(
                 onPressed: () async {
                   if (!isClickable) return;

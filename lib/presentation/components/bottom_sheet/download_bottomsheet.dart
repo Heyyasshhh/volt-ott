@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:butterfly/constants/colors.dart';
-import 'package:butterfly/presentation/components/controls/icon_text.dart';
-import 'package:butterfly/presentation/pages/media/offline_video_player.dart';
-import 'package:butterfly/providers/download_provider.dart';
+import 'package:volt/constants/colors.dart';
+import 'package:volt/presentation/components/controls/icon_text.dart';
+import 'package:volt/presentation/pages/media/offline_video_player.dart';
+import 'package:volt/providers/download_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 

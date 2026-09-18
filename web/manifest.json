@@ -1,11 +1,11 @@
 {
-    "name": "Butterfly",
-    "short_name": "Butterfly",
+    "name": "VOLT OTT",
+    "short_name": "VOLT",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#07070C",
-    "theme_color": "#07070C",
-    "description": "Butterfly OTT",
+    "background_color": "#030609",
+    "theme_color": "#030609",
+    "description": "VOLT OTT — Entertainment at full power",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

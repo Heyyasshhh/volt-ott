@@ -19,7 +19,7 @@
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="Butterfly"
+        android:label="VOLT OTT"
         android:largeHeap="true"
         tools:replace="android:label">
         <meta-data

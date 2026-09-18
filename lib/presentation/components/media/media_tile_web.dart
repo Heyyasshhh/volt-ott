@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:butterfly/models/media/section.dart';
-import 'package:butterfly/presentation/components/media/media_item.dart';
-import 'package:butterfly/presentation/pages/fragments/search_page.dart';
+import 'package:volt/models/media/section.dart';
+import 'package:volt/presentation/components/media/media_item.dart';
+import 'package:volt/presentation/pages/fragments/search_page.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MediaTileWeb extends StatelessWidget {
