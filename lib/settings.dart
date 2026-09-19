@@ -40,13 +40,13 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   const SizedBox(width: 12),
-                  Text('SETTINGS', style: AppTextStyles.displayTitle.copyWith(fontSize: 28)),
+                  Text('Settings', style: AppTextStyles.displayTitle.copyWith(fontSize: 28)),
                 ],
               ),
               const SizedBox(height: 10),
-              const EnergyTrail(height: 1.4),
+              const Divider(color: AppColors.colorHairline, height: 1),
               const SizedBox(height: 28),
-              const _SettingsHeading(label: 'PLAYBACK'),
+              const _SettingsHeading(label: 'Playback'),
               _SettingsSwitchRow(
                 label: 'Notifications From Us',
                 value: _notifications,
@@ -58,7 +58,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
                 onChanged: (value) => setState(() => _backgroundMusic = value),
               ),
               const SizedBox(height: 28),
-              const _SettingsHeading(label: 'DOWNLOADS'),
+              const _SettingsHeading(label: 'Downloads'),
               _SettingsSwitchRow(
                 label: 'Download Only On Wifi',
                 value: _wifiOnly,
@@ -86,7 +86,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
               const ChromeRule(width: double.infinity, thickness: 1),
               if (isLoggedIn) ...[
                 const SizedBox(height: 32),
-                const _SettingsHeading(label: 'ACCOUNT'),
+                const _SettingsHeading(label: 'Account'),
                 InkWell(
                   onTap: () => _confirmDelete(authenticationProvider),
                   child: const Padding(
@@ -105,7 +105,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
                     ),
                   ),
                 ),
-                const ChromeRule(width: double.infinity, thickness: 1, orange: true),
+                const Divider(color: AppColors.colorHairline, height: 1),
               ],
             ],
           ),

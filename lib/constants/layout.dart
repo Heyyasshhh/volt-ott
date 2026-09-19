@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class AppLayout {
   static const double tablet = 720;
   static const double desktop = 1100;
-  static const double dockHeight = 72;
-  static const double pageGutter = 22;
+  static const double dockHeight = 68;
+  static const double pageGutter = 20;
   static const double desktopGutter = 56;
-  static const double radius = 4;
-  static const double radiusSm = 2;
-  static const double radiusLg = 18;
+  static const double radius = 8;
+  static const double radiusSm = 6;
+  static const double radiusLg = 14;
 
   static bool isTablet(BuildContext context) =>
       MediaQuery.sizeOf(context).width >= tablet;

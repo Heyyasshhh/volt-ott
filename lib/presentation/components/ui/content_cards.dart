@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:volt/constants/app_theme.dart';
@@ -32,7 +30,7 @@ class NetworkPoster extends StatelessWidget {
   }
 
   Widget _fallback() {
-    return Center(child: Image.asset(BrandAssets.logo, width: 72, fit: BoxFit.contain));
+    return Center(child: Image.asset(BrandAssets.logo, width: 64, fit: BoxFit.contain));
   }
 }
 
@@ -70,7 +68,7 @@ class ChargePoster extends StatelessWidget {
     this.height = 198,
     this.style = ChargePosterStyle.portrait,
     this.showProgress = false,
-    this.showTitle = true,
+    this.showTitle = false,
     this.energyIndex = 0,
     this.vault = false,
     this.circle = false,
@@ -83,85 +81,55 @@ class ChargePoster extends StatelessWidget {
     final progress = item.getPercentageWatched().clamp(0.0, 1.0);
     final landscape = wide || style == ChargePosterStyle.landscape || style == ChargePosterStyle.strip;
     final url = landscape ? bestLandscape(item) : bestPortrait(item);
-    final orange = energyIndex.isEven;
+    final overlayTitle = showTitle || landscape;
 
     Widget poster = NetworkPoster(url: url);
-    if (vault) {
-      poster = ColorFiltered(
-        colorFilter: const ColorFilter.matrix([
-          0.9, 0.05, 0.05, 0, 0,
-          0.05, 0.85, 0.1, 0, 0,
-          0.1, 0.1, 1.05, 0, 8,
-          0, 0, 0, 1, 0,
-        ]),
-        child: poster,
-      );
-    }
 
-    final framed = Stack(
-      fit: StackFit.expand,
-      children: [
-        CustomPaint(
-          painter: _ChargeFramePainter(orange: orange, core: style == ChargePosterStyle.core),
-          child: Padding(
-            padding: EdgeInsets.all(style == ChargePosterStyle.core ? 10 : 5),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                poster,
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        AppColors.colorBackground.withValues(alpha: 0.18),
-                        AppColors.colorBackground.withValues(alpha: 0.88),
-                      ],
-                    ),
-                  ),
+    final framed = ClipRRect(
+      borderRadius: BorderRadius.circular(circle ? 999 : AppLayout.radius),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          poster,
+          if (overlayTitle)
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Color(0x99030507),
+                  ],
                 ),
-                if (showProgress && progress > 0)
-                  Positioned(
-                    left: 8,
-                    right: 8,
-                    bottom: showTitle ? 28 : 10,
-                    child: EnergyProgress(value: progress),
-                  ),
-                if (showTitle && item.title.isNotEmpty)
-                  Positioned(
-                    left: 8,
-                    right: 8,
-                    bottom: 8,
-                    child: Text(
-                      item.title.toUpperCase(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: AppColors.colorSilver,
-                        fontSize: style == ChargePosterStyle.strip ? 11 : 10,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1.1,
-                        fontFamily: AppTheme.fontFamily,
-                        shadows: const [Shadow(color: Colors.black, blurRadius: 8)],
-                      ),
-                    ),
-                  ),
-              ],
+              ),
             ),
-          ),
-        ),
-        if (style == ChargePosterStyle.core)
-          Positioned(
-            right: 8,
-            top: 8,
-            child: CustomPaint(
-              size: const Size(18, 18),
-              painter: _MiniBoltPainter(orange: orange),
+          if (showProgress && progress > 0)
+            Positioned(
+              left: 8,
+              right: 8,
+              bottom: overlayTitle ? 28 : 8,
+              child: EnergyProgress(value: progress),
             ),
-          ),
-      ],
+          if (overlayTitle && item.title.isNotEmpty)
+            Positioned(
+              left: 8,
+              right: 8,
+              bottom: 8,
+              child: Text(
+                item.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: AppColors.colorChrome,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: AppTheme.fontFamily,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
 
     return GestureDetector(
@@ -171,89 +139,11 @@ class ChargePoster extends StatelessWidget {
         child: SizedBox(
           width: width,
           height: height,
-          child: circle
-              ? EnergyPortraitRing(
-                  size: math.min(width, height),
-                  child: poster,
-                )
-              : framed,
+          child: framed,
         ),
       ),
     );
   }
-}
-
-class _ChargeFramePainter extends CustomPainter {
-  final bool orange;
-  final bool core;
-
-  _ChargeFramePainter({required this.orange, required this.core});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-    final shader = LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: orange
-          ? [AppColors.colorOrange, AppColors.colorGold, AppColors.colorSilver]
-          : [AppColors.colorAccent, AppColors.colorElectric, AppColors.colorSilver],
-    ).createShader(rect);
-    final paint = Paint()
-      ..shader = shader
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = core ? 1.6 : 1.1;
-    const cut = 10.0;
-    final path = Path()
-      ..moveTo(cut, 1)
-      ..lineTo(size.width - 1, 1)
-      ..lineTo(size.width - 1, size.height - cut)
-      ..lineTo(size.width - cut, size.height - 1)
-      ..lineTo(1, size.height - 1)
-      ..lineTo(1, cut)
-      ..close();
-    canvas.drawPath(path, paint);
-
-    if (core) {
-      final glow = Paint()
-        ..shader = RadialGradient(
-          colors: [
-            (orange ? AppColors.colorOrange : AppColors.colorAccent).withValues(alpha: 0.18),
-            Colors.transparent,
-          ],
-        ).createShader(Rect.fromCircle(center: Offset(size.width * 0.5, size.height * 0.42), radius: size.width * 0.7));
-      canvas.drawRect(rect, glow);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _ChargeFramePainter oldDelegate) =>
-      oldDelegate.orange != orange || oldDelegate.core != core;
-}
-
-class _MiniBoltPainter extends CustomPainter {
-  final bool orange;
-  _MiniBoltPainter({required this.orange});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final path = Path()
-      ..moveTo(size.width * 0.58, 1)
-      ..lineTo(size.width * 0.28, size.height * 0.48)
-      ..lineTo(size.width * 0.5, size.height * 0.48)
-      ..lineTo(size.width * 0.38, size.height - 1)
-      ..lineTo(size.width * 0.78, size.height * 0.42)
-      ..lineTo(size.width * 0.54, size.height * 0.42)
-      ..close();
-    final paint = Paint()
-      ..color = orange ? AppColors.colorOrange : AppColors.colorAccent
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant _MiniBoltPainter oldDelegate) => oldDelegate.orange != orange;
 }
 
 class ChargeStackRow extends StatelessWidget {
@@ -271,35 +161,25 @@ class ChargeStackRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final landscape = style == ChargePosterStyle.landscape || style == ChargePosterStyle.strip;
-    final width = landscape ? 220.0 : 138.0;
-    final height = landscape ? 128.0 : 210.0;
+    final width = landscape ? 228.0 : 132.0;
+    final height = landscape ? 128.0 : 198.0;
 
     return SizedBox(
-      height: height + 18,
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 18),
+      height: height,
+      child: ListView.separated(
+        padding: EdgeInsets.symmetric(horizontal: AppLayout.gutter(context)),
         scrollDirection: Axis.horizontal,
         itemCount: items.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
-          final tilt = index.isEven ? -0.035 : 0.028;
-          final core = index % 3 == 0;
-          return Padding(
-            padding: EdgeInsets.only(
-              right: 10,
-              top: index.isEven ? 10 : 0,
-              bottom: index.isEven ? 0 : 10,
-            ),
-            child: Transform.rotate(
-              angle: tilt,
-              child: ChargePoster(
-                item: items[index],
-                width: width,
-                height: height,
-                style: core ? ChargePosterStyle.core : style,
-                showProgress: showProgress,
-                energyIndex: index,
-              ),
-            ),
+          return ChargePoster(
+            item: items[index],
+            width: width,
+            height: height,
+            style: style,
+            showProgress: showProgress,
+            showTitle: landscape,
+            energyIndex: index,
           );
         },
       ),
@@ -319,30 +199,10 @@ class ChargeOverlapStack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shown = items.take(6).toList();
-    return SizedBox(
-      height: 236,
-      child: ListView.builder(
-        padding: const EdgeInsets.fromLTRB(22, 8, 22, 8),
-        scrollDirection: Axis.horizontal,
-        itemCount: shown.length,
-        itemBuilder: (context, index) {
-          return Transform.translate(
-            offset: Offset(index == 0 ? 0 : -18, index.isEven ? -6 : 8),
-            child: Transform.rotate(
-              angle: (index.isEven ? -1 : 1) * 0.045,
-              child: ChargePoster(
-                item: shown[index],
-                width: 148,
-                height: 214,
-                style: index % 2 == 0 ? ChargePosterStyle.core : ChargePosterStyle.portrait,
-                showProgress: showProgress,
-                energyIndex: index,
-              ),
-            ),
-          );
-        },
-      ),
+    return ChargeStackRow(
+      items: items,
+      showProgress: showProgress,
+      style: ChargePosterStyle.portrait,
     );
   }
 }
@@ -358,41 +218,14 @@ class EnergyPortraitRing extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: CustomPaint(
-        painter: _PortraitRingPainter(),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: ClipOval(child: child),
+      child: ClipOval(
+        child: ColoredBox(
+          color: AppColors.colorSurface,
+          child: child,
         ),
       ),
     );
   }
-}
-
-class _PortraitRingPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final c = Offset(size.width / 2, size.height / 2);
-    final orange = Paint()
-      ..color = AppColors.colorOrange
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.8;
-    final blue = Paint()
-      ..color = AppColors.colorAccent
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.1;
-    canvas.drawCircle(c, size.width * 0.46, orange);
-    canvas.drawCircle(c, size.width * 0.38, blue);
-    for (int i = 0; i < 8; i++) {
-      final a = (math.pi * 2 / 8) * i - math.pi / 2;
-      final inner = Offset(c.dx + math.cos(a) * size.width * 0.38, c.dy + math.sin(a) * size.width * 0.38);
-      final outer = Offset(c.dx + math.cos(a) * size.width * 0.46, c.dy + math.sin(a) * size.width * 0.46);
-      canvas.drawLine(inner, outer, orange..strokeWidth = 1.2);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class NowPlayingHero extends StatelessWidget {
@@ -413,70 +246,61 @@ class NowPlayingHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = AppLayout.isDesktop(context) ? 720.0 : MediaQuery.sizeOf(context).height * 0.78;
+    final desktop = AppLayout.isDesktop(context);
+    final height = desktop ? 680.0 : MediaQuery.sizeOf(context).height * 0.72;
+    final description = item.description.trim();
+
     return SizedBox(
       height: height,
       width: double.infinity,
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Positioned(
-            left: -24,
-            right: 36,
-            top: 0,
-            bottom: 80,
-            child: ClipPath(
-              clipper: const DiagonalClipper(cut: 28),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  media ?? NetworkPoster(url: bestPortrait(item)),
-                  const DecoratedBox(decoration: BoxDecoration(gradient: AppColors.cinemaWash)),
-                ],
-              ),
-            ),
-          ),
+          media ?? NetworkPoster(url: desktop ? bestLandscape(item) : bestPortrait(item)),
+          const DecoratedBox(decoration: BoxDecoration(gradient: AppColors.cinemaWash)),
           Positioned(
             left: AppLayout.gutter(context),
-            right: AppLayout.gutter(context),
-            bottom: 18,
+            right: desktop ? MediaQuery.sizeOf(context).width * 0.38 : AppLayout.gutter(context),
+            bottom: 28,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('NOW PLAYING', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorOrange)),
+                if (item.categories.isNotEmpty)
+                  Text(
+                    item.categories.first,
+                    style: AppTextStyles.eyebrow,
+                  ),
                 const SizedBox(height: 8),
                 Text(
                   item.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.displayTitle.copyWith(fontSize: 40),
+                  style: AppTextStyles.displayTitle.copyWith(fontSize: desktop ? 52 : 34),
                 ),
                 const SizedBox(height: 10),
-                Text(mediaMetaLine(item), style: AppTextStyles.meta.copyWith(letterSpacing: 1.6, fontSize: 11)),
-                const SizedBox(height: 18),
-                Row(
+                Text(mediaMetaLine(item), style: AppTextStyles.meta),
+                if (description.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    description,
+                    maxLines: desktop ? 3 : 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.meta.copyWith(fontSize: 14, height: 1.45),
+                  ),
+                ],
+                const SizedBox(height: 20),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
                   children: [
                     PlayCoreButton(
                       onPressed: onPlay ?? () => showBottomSheetOrNavigate(context, item),
-                      size: 72,
+                      label: 'Watch Now',
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          MetallicButton(
-                            label: 'MY LIST',
-                            icon: Icons.add,
-                            onPressed: onMyList ?? () => showBottomSheetOrNavigate(context, item),
-                          ),
-                          const SizedBox(height: 8),
-                          MetallicButton(
-                            label: 'TRAILER',
-                            icon: Icons.play_circle_outline,
-                            onPressed: onTrailer ?? () => showBottomSheetOrNavigate(context, item),
-                          ),
-                        ],
-                      ),
+                    MetallicButton(
+                      label: 'Add to My List',
+                      icon: Icons.add,
+                      onPressed: onMyList ?? () => showBottomSheetOrNavigate(context, item),
                     ),
                   ],
                 ),
@@ -505,28 +329,7 @@ class FrequencyPortal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget framed = NetworkPoster(url: item == null ? '' : bestPortrait(item!));
-    if (shape % 3 == 0) {
-      framed = ClipPath(clipper: const DiagonalClipper(cut: 16), child: framed);
-    } else if (shape % 3 == 1) {
-      framed = ClipOval(child: framed);
-    } else {
-      framed = ChromeFrame(child: framed);
-    }
-
-    return GestureDetector(
-      onTap: onTap,
-      child: SizedBox(
-        width: 108,
-        child: Column(
-          children: [
-            SizedBox(width: 96, height: 118, child: framed),
-            const SizedBox(height: 10),
-            Text(label.toUpperCase(), style: AppTextStyles.eyebrow.copyWith(fontSize: 9, color: AppColors.colorOrange)),
-          ],
-        ),
-      ),
-    );
+    return GenrePortalTile(label: label, item: item, onTap: onTap, shape: shape);
   }
 }
 
@@ -544,22 +347,31 @@ class DiscoveryRow extends StatelessWidget {
         section.title.toLowerCase().contains('continue');
 
     if (continueWatching) {
-      return _ChargeSection(title: 'Continue Watching', items: items, section: section);
+      return _RowSection(
+        title: 'Continue Watching',
+        items: items,
+        section: section,
+        style: ChargePosterStyle.landscape,
+        showProgress: true,
+      );
     }
 
-    switch (visualIndex % 6) {
+    switch (visualIndex % 5) {
       case 0:
-        return _OffsetPosters(title: _prettyTitle(section.title, 'Trending'), items: items, section: section);
+        return _RowSection(title: _prettyTitle(section.title, 'Trending Now'), items: items, section: section);
       case 1:
-        return _Originals(title: _prettyTitle(section.title, 'Originals'), items: items, section: section);
+        return _BannerRow(title: _prettyTitle(section.title, 'VOLT Originals'), items: items, section: section);
       case 2:
-        return _FrequencyRow(title: 'Browse by mood', items: items);
+        return _GenreRow(title: 'Genres', items: items);
       case 3:
-        return _VaultRow(title: _prettyTitle(section.title, 'Classics'), items: items, section: section);
-      case 4:
-        return _JustDropped(title: _prettyTitle(section.title, 'New'), items: items, section: section);
+        return _FeaturedSplit(title: _prettyTitle(section.title, 'New Releases'), items: items, section: section);
       default:
-        return _OffsetPosters(title: section.title, items: items, section: section);
+        return _RowSection(
+          title: section.title.isEmpty ? 'Recommended For You' : section.title,
+          items: items,
+          section: section,
+          style: ChargePosterStyle.landscape,
+        );
     }
   }
 
@@ -577,12 +389,20 @@ class _SeeAll {
   }
 }
 
-class _ChargeSection extends StatelessWidget {
+class _RowSection extends StatelessWidget {
   final String title;
   final List<BaseItem> items;
   final Section section;
+  final ChargePosterStyle style;
+  final bool showProgress;
 
-  const _ChargeSection({required this.title, required this.items, required this.section});
+  const _RowSection({
+    required this.title,
+    required this.items,
+    required this.section,
+    this.style = ChargePosterStyle.portrait,
+    this.showProgress = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -590,37 +410,18 @@ class _ChargeSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(title: title, onSeeAll: _SeeAll.of(context, section)),
-        ChargeStackRow(items: items.take(12).toList(), showProgress: true, style: ChargePosterStyle.landscape),
+        ChargeStackRow(items: items.take(16).toList(), showProgress: showProgress, style: style),
       ],
     );
   }
 }
 
-class _OffsetPosters extends StatelessWidget {
+class _BannerRow extends StatelessWidget {
   final String title;
   final List<BaseItem> items;
   final Section section;
 
-  const _OffsetPosters({required this.title, required this.items, required this.section});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(title: title, onSeeAll: _SeeAll.of(context, section)),
-        ChargeOverlapStack(items: items),
-      ],
-    );
-  }
-}
-
-class _Originals extends StatelessWidget {
-  final String title;
-  final List<BaseItem> items;
-  final Section section;
-
-  const _Originals({required this.title, required this.items, required this.section});
+  const _BannerRow({required this.title, required this.items, required this.section});
 
   @override
   Widget build(BuildContext context) {
@@ -629,19 +430,20 @@ class _Originals extends StatelessWidget {
       children: [
         SectionHeader(title: title, onSeeAll: _SeeAll.of(context, section)),
         SizedBox(
-          height: 280,
+          height: 210,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: AppLayout.gutter(context)),
             scrollDirection: Axis.horizontal,
-            itemCount: math.min(items.length, 8),
-            separatorBuilder: (_, __) => const SizedBox(width: 14),
+            itemCount: items.length.clamp(0, 8),
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (context, index) {
               final item = items[index];
               return GestureDetector(
                 onTap: () => showBottomSheetOrNavigate(context, item),
                 child: SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.84,
-                  child: ChromeFrame(
+                  width: MediaQuery.sizeOf(context).width * 0.82,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppLayout.radius),
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
@@ -650,8 +452,12 @@ class _Originals extends StatelessWidget {
                         Positioned(
                           left: 16,
                           right: 16,
-                          bottom: 18,
-                          child: Text(item.title, maxLines: 2, style: AppTextStyles.editorial.copyWith(fontSize: 24)),
+                          bottom: 16,
+                          child: Text(
+                            item.title,
+                            maxLines: 2,
+                            style: AppTextStyles.editorial.copyWith(fontSize: 22),
+                          ),
                         ),
                       ],
                     ),
@@ -666,33 +472,36 @@ class _Originals extends StatelessWidget {
   }
 }
 
-class _FrequencyRow extends StatelessWidget {
+class _GenreRow extends StatelessWidget {
   final String title;
   final List<BaseItem> items;
 
-  const _FrequencyRow({required this.title, required this.items});
+  const _GenreRow({required this.title, required this.items});
 
   @override
   Widget build(BuildContext context) {
-    const moods = ['Intense', 'Romantic', 'Dark', 'Fun', 'Adventure', 'Mystery', 'Family'];
+    const genres = ['Action', 'Drama', 'Romance', 'Thriller', 'Comedy', 'Horror', 'Documentary', 'Kids'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(title: title),
         SizedBox(
-          height: 160,
+          height: 112,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: AppLayout.gutter(context)),
             scrollDirection: Axis.horizontal,
-            itemCount: moods.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 14),
+            itemCount: genres.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (context, index) {
               final item = items[index % items.length];
-              return FrequencyPortal(
-                label: moods[index],
-                item: item,
-                shape: index,
-                onTap: () => showBottomSheetOrNavigate(context, item),
+              return SizedBox(
+                width: 168,
+                child: GenrePortalTile(
+                  label: genres[index],
+                  item: item,
+                  shape: index,
+                  onTap: () => showBottomSheetOrNavigate(context, item),
+                ),
               );
             },
           ),
@@ -702,54 +511,17 @@ class _FrequencyRow extends StatelessWidget {
   }
 }
 
-class _VaultRow extends StatelessWidget {
+class _FeaturedSplit extends StatelessWidget {
   final String title;
   final List<BaseItem> items;
   final Section section;
 
-  const _VaultRow({required this.title, required this.items, required this.section});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(title: title, onSeeAll: _SeeAll.of(context, section)),
-        SizedBox(
-          height: 210,
-          child: ListView.separated(
-            padding: EdgeInsets.symmetric(horizontal: AppLayout.gutter(context)),
-            scrollDirection: Axis.horizontal,
-            itemCount: math.min(items.length, 14),
-            separatorBuilder: (_, __) => const SizedBox(width: 14),
-            itemBuilder: (context, index) {
-              return ChargePoster(
-                item: items[index],
-                vault: true,
-                width: 124,
-                height: 186,
-                style: ChargePosterStyle.core,
-                energyIndex: index,
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _JustDropped extends StatelessWidget {
-  final String title;
-  final List<BaseItem> items;
-  final Section section;
-
-  const _JustDropped({required this.title, required this.items, required this.section});
+  const _FeaturedSplit({required this.title, required this.items, required this.section});
 
   @override
   Widget build(BuildContext context) {
     final lead = items.first;
-    final rest = items.skip(1).take(4).toList();
+    final rest = items.skip(1).take(3).toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -764,18 +536,19 @@ class _JustDropped extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () => showBottomSheetOrNavigate(context, lead),
                   child: AspectRatio(
-                    aspectRatio: 0.78,
-                    child: ChromeFrame(
+                    aspectRatio: 0.72,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(AppLayout.radius),
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
-                          NetworkPoster(url: bestLandscape(lead)),
+                          NetworkPoster(url: bestPortrait(lead)),
                           const DecoratedBox(decoration: BoxDecoration(gradient: AppColors.cinemaWash)),
                           Positioned(
                             left: 12,
                             right: 12,
                             bottom: 14,
-                            child: Text(lead.title, style: AppTextStyles.editorial.copyWith(fontSize: 22)),
+                            child: Text(lead.title, style: AppTextStyles.editorial.copyWith(fontSize: 20)),
                           ),
                         ],
                       ),
@@ -785,9 +558,9 @@ class _JustDropped extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Expanded(
-                flex: 4,
+                flex: 5,
                 child: Column(
-                  children: rest.take(3).map((item) {
+                  children: rest.map((item) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: ChargePoster(
@@ -795,6 +568,7 @@ class _JustDropped extends StatelessWidget {
                         width: double.infinity,
                         height: 92,
                         wide: true,
+                        showTitle: true,
                         style: ChargePosterStyle.strip,
                       ),
                     );
@@ -825,37 +599,31 @@ class GenrePortalTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget art = item == null
+    final art = item == null
         ? Container(color: AppColors.colorSurface)
-        : NetworkPoster(url: bestPortrait(item!));
-    if (shape % 4 == 0) {
-      art = ClipPath(clipper: const DiagonalClipper(cut: 18), child: art);
-    } else if (shape % 4 == 1) {
-      art = ClipOval(child: art);
-    } else if (shape % 4 == 2) {
-      art = ChromeFrame(child: art);
-    } else {
-      art = ClipPath(clipper: const DiagonalClipper(cut: 8), child: art);
-    }
+        : NetworkPoster(url: bestLandscape(item!));
 
     return GestureDetector(
       onTap: onTap,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          art,
-          Container(color: Colors.black.withValues(alpha: 0.28)),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Text(
-                label.toUpperCase(),
-                style: AppTextStyles.editorial.copyWith(fontSize: 18),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppLayout.radius),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            art,
+            Container(color: Colors.black.withValues(alpha: 0.38)),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(
+                  label,
+                  style: AppTextStyles.editorial.copyWith(fontSize: 16),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

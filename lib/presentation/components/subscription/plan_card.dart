@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:volt/constants/app_theme.dart';
 import 'package:volt/constants/colors.dart';
+import 'package:volt/constants/layout.dart';
 import 'package:volt/models/subscription_plan.dart';
 import 'package:volt/presentation/components/ui/app_widgets.dart';
 
@@ -12,9 +13,9 @@ class PlansPageHeader extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('MEMBERSHIP', style: AppTextStyles.eyebrow),
+        Text('Membership', style: AppTextStyles.eyebrow),
         SizedBox(height: 8),
-        Text('Choose a plan', style: AppTextStyles.displayTitle),
+        Text('Choose Your Plan', style: AppTextStyles.displayTitle),
         SizedBox(height: 8),
         Text(
           'Select a membership and start watching.',
@@ -26,9 +27,9 @@ class PlansPageHeader extends StatelessWidget {
 }
 
 String voltPowerLabel(SubscriptionPlan plan, int index, int total) {
-  if (plan.isMostPopular) return 'MOST POPULAR';
-  if (plan.isBestValue) return 'BEST VALUE';
-  return 'PLAN';
+  if (plan.isMostPopular) return 'Most Popular';
+  if (plan.isBestValue) return 'Best Value';
+  return 'Plan';
 }
 
 class PromoCodeBar extends StatelessWidget {
@@ -62,7 +63,7 @@ class PromoCodeBar extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 10),
           child: Row(
             children: [
-              Icon(Icons.confirmation_number_outlined, color: AppColors.colorOrange, size: 18),
+              Icon(Icons.confirmation_number_outlined, color: AppColors.colorAccent, size: 18),
               SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -70,17 +71,16 @@ class PromoCodeBar extends StatelessWidget {
                   style: TextStyle(
                     color: AppColors.colorTextSecondary,
                     fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
               Text(
-                'ADD',
+                'Add',
                 style: TextStyle(
-                  color: AppColors.colorOrange,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.2,
+                  color: AppColors.colorAccent,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -100,20 +100,20 @@ class PromoCodeBar extends StatelessWidget {
                 cursorColor: AppColors.colorOrange,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
-                  fontFamily: AppTheme.displayFamily,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontFamily: AppTheme.fontFamily,
+                  fontWeight: FontWeight.w600,
                 ),
                 textCapitalization: TextCapitalization.characters,
                 decoration: const InputDecoration(
-                  hintText: 'PROMO CODE',
-                  hintStyle: TextStyle(color: AppColors.colorHint, fontSize: 14, letterSpacing: 2),
+                  hintText: 'Promo code',
+                  hintStyle: TextStyle(color: AppColors.colorHint, fontSize: 14),
                   border: InputBorder.none,
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: AppColors.colorHairline),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.colorAccent, width: 1.6),
+                    borderSide: BorderSide(color: AppColors.colorAccent, width: 1.4),
                   ),
                 ),
                 onSubmitted: (_) => onApply(),
@@ -124,7 +124,7 @@ class PromoCodeBar extends StatelessWidget {
               width: 96,
               child: GradientButton(
                 label: 'Apply',
-                height: 48,
+                height: 44,
                 isLoading: loading,
                 onPressed: loading ? null : onApply,
               ),
@@ -154,7 +154,7 @@ class PromoCodeBar extends StatelessWidget {
                   style: TextStyle(
                     color: AppColors.colorTextSecondary,
                     fontSize: 13,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -205,19 +205,19 @@ class PlanCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedSize(
-        duration: const Duration(milliseconds: 320),
+        duration: const Duration(milliseconds: 280),
         curve: Curves.easeOutCubic,
         alignment: Alignment.topCenter,
         child: isSelected
-            ? _EnergyCore(
+            ? _ExpandedPlan(
                 plan: plan,
                 features: features,
                 onSubscribe: onSubscribe,
-                powerLabel: voltPowerLabel(plan, index, total),
+                badge: voltPowerLabel(plan, index, total),
               )
-            : _DormantCore(
+            : _CompactPlan(
                 plan: plan,
-                powerLabel: voltPowerLabel(plan, index, total),
+                badge: voltPowerLabel(plan, index, total),
               ),
       ),
     );
@@ -227,39 +227,36 @@ class PlanCard extends StatelessWidget {
 ({String number, String unit}) _splitValidity(String validity) {
   final match = RegExp(r'^(\d+)\s*(.*)$').firstMatch(validity.trim());
   if (match == null || (match.group(1) ?? '').isEmpty) {
-    return (number: '•', unit: validity.toUpperCase());
+    return (number: '•', unit: validity);
   }
   final unit = (match.group(2) ?? '').trim();
-  return (number: match.group(1)!, unit: unit.isEmpty ? 'PASS' : unit);
+  return (number: match.group(1)!, unit: unit.isEmpty ? 'days' : unit);
 }
 
-class _DormantCore extends StatelessWidget {
+class _CompactPlan extends StatelessWidget {
   final SubscriptionPlan plan;
-  final String powerLabel;
+  final String badge;
 
-  const _DormantCore({required this.plan, required this.powerLabel});
+  const _CompactPlan({required this.plan, required this.badge});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 92,
+      height: 84,
       decoration: BoxDecoration(
+        color: AppColors.colorSurface,
+        borderRadius: BorderRadius.circular(AppLayout.radius),
         border: Border.all(color: AppColors.colorHairline),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [
-          CustomPaint(
-            size: const Size(42, 42),
-            painter: _CoreRingPainter(active: false),
-          ),
-          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(powerLabel, style: AppTextStyles.eyebrow),
+                Text(badge, style: AppTextStyles.eyebrow),
                 const SizedBox(height: 4),
                 Text(
                   plan.name.isNotEmpty ? plan.name : plan.validity,
@@ -268,7 +265,7 @@ class _DormantCore extends StatelessWidget {
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -284,17 +281,17 @@ class _DormantCore extends StatelessWidget {
   }
 }
 
-class _EnergyCore extends StatelessWidget {
+class _ExpandedPlan extends StatelessWidget {
   final SubscriptionPlan plan;
   final List<String> features;
   final VoidCallback onSubscribe;
-  final String powerLabel;
+  final String badge;
 
-  const _EnergyCore({
+  const _ExpandedPlan({
     required this.plan,
     required this.features,
     required this.onSubscribe,
-    required this.powerLabel,
+    required this.badge,
   });
 
   @override
@@ -303,180 +300,118 @@ class _EnergyCore extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
+        color: AppColors.colorSurface,
+        borderRadius: BorderRadius.circular(AppLayout.radius),
         border: Border.all(color: AppColors.colorOrange.withValues(alpha: 0.7)),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.colorOrange.withValues(alpha: 0.22),
-            blurRadius: 28,
-            offset: const Offset(0, 12),
-          ),
-        ],
       ),
-      child: Stack(
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Positioned.fill(
-            child: CustomPaint(painter: _CoreGlowPainter()),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomPaint(
-                      size: const Size(54, 54),
-                      painter: _CoreRingPainter(active: true),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(powerLabel, style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorOrange)),
-                          const SizedBox(height: 4),
-                          Text(
-                            plan.name.isNotEmpty ? plan.name : plan.validity,
-                            style: AppTextStyles.editorial.copyWith(fontSize: 22),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (plan.isMostPopular)
-                      Text('MOST POPULAR', style: AppTextStyles.seeAll)
-                    else if (plan.isBestValue)
-                      Text('BEST VALUE', style: AppTextStyles.seeAll.copyWith(color: AppColors.colorAccent)),
-                  ],
-                ),
-                const SizedBox(height: 18),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
+                    Text(badge, style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorOrange)),
+                    const SizedBox(height: 4),
                     Text(
-                      parts.number,
-                      style: AppTextStyles.displayTitle.copyWith(fontSize: 56),
-                    ),
-                    const SizedBox(width: 8),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        parts.unit.toUpperCase(),
-                        style: const TextStyle(
-                          color: AppColors.colorOrange,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.8,
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        if (plan.originalCost != null)
-                          Text(
-                            '${plan.currency}${SubscriptionPlan.formatCost(plan.originalCost!)}',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: AppColors.colorTextMuted,
-                              decoration: TextDecoration.lineThrough,
-                              decorationColor: AppColors.colorTextMuted,
-                            ),
-                          ),
-                        Text(
-                          '${plan.currency}${SubscriptionPlan.formatCost(plan.cost)}',
-                          style: const TextStyle(
-                            color: AppColors.colorSilver,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w800,
-                            height: 1.05,
-                            fontFamily: AppTheme.displayFamily,
-                          ),
-                        ),
-                      ],
+                      plan.name.isNotEmpty ? plan.name : plan.validity,
+                      style: AppTextStyles.editorial.copyWith(fontSize: 22),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                const EnergyTrail(height: 1.6, orange: true),
-                const SizedBox(height: 14),
-                ...features.map(
-                  (feature) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.bolt, color: AppColors.colorAccent, size: 14),
-                        const SizedBox(width: 8),
-                        Text(feature, style: AppTextStyles.meta),
-                      ],
-                    ),
+              ),
+              if (plan.isMostPopular)
+                Text('Most Popular', style: AppTextStyles.seeAll.copyWith(color: AppColors.colorOrange))
+              else if (plan.isBestValue)
+                Text('Best Value', style: AppTextStyles.seeAll),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                parts.number,
+                style: AppTextStyles.displayTitle.copyWith(fontSize: 40),
+              ),
+              const SizedBox(width: 8),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  parts.unit,
+                  style: const TextStyle(
+                    color: AppColors.colorTextSecondary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 10),
-                GradientButton(
-                  label: 'Subscribe',
-                  height: 50,
-                  onPressed: onSubscribe,
-                ),
-              ],
+              ),
+              const Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  if (plan.originalCost != null)
+                    Text(
+                      '${plan.currency}${SubscriptionPlan.formatCost(plan.originalCost!)}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: AppColors.colorTextMuted,
+                        decoration: TextDecoration.lineThrough,
+                        decorationColor: AppColors.colorTextMuted,
+                      ),
+                    ),
+                  Text(
+                    '${plan.currency}${SubscriptionPlan.formatCost(plan.cost)}',
+                    style: const TextStyle(
+                      color: AppColors.colorChrome,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
+                      height: 1.05,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Divider(color: AppColors.colorHairline, height: 1),
+          const SizedBox(height: 14),
+          ...features.map(
+            (feature) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  const Icon(Icons.check_rounded, color: AppColors.colorAccent, size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(feature, style: AppTextStyles.meta)),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          GradientButton(
+            label: 'Subscribe',
+            height: 48,
+            onPressed: onSubscribe,
+          ),
+          const SizedBox(height: 10),
+          const Center(
+            child: Text(
+              'Secure Payment  ·  Cancel Anytime',
+              style: TextStyle(
+                color: AppColors.colorTextMuted,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],
       ),
     );
   }
-}
-
-class _CoreRingPainter extends CustomPainter {
-  final bool active;
-  _CoreRingPainter({required this.active});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final c = Offset(size.width / 2, size.height / 2);
-    final orange = Paint()
-      ..color = active ? AppColors.colorOrange : AppColors.colorHairline
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = active ? 2 : 1.1;
-    final blue = Paint()
-      ..color = active ? AppColors.colorAccent : AppColors.colorTextMuted
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.1;
-    canvas.drawCircle(c, size.width * 0.46, orange);
-    canvas.drawCircle(c, size.width * 0.32, blue);
-    if (active) {
-      canvas.drawCircle(c, 4, Paint()..color = AppColors.colorElectric);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _CoreRingPainter oldDelegate) => oldDelegate.active != active;
-}
-
-class _CoreGlowPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final glow = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          AppColors.colorOrange.withValues(alpha: 0.16),
-          AppColors.colorAccent.withValues(alpha: 0.08),
-          Colors.transparent,
-        ],
-      ).createShader(Rect.fromCircle(center: Offset(size.width * 0.18, size.height * 0.2), radius: 180));
-    canvas.drawRect(Offset.zero & size, glow);
-    final blue = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          AppColors.colorAccent.withValues(alpha: 0.14),
-          Colors.transparent,
-        ],
-      ).createShader(Rect.fromCircle(center: Offset(size.width * 0.9, size.height * 0.85), radius: 160));
-    canvas.drawRect(Offset.zero & size, blue);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class BillingPowerMeter extends StatelessWidget {
@@ -491,64 +426,61 @@ class BillingPowerMeter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onChanged(!yearly),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          children: [
-            Text(
-              'MONTHLY',
-              style: TextStyle(
-                color: yearly ? AppColors.colorTextMuted : AppColors.colorOrange,
-                fontSize: 11,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 2.2,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: CustomPaint(
-                size: const Size(double.infinity, 10),
-                painter: _MeterPainter(value: yearly ? 1 : 0),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              'YEARLY',
-              style: TextStyle(
-                color: yearly ? AppColors.colorAccent : AppColors.colorTextMuted,
-                fontSize: 11,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 2.2,
-              ),
-            ),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: AppColors.colorSurface,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.colorHairline),
+      ),
+      child: Row(
+        children: [
+          _CycleChip(
+            label: 'Monthly',
+            selected: !yearly,
+            onTap: () => onChanged(false),
+          ),
+          _CycleChip(
+            label: 'Yearly',
+            selected: yearly,
+            onTap: () => onChanged(true),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _MeterPainter extends CustomPainter {
-  final double value;
-  _MeterPainter({required this.value});
+class _CycleChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _CycleChip({required this.label, required this.selected, required this.onTap});
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final y = size.height / 2;
-    final bg = Paint()
-      ..color = AppColors.colorHairline
-      ..strokeWidth = 1.4;
-    canvas.drawLine(Offset(0, y), Offset(size.width, y), bg);
-    final t = size.width * (0.12 + value * 0.76);
-    canvas.drawCircle(
-      Offset(t, y),
-      5,
-      Paint()..color = value > 0.5 ? AppColors.colorAccent : AppColors.colorOrange,
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          height: 40,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: selected ? AppColors.colorAccent.withValues(alpha: 0.18) : Colors.transparent,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: selected ? AppColors.colorElectric : AppColors.colorTextMuted,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
     );
   }
-
-  @override
-  bool shouldRepaint(covariant _MeterPainter oldDelegate) => oldDelegate.value != value;
 }

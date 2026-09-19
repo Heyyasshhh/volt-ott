@@ -52,7 +52,7 @@ class MyListPage extends StatelessWidget {
                     _header(context),
                     const Expanded(
                       child: EmptyState(
-                        icon: Icons.bolt_outlined,
+                        icon: Icons.bookmark_border_rounded,
                         title: 'Your list is empty',
                         subtitle: 'Save titles from a details page to watch them later.',
                       ),
@@ -69,7 +69,7 @@ class MyListPage extends StatelessWidget {
                         ChargeOverlapStack(items: watchLater),
                       ],
                       if (started.isNotEmpty) ...[
-                        const SectionHeader(title: 'STARTED'),
+                        const SectionHeader(title: 'Continue Watching'),
                         ChargeStackRow(items: started, showProgress: true, style: ChargePosterStyle.landscape),
                       ],
                       if (finishSoon.isNotEmpty) ...[
@@ -82,7 +82,7 @@ class MyListPage extends StatelessWidget {
                       ChargeStackRow(items: saved, style: ChargePosterStyle.landscape),
                     ],
                     if (continueWatching.isNotEmpty) ...[
-                      const SectionHeader(title: 'CONTINUE WATCHING'),
+                      const SectionHeader(title: 'Continue Watching'),
                       ChargeStackRow(
                         items: continueWatching,
                         showProgress: true,
@@ -90,7 +90,7 @@ class MyListPage extends StatelessWidget {
                       ),
                     ],
                     if (upcoming.isNotEmpty) ...[
-                      const SectionHeader(title: 'COMING SOON'),
+                      const SectionHeader(title: 'Coming Soon'),
                       ChargeStackRow(items: upcoming),
                     ],
                   ],
@@ -123,7 +123,7 @@ class MyListPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          const EnergyTrail(height: 1.4, orange: true),
+          const Divider(color: AppColors.colorHairline, height: 1),
         ],
       ),
     );

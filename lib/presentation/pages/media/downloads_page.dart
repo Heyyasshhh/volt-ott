@@ -87,7 +87,7 @@ class DownloadsPage extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        const EnergyTrail(height: 1.4),
+                        const Divider(color: AppColors.colorHairline, height: 1),
                       ],
                     ),
                   ),
@@ -100,23 +100,23 @@ class DownloadsPage extends StatelessWidget {
                               padding: const EdgeInsets.fromLTRB(20, 12, 20, 96),
                               children: [
                                 if (downloaded.isNotEmpty) ...[
-                                  const _OfflineHeading(label: 'DOWNLOADED'),
+                                  const _OfflineHeading(label: 'Downloaded'),
                                   ...downloaded.map((wrapper) => DownloadedMediaItem(wrapper: wrapper)),
                                 ],
                                 if (downloading.isNotEmpty) ...[
-                                  const _OfflineHeading(label: 'DOWNLOADING'),
+                                  const _OfflineHeading(label: 'Downloading'),
                                   ...downloading.map((wrapper) => DownloadedMediaItem(wrapper: wrapper)),
                                 ],
                                 if (queued.isNotEmpty) ...[
-                                  const _OfflineHeading(label: 'QUEUED'),
+                                  const _OfflineHeading(label: 'Queued'),
                                   ...queued.map((wrapper) => DownloadedMediaItem(wrapper: wrapper)),
                                 ],
                               ],
                             )
                           : const EmptyState(
-                              icon: Icons.offline_bolt_outlined,
-                              title: 'No offline power yet',
-                              subtitle: 'Videos you download will appear here. Start watching to save them offline.',
+                              icon: Icons.download_outlined,
+                              title: 'No downloads yet',
+                              subtitle: 'Videos you download will appear here for offline viewing.',
                             ),
                     ),
                   ),
@@ -141,9 +141,9 @@ class _OfflineHeading extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: AppTextStyles.eyebrow),
+          Text(label, style: AppTextStyles.sectionTitle.copyWith(fontSize: 16)),
           const SizedBox(height: 8),
-          const ChromeRule(width: double.infinity, thickness: 1, orange: true),
+          const Divider(color: AppColors.colorHairline, height: 1),
         ],
       ),
     );

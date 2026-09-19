@@ -19,23 +19,23 @@ class _OnboardingPageState extends State<OnboardingPage> {
   int _index = 0;
 
   static const _pages = [
-    _PowerPage(
+    _IntroPage(
       number: '01',
-      title: 'DISCOVER',
+      title: 'Discover',
       line: 'Find something to watch.',
       copy: 'Browse movies and series, then pick a title and start watching.',
     ),
-    _PowerPage(
+    _IntroPage(
       number: '02',
-      title: 'WATCH',
+      title: 'Watch',
       line: 'Stream in cinematic quality.',
       copy: 'Play titles in a dark, focused player built for movies and shows.',
     ),
-    _PowerPage(
+    _IntroPage(
       number: '03',
-      title: 'EXPERIENCE',
-      line: 'Your list, downloads, and plans.',
-      copy: 'Save titles, download for offline, and subscribe when you are ready.',
+      title: 'Your library',
+      line: 'My List, downloads, and plans.',
+      copy: 'Save titles, download for offline viewing, and subscribe when you are ready.',
     ),
   ];
 
@@ -47,7 +47,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       PageRouteBuilder(
         pageBuilder: (_, __, ___) => widget.nextPage,
         transitionsBuilder: (_, animation, __, child) => FadeTransition(opacity: animation, child: child),
-        transitionDuration: const Duration(milliseconds: 600),
+        transitionDuration: const Duration(milliseconds: 480),
       ),
     );
   }
@@ -70,16 +70,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
               children: [
                 Row(
                   children: [
-                    const BrandWordmark(fontSize: 22),
+                    Image.asset(BrandAssets.logo, height: 28, fit: BoxFit.contain),
                     const Spacer(),
                     GestureDetector(
                       onTap: _finish,
-                      child: Text('SKIP', style: AppTextStyles.seeAll.copyWith(color: AppColors.colorTextMuted)),
+                      child: Text('Skip', style: AppTextStyles.seeAll.copyWith(color: AppColors.colorTextMuted)),
                     ),
                   ],
                 ),
                 const SizedBox(height: 18),
-                _PowerLine(index: _index),
+                _ProgressDots(index: _index, total: _pages.length),
                 const SizedBox(height: 12),
                 Expanded(
                   child: PageView.builder(
@@ -95,7 +95,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     if (_index == _pages.length - 1) {
                       _finish();
                     } else {
-                      _controller.nextPage(duration: const Duration(milliseconds: 420), curve: Curves.easeOutCubic);
+                      _controller.nextPage(duration: const Duration(milliseconds: 360), curve: Curves.easeOutCubic);
                     }
                   },
                 ),
@@ -108,38 +108,22 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 }
 
-class _PowerLine extends StatelessWidget {
+class _ProgressDots extends StatelessWidget {
   final int index;
+  final int total;
 
-  const _PowerLine({required this.index});
+  const _ProgressDots({required this.index, required this.total});
 
   @override
   Widget build(BuildContext context) {
-    const stages = ['DISCOVER', 'WATCH', 'EXPERIENCE'];
     return Row(
-      children: List.generate(stages.length * 2 - 1, (i) {
-        if (i.isOdd) {
-          final active = index >= (i ~/ 2) + 1;
-          return Expanded(
-            child: Container(
-              height: 2,
-              margin: const EdgeInsets.symmetric(horizontal: 6),
-              decoration: BoxDecoration(
-                gradient: active ? AppColors.premiumGradient : null,
-                color: active ? null : AppColors.colorHairline,
-              ),
-            ),
-          );
-        }
-        final stage = i ~/ 2;
-        final on = index >= stage;
-        return Text(
-          stages[stage],
-          style: TextStyle(
-            fontSize: 9,
-            letterSpacing: 1.6,
-            fontWeight: FontWeight.w800,
-            color: on ? (stage == index ? AppColors.colorOrange : AppColors.colorElectric) : AppColors.colorTextMuted,
+      children: List.generate(total, (i) {
+        final on = i == index;
+        return Expanded(
+          child: Container(
+            height: 2,
+            margin: EdgeInsets.only(right: i == total - 1 ? 0 : 8),
+            color: on ? AppColors.colorOrange : AppColors.colorHairline,
           ),
         );
       }),
@@ -147,13 +131,13 @@ class _PowerLine extends StatelessWidget {
   }
 }
 
-class _PowerPage extends StatelessWidget {
+class _IntroPage extends StatelessWidget {
   final String number;
   final String title;
   final String line;
   final String copy;
 
-  const _PowerPage({
+  const _IntroPage({
     required this.number,
     required this.title,
     required this.line,
@@ -162,63 +146,21 @@ class _PowerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 12),
-        Expanded(
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: CustomPaint(painter: _OnboardPainter(title.hashCode)),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(4, 24, 4, 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(number, style: AppTextStyles.eyebrow),
-                    const Spacer(),
-                    Text(title, style: AppTextStyles.displayTitle.copyWith(fontSize: 56)),
-                    const SizedBox(height: 12),
-                    const LightningDivider(),
-                    const SizedBox(height: 16),
-                    Text(line, style: AppTextStyles.editorial.copyWith(fontSize: 22, color: AppColors.colorSilver)),
-                    const SizedBox(height: 14),
-                    Text(copy, style: AppTextStyles.meta.copyWith(fontSize: 15, height: 1.55)),
-                    const SizedBox(height: 18),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 36, 4, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(number, style: AppTextStyles.eyebrow),
+          const Spacer(),
+          Text(title, style: AppTextStyles.displayTitle.copyWith(fontSize: 44)),
+          const SizedBox(height: 12),
+          Text(line, style: AppTextStyles.editorial.copyWith(fontSize: 22)),
+          const SizedBox(height: 12),
+          Text(copy, style: AppTextStyles.meta.copyWith(fontSize: 15, height: 1.55)),
+          const SizedBox(height: 28),
+        ],
+      ),
     );
   }
-}
-
-class _OnboardPainter extends CustomPainter {
-  final int seed;
-  _OnboardPainter(this.seed);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final orange = Paint()
-      ..color = AppColors.colorOrange.withValues(alpha: 0.12)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
-    final blue = Paint()
-      ..color = AppColors.colorAccent.withValues(alpha: 0.18)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-    for (int i = 0; i < 6; i++) {
-      final y = 40.0 + i * 48 + (seed % 7);
-      canvas.drawLine(Offset(0, y), Offset(size.width * (0.4 + (i % 3) * 0.15), y + 18), i.isEven ? orange : blue);
-    }
-    canvas.drawCircle(Offset(size.width * 0.82, size.height * 0.22), 70, blue);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

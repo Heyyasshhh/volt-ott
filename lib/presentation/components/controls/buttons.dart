@@ -29,17 +29,8 @@ class SubmitButton extends StatelessWidget {
             width: buttonWidth,
             margin: const EdgeInsets.symmetric(horizontal: 25),
             decoration: BoxDecoration(
-              gradient: isLoading ? null : AppColors.primaryGradient,
-              color: isLoading ? AppColors.colorPrimary.withValues(alpha: 0.7) : null,
-              boxShadow: isLoading
-                  ? null
-                  : [
-                      BoxShadow(
-                        color: AppColors.colorPrimary.withValues(alpha: 0.28),
-                        blurRadius: 18,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
+              color: isLoading ? AppColors.colorPrimary.withValues(alpha: 0.7) : AppColors.colorOrange,
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
               child: isLoading
@@ -48,16 +39,15 @@ class SubmitButton extends StatelessWidget {
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF030609)),
+                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF5F7FA)),
                       ),
                     )
                   : Text(
-                      buttonText.toUpperCase(),
+                      buttonText,
                       style: const TextStyle(
-                        color: Color(0xFF030609),
-                        fontSize: 13,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 2,
+                        color: Color(0xFFF5F7FA),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
             ),
@@ -85,12 +75,11 @@ class PlayButton extends StatelessWidget {
         width: 60,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          gradient: AppColors.primaryGradient,
-          border: Border.all(color: AppColors.colorAccent.withValues(alpha: 0.6)),
+          color: AppColors.colorOrange,
         ),
         child: const Icon(
           Icons.play_arrow_rounded,
-          color: Color(0xFF030609),
+          color: Color(0xFFF5F7FA),
         ),
       ),
     );

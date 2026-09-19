@@ -322,7 +322,7 @@ class FooterWithBadges extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       child: Column(
         children: [
-          const LightningDivider(),
+          const Divider(color: AppColors.colorHairline, height: 1),
           const SizedBox(height: 16),
           Text('Download VOLT', style: AppTextStyles.editorial.copyWith(fontSize: 20)),
           const SizedBox(height: 12),

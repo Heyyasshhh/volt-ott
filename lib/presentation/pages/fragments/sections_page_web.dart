@@ -154,19 +154,19 @@ class _SectionsPageWebState extends State<SectionsPageWeb> {
                                   Navigator.push(context, MaterialPageRoute(builder: (_) => PlansListPage()));
                                 },
                                 child: Container(
-                                  height: 32,
+                                  height: 36,
                                   padding: const EdgeInsets.symmetric(horizontal: 14),
                                   alignment: Alignment.center,
-                                  decoration: const BoxDecoration(
-                                    gradient: AppColors.primaryGradient,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.colorOrange,
+                                    borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: const Text(
-                                    'SUBSCRIBE',
+                                    'Subscribe',
                                     style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: 1.6,
-                                      color: Color(0xFF030609),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFFF5F7FA),
                                     ),
                                   ),
                                 ),
@@ -177,19 +177,19 @@ class _SectionsPageWebState extends State<SectionsPageWeb> {
                                   Navigator.push(context, MaterialPageRoute(builder: (_) => LoginPage()));
                                 },
                                 child: Container(
-                                  height: 32,
+                                  height: 36,
                                   padding: const EdgeInsets.symmetric(horizontal: 14),
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: AppColors.colorSilver.withValues(alpha: 0.5)),
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(color: AppColors.colorSilver.withValues(alpha: 0.4)),
                                   ),
                                   child: const Text(
-                                    'LOGIN',
+                                    'Sign In',
                                     style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: 1.6,
-                                      color: AppColors.colorSilver,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.colorChrome,
                                     ),
                                   ),
                                 ),

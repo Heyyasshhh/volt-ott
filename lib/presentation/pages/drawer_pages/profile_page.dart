@@ -9,7 +9,6 @@ import 'package:volt/presentation/purchase_history_page.dart';
 import 'package:volt/services/network_service.dart';
 import 'package:volt/presentation/components/controls/text_input.dart';
 import 'package:volt/presentation/components/ui/app_widgets.dart';
-import 'package:volt/presentation/components/ui/content_cards.dart';
 import 'package:volt/presentation/pages/payment/plans_list_page.dart';
 import 'package:volt/presentation/pages/authentication/login_screen.dart';
 import 'package:volt/presentation/pages/drawer_pages/contact_us_page.dart';
@@ -166,14 +165,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                const EnergyTrail(height: 1.4, orange: true),
+                const Divider(color: AppColors.colorHairline, height: 1),
                 const SizedBox(height: 28),
                 Center(
-                  child: EnergyPortraitRing(
-                    size: 118,
-                    child: Image.asset(
-                      BrandAssets.logo,
-                      fit: BoxFit.contain,
+                  child: ClipOval(
+                    child: Container(
+                      width: 88,
+                      height: 88,
+                      color: AppColors.colorSurface,
+                      child: Image.asset(
+                        BrandAssets.logo,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),
@@ -201,12 +204,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: GestureDetector(
                       onTap: () => _openManageProfiles(authenticationProvider),
                       child: const Text(
-                        'EDIT PROFILE',
+                        'Edit Profile',
                         style: TextStyle(
-                          color: AppColors.colorOrange,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 11,
-                          letterSpacing: 2.4,
+                          color: AppColors.colorAccent,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -231,13 +233,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: double.infinity,
                     padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
                     decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.colorOrange.withValues(alpha: 0.55)),
+                      color: AppColors.colorSurface,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.colorHairline),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          isSubscribed ? 'MEMBERSHIP' : 'NOT SUBSCRIBED',
+                          isSubscribed ? 'Membership' : 'Not subscribed',
                           style: AppTextStyles.eyebrow.copyWith(
                             color: isSubscribed ? AppColors.colorOrange : AppColors.colorAccent,
                           ),
@@ -276,7 +280,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 const SizedBox(height: 28),
-                const Text('ACTIVITY', style: AppTextStyles.eyebrow),
+                const Text('Library', style: AppTextStyles.sectionTitle),
                 const SizedBox(height: 14),
                 GridView.count(
                   crossAxisCount: 2,
@@ -287,22 +291,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   childAspectRatio: 1.55,
                   children: [
                     _PowerShortcut(
-                      label: 'MY LIST',
-                      icon: Icons.bolt_outlined,
+                      label: 'My List',
+                      icon: Icons.bookmark_border_rounded,
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyListPage()));
                       },
                     ),
                     _PowerShortcut(
-                      label: 'DOWNLOADS',
-                      icon: Icons.offline_bolt_outlined,
+                      label: 'Downloads',
+                      icon: Icons.download_outlined,
                       accent: true,
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (_) => const DownloadsPage()));
                       },
                     ),
                     _PowerShortcut(
-                      label: 'WATCH HISTORY',
+                      label: 'Watch History',
                       icon: Icons.history_rounded,
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyListPage()));
@@ -310,7 +314,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     if (user != null)
                       _PowerShortcut(
-                        label: 'PURCHASE HISTORY',
+                        label: 'Purchase History',
                         icon: Icons.receipt_long_outlined,
                         accent: true,
                         onPressed: () {
@@ -318,15 +322,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                       ),
                     _PowerShortcut(
-                      label: 'NOTIFICATIONS',
+                      label: 'Notifications',
                       icon: Icons.notifications_none_rounded,
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (_) => NotificationsPage()));
                       },
                     ),
                     _PowerShortcut(
-                      label: 'SETTINGS',
-                      icon: Icons.tune_rounded,
+                      label: 'Settings',
+                      icon: Icons.settings_outlined,
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AppSettingsPage()));
                       },
@@ -607,27 +611,26 @@ class _PowerShortcut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = accent ? AppColors.colorAccent : AppColors.colorOrange;
     return GestureDetector(
       onTap: onPressed,
       child: Container(
         padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
         decoration: BoxDecoration(
-          border: Border.all(color: color.withValues(alpha: 0.45)),
+          color: AppColors.colorSurface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.colorHairline),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: color, size: 22),
+            Icon(icon, color: accent ? AppColors.colorAccent : AppColors.colorOrange, size: 20),
             const Spacer(),
             Text(
               label,
-              style: TextStyle(
-                color: AppColors.colorSilver,
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.6,
-                fontFamily: AppTheme.displayFamily,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],

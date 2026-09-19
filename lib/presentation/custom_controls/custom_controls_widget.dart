@@ -642,10 +642,7 @@ class _CustomControlsWidgetState extends BetterPlayerControlsState<CustomControl
         height: 64,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: AppColors.colorOrange, width: 2),
-          boxShadow: [
-            BoxShadow(color: AppColors.colorOrange.withValues(alpha: 0.35), blurRadius: 16),
-          ],
+          border: Border.all(color: AppColors.colorOrange, width: 1.4),
         ),
         child: Icon(
           isFinished

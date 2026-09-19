@@ -5,32 +5,30 @@ import 'package:volt/constants/layout.dart';
 
 class AppTheme {
   static const String fontFamily = 'Inter';
-  static const String displayFamily = 'Exo 2';
+  static const String displayFamily = 'Inter';
 
   static ThemeData dark() {
     const textTheme = TextTheme(
       displayLarge: TextStyle(
         fontFamily: displayFamily,
-        fontSize: 48,
-        fontWeight: FontWeight.w800,
-        fontStyle: FontStyle.italic,
+        fontSize: 44,
+        fontWeight: FontWeight.w700,
         color: Colors.white,
-        letterSpacing: -1.1,
-        height: 0.92,
+        letterSpacing: -0.8,
+        height: 1.05,
       ),
       displayMedium: TextStyle(
         fontFamily: displayFamily,
-        fontSize: 34,
-        fontWeight: FontWeight.w800,
-        fontStyle: FontStyle.italic,
+        fontSize: 32,
+        fontWeight: FontWeight.w700,
         color: Colors.white,
-        letterSpacing: -0.6,
-        height: 0.98,
+        letterSpacing: -0.4,
+        height: 1.1,
       ),
       headlineMedium: TextStyle(
         fontFamily: displayFamily,
-        fontSize: 24,
-        fontWeight: FontWeight.w700,
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
         color: Colors.white,
         letterSpacing: -0.2,
       ),
@@ -63,9 +61,9 @@ class AppTheme {
       labelLarge: TextStyle(
         fontFamily: fontFamily,
         fontSize: 12,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w600,
         color: AppColors.colorSilver,
-        letterSpacing: 2.6,
+        letterSpacing: 0.4,
       ),
     );
 
@@ -78,7 +76,7 @@ class AppTheme {
         primary: AppColors.colorPrimary,
         secondary: AppColors.colorAccent,
         surface: AppColors.colorSurface,
-        onPrimary: Color(0xFF030609),
+        onPrimary: Color(0xFFF5F7FA),
         onSurface: Colors.white,
       ),
       textTheme: textTheme,
@@ -93,9 +91,8 @@ class AppTheme {
         titleTextStyle: TextStyle(
           fontFamily: displayFamily,
           color: Colors.white,
-          fontSize: 26,
-          fontWeight: FontWeight.w800,
-          fontStyle: FontStyle.italic,
+          fontSize: 22,
+          fontWeight: FontWeight.w700,
         ),
         iconTheme: IconThemeData(color: Colors.white),
       ),
@@ -116,48 +113,44 @@ class AppTheme {
 class AppTextStyles {
   static const TextStyle displayTitle = TextStyle(
     fontFamily: AppTheme.displayFamily,
-    fontSize: 42,
-    fontWeight: FontWeight.w800,
-    fontStyle: FontStyle.italic,
+    fontSize: 36,
+    fontWeight: FontWeight.w700,
     color: Colors.white,
-    height: 0.94,
-    letterSpacing: -0.8,
+    height: 1.08,
+    letterSpacing: -0.6,
   );
 
   static const TextStyle editorial = TextStyle(
     fontFamily: AppTheme.displayFamily,
-    fontSize: 28,
-    fontWeight: FontWeight.w700,
-    fontStyle: FontStyle.italic,
+    fontSize: 24,
+    fontWeight: FontWeight.w600,
     color: Colors.white,
-    height: 1.04,
-    letterSpacing: -0.3,
+    height: 1.15,
+    letterSpacing: -0.2,
   );
 
   static const TextStyle eyebrow = TextStyle(
     fontFamily: AppTheme.fontFamily,
-    fontSize: 11,
-    fontWeight: FontWeight.w700,
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
     color: AppColors.colorAccent,
-    letterSpacing: 3.4,
+    letterSpacing: 0.6,
     height: 1.2,
   );
 
   static const TextStyle sectionTitle = TextStyle(
     fontFamily: AppTheme.displayFamily,
-    fontSize: 22,
-    fontWeight: FontWeight.w800,
-    fontStyle: FontStyle.italic,
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
     color: Colors.white,
     letterSpacing: -0.2,
   );
 
   static const TextStyle seeAll = TextStyle(
     fontFamily: AppTheme.fontFamily,
-    fontSize: 11,
-    fontWeight: FontWeight.w700,
-    color: AppColors.colorOrange,
-    letterSpacing: 1.8,
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+    color: AppColors.colorAccent,
   );
 
   static const TextStyle meta = TextStyle(
@@ -166,14 +159,14 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     color: AppColors.colorTextSecondary,
     height: 1.45,
-    letterSpacing: 0.4,
+    letterSpacing: 0.1,
   );
 
   static const TextStyle chrome = TextStyle(
-    fontFamily: AppTheme.displayFamily,
-    fontSize: 16,
-    fontWeight: FontWeight.w700,
+    fontFamily: AppTheme.fontFamily,
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
     color: AppColors.colorSilver,
-    letterSpacing: 1.2,
+    letterSpacing: 0.2,
   );
 }

@@ -411,10 +411,8 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.displayTitle.copyWith(
-                          fontSize: 52,
-                          fontStyle: FontStyle.italic,
-                          height: 0.88,
-                          shadows: const [Shadow(color: Colors.black, blurRadius: 18)],
+                          fontSize: 40,
+                          height: 1.05,
                         ),
                       ),
                     ),
@@ -460,24 +458,23 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('STORY', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorOrange)),
+                    Text('Description', style: AppTextStyles.sectionTitle),
                     const SizedBox(height: 10),
                     Text(
                       movie.description,
                       style: AppTextStyles.editorial.copyWith(
-                        fontSize: 18,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w500,
-                        height: 1.35,
-                        color: AppColors.colorSilver,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        height: 1.5,
+                        color: AppColors.colorTextSecondary,
                       ),
                     ),
                     const SizedBox(height: 28),
-                    const LightningDivider(),
+                    const Divider(color: AppColors.colorHairline, height: 1),
                     const SizedBox(height: 22),
                     _castStrip(movie),
                     const SizedBox(height: 28),
-                    Text('RELATED', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorAccent)),
+                    Text('More Like This', style: AppTextStyles.sectionTitle),
                     const SizedBox(height: 8),
                     Text('Related', style: AppTextStyles.sectionTitle),
                     const SizedBox(height: 16),
@@ -550,7 +547,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
         PlayCoreButton(
           onPressed: onWatch,
           size: 92,
-          label: isSubscribed ? (_playingMovie ? 'WATCH NOW' : _buttonText.toUpperCase()) : 'SUBSCRIBE',
+          label: isSubscribed ? (_playingMovie ? 'Watch Now' : _buttonText) : 'Subscribe',
         ),
         const SizedBox(height: 14),
         Row(
@@ -573,7 +570,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
   Widget _downloadOrbit(BaseItem movie) {
     if (PlatformUtils.isWeb) {
       return DetailAction(
-        icon: Icons.offline_bolt_outlined,
+        icon: Icons.download_outlined,
         label: 'Download',
         onPressed: () {},
       );
@@ -600,7 +597,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
           ),
           const SizedBox(height: 8),
           const Text(
-            'DOWNLOAD',
+            'Download',
             style: TextStyle(
               color: AppColors.colorTextSecondary,
               fontSize: 9,
@@ -630,9 +627,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('CAST', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorGold)),
-        const SizedBox(height: 8),
-        Text('Cast', style: AppTextStyles.sectionTitle),
+        Text('Cast & Crew', style: AppTextStyles.sectionTitle),
         const SizedBox(height: 16),
         SizedBox(
           height: 196,
@@ -650,8 +645,8 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                     SizedBox(
                       height: 148,
                       width: 104,
-                      child: ClipPath(
-                        clipper: const DiagonalClipper(cut: 14),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
                         child: photo.isEmpty
                             ? Container(
                                 color: AppColors.colorSurface,
@@ -662,7 +657,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      member.name.toUpperCase(),
+                      member.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
@@ -690,16 +685,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
         separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
           final item = movies[index];
-          switch (index % 4) {
-            case 0:
-              return ChargePoster(item: item, width: 148, height: 220, style: ChargePosterStyle.portrait);
-            case 1:
-              return ChargePoster(item: item, width: 210, height: 132, style: ChargePosterStyle.landscape, wide: true);
-            case 2:
-              return ChargePoster(item: item, width: 118, height: 172, style: ChargePosterStyle.core, circle: true);
-            default:
-              return ChargePoster(item: item, width: 128, height: 196, style: ChargePosterStyle.strip, vault: true);
-          }
+          return ChargePoster(item: item, width: 132, height: 198, style: ChargePosterStyle.portrait);
         },
       ),
     );
@@ -718,18 +704,16 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('CAST', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorGold)),
-        const SizedBox(height: 8),
-        Text('Cast', style: AppTextStyles.sectionTitle),
+        Text('Cast & Crew', style: AppTextStyles.sectionTitle),
         const SizedBox(height: 12),
         Text(
           crew('cast'),
-          style: AppTextStyles.editorial.copyWith(fontSize: 20, color: AppColors.colorSilver),
+          style: AppTextStyles.meta.copyWith(fontSize: 15, color: AppColors.colorSilver),
         ),
         const SizedBox(height: 16),
         Text(
-          'DIRECTOR  /  ${crew('director').toUpperCase()}',
-          style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorTextMuted, letterSpacing: 2),
+          'Director  ·  ${crew('director')}',
+          style: AppTextStyles.meta,
         ),
       ],
     );

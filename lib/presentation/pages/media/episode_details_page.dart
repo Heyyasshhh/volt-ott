@@ -286,7 +286,7 @@ class _EpisodeDetailsPageState extends State<EpisodeDetailsPage> {
                     const SizedBox(height: 8),
                     Text(
                       widget.baseItem.title,
-                      style: AppTextStyles.displayTitle.copyWith(fontSize: 34, fontStyle: FontStyle.italic),
+                      style: AppTextStyles.displayTitle.copyWith(fontSize: 32),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -304,10 +304,8 @@ class _EpisodeDetailsPageState extends State<EpisodeDetailsPage> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    const LightningDivider(),
+                    const Divider(color: AppColors.colorHairline, height: 1),
                     const SizedBox(height: 18),
-                    Text('EPISODES', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorAccent)),
-                    const SizedBox(height: 8),
                     const Text('Episodes', style: AppTextStyles.sectionTitle),
                     const SizedBox(height: 12),
                   ],

@@ -83,13 +83,13 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/images/volt-logo.png"
   remove_alpha_ios: true
-  adaptive_icon_background: "#030609"
+  adaptive_icon_background: "#030507"
   adaptive_icon_foreground: "assets/images/volt-logo.png"
   web:
     generate: true
     image_path: "assets/images/volt-logo.png"
-    background_color: "#030609"
-    theme_color: "#030609"
+    background_color: "#030507"
+    theme_color: "#030507"
 # dart run flutter_native_splash:create
 flutter:
   assets:
@@ -117,7 +117,7 @@ flutter:
           weight: 700
 
 flutter_native_splash:
-  color: "#030609"
+  color: "#030507"
   android: true
   ios: true
   web: true
@@ -126,8 +126,8 @@ flutter_native_splash:
   ios_content_mode: center
   image: assets/images/volt-logo.png
   android_12:
-    color: "#030609"
-    icon_background_color: "#030609"
+    color: "#030507"
+    icon_background_color: "#030507"
     image: assets/images/volt-logo.png
 
 dependency_overrides:

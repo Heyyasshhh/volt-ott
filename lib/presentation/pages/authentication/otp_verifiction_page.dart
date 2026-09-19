@@ -82,19 +82,15 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-              const BrandWordmark(fontSize: 22),
+              Image.asset(BrandAssets.logo, height: 36, fit: BoxFit.contain),
               const SizedBox(height: 32),
-              Text('VERIFY OTP', style: AppTextStyles.eyebrow),
-              const SizedBox(height: 12),
               Text(
                 "Enter OTP",
-                style: AppTextStyles.displayTitle.copyWith(fontSize: 42),
+                style: AppTextStyles.displayTitle.copyWith(fontSize: 32),
               ),
               const SizedBox(height: 10),
-              const ChromeRule(width: 48, thickness: 1.4, orange: true),
-              const SizedBox(height: 16),
               Text(
-                "An OTP was sent to\n${widget.phoneNumber}",
+                "An OTP was sent to ${widget.phoneNumber}",
                 style: AppTextStyles.meta.copyWith(height: 1.5),
               ),
               const SizedBox(height: 40),
@@ -186,8 +182,6 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                 ),
               ),
               const SizedBox(height: 36),
-              const EnergyTrail(orange: true),
-              const SizedBox(height: 24),
               GradientButton(
                 onPressed: () async {
                   if (!isClickable) return;

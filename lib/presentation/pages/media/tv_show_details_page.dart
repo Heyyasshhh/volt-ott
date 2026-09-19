@@ -199,7 +199,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                               const SizedBox(height: 8),
                               Text(
                                 displayItem.title,
-                                style: AppTextStyles.displayTitle.copyWith(fontSize: 46, fontStyle: FontStyle.italic),
+                                style: AppTextStyles.displayTitle.copyWith(fontSize: 36),
                               ),
                               const SizedBox(height: 10),
                               Text(
@@ -223,7 +223,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                             }
                           },
                           size: 86,
-                          label: 'WATCH NOW',
+                          label: 'Watch Now',
                         ),
                         const SizedBox(height: 18),
                         Row(
@@ -260,7 +260,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('STORYLINE', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorAccent)),
+                        Text('Description', style: AppTextStyles.sectionTitle),
                         const SizedBox(height: 10),
                         Text(
                           displayItem.description,
@@ -340,7 +340,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                     ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 18),
-                    child: LightningDivider(),
+                    child: Divider(color: AppColors.colorHairline, height: 1),
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(gutter, 0, gutter, 16),
@@ -351,7 +351,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('RELATED', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorAccent)),
+                        Text('Related', style: AppTextStyles.sectionTitle),
                         const SizedBox(height: 8),
                         const Text('More like this', style: AppTextStyles.sectionTitle),
                         const SizedBox(height: 16),
@@ -373,16 +373,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                                 separatorBuilder: (_, __) => const SizedBox(width: 12),
                                 itemBuilder: (context, index) {
                                   final item = suggestedSeries[index];
-                                  switch (index % 4) {
-                                    case 0:
-                                      return ChargePoster(item: item, width: 148, height: 220, style: ChargePosterStyle.portrait);
-                                    case 1:
-                                      return ChargePoster(item: item, width: 210, height: 132, style: ChargePosterStyle.landscape, wide: true);
-                                    case 2:
-                                      return ChargePoster(item: item, width: 118, height: 172, style: ChargePosterStyle.core, circle: true);
-                                    default:
-                                      return ChargePoster(item: item, width: 128, height: 196, style: ChargePosterStyle.strip, vault: true);
-                                  }
+                                  return ChargePoster(item: item, width: 132, height: 198, style: ChargePosterStyle.portrait);
                                 },
                               ),
                             );
@@ -428,7 +419,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
         itemCount: seasonList.length,
         separatorBuilder: (_, __) => const SizedBox(
           width: 18,
-          child: Center(child: EnergyTrail(height: 2)),
+          child: Center(child: Divider(color: AppColors.colorHairline, height: 1)),
         ),
         itemBuilder: (context, index) {
           final label = seasonList[index];
@@ -508,9 +499,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('CAST', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorGold)),
-        const SizedBox(height: 8),
-        const Text('Cast', style: AppTextStyles.sectionTitle),
+        Text('Cast & Crew', style: AppTextStyles.sectionTitle),
         const SizedBox(height: 14),
         SizedBox(
           height: 196,
@@ -528,8 +517,8 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                     SizedBox(
                       height: 148,
                       width: 104,
-                      child: ClipPath(
-                        clipper: const DiagonalClipper(cut: 14),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
                         child: photo.isEmpty
                             ? Container(
                                 color: AppColors.colorSurface,
@@ -540,7 +529,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      member.name.toUpperCase(),
+                      member.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,

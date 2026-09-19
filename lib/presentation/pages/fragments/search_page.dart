@@ -24,12 +24,12 @@ class _ShowsPageState extends State<SearchPage> {
   String _query = '';
 
   static const _shortcuts = [
-    'Something intense',
-    'under 2 hours',
-    'Weekend watch',
+    'Action',
+    'Drama',
+    'Comedy',
+    'Thriller',
+    'Romance',
     'Latest releases',
-    'Hindi action',
-    'Family night',
   ];
 
   static const _genres = [
@@ -130,74 +130,73 @@ class _ShowsPageState extends State<SearchPage> {
                           ),
                         const SizedBox(height: 16),
                         Text(
-                          widget.section?.title ?? 'Search',
-                          style: AppTextStyles.displayTitle.copyWith(fontSize: 34),
+                          widget.section?.title ?? 'Explore',
+                          style: AppTextStyles.displayTitle.copyWith(fontSize: 32),
                         ),
-                        const SizedBox(height: 6),
-                        Text('Search', style: AppTextStyles.eyebrow.copyWith(color: AppColors.colorOrange)),
                         if (widget.section == null) ...[
-                          const SizedBox(height: 18),
-                          ChromeFrame(
-                            inset: 4,
-                            child: TextField(
-                              controller: searchController,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: AppTheme.displayFamily,
-                                fontSize: 18,
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              cursorColor: AppColors.colorOrange,
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Search for title, topic or keyword',
-                                hintStyle: TextStyle(color: AppColors.colorHint, fontSize: 14, fontStyle: FontStyle.normal),
-                                prefixIcon: Icon(Icons.search_rounded, color: AppColors.colorAccent),
-                                contentPadding: EdgeInsets.symmetric(vertical: 16),
-                              ),
-                              onChanged: (value) => _applyQuery(contentProvider, value),
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: searchController,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: AppTheme.fontFamily,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
+                            cursorColor: AppColors.colorOrange,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: AppColors.colorSurface,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: AppColors.colorHairline),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: AppColors.colorHairline),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: AppColors.colorAccent),
+                              ),
+                              hintText: 'Search movies, series, actors...',
+                              hintStyle: const TextStyle(color: AppColors.colorHint, fontSize: 14),
+                              prefixIcon: const Icon(Icons.search_rounded, color: AppColors.colorAccent),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                            ),
+                            onChanged: (value) => _applyQuery(contentProvider, value),
                           ),
                           const SizedBox(height: 22),
-                          Text('QUICK SEARCH', style: AppTextStyles.eyebrow),
+                          const Text('Trending Searches', style: AppTextStyles.sectionTitle),
                           const SizedBox(height: 12),
-                          ..._shortcuts.map((label) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: GestureDetector(
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: _shortcuts.map((label) {
+                              return GestureDetector(
                                 onTap: () {
                                   searchController.text = label;
                                   _applyQuery(contentProvider, label);
                                 },
                                 child: Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: AppColors.colorSilver.withValues(alpha: 0.28)),
+                                    color: AppColors.colorSurface,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(color: AppColors.colorHairline),
                                   ),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.bolt, color: AppColors.colorOrange, size: 16),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          label.toUpperCase(),
-                                          style: const TextStyle(
-                                            color: AppColors.colorSilver,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w700,
-                                            letterSpacing: 1.8,
-                                          ),
-                                        ),
-                                      ),
-                                      Icon(Icons.arrow_forward, color: AppColors.colorAccent, size: 16),
-                                    ],
+                                  child: Text(
+                                    label,
+                                    style: const TextStyle(
+                                      color: AppColors.colorSilver,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          }),
+                              );
+                            }).toList(),
+                          ),
                         ],
                       ],
                     ),
@@ -207,7 +206,7 @@ class _ShowsPageState extends State<SearchPage> {
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(gutter, 20, gutter, 12),
-                      child: Text('Browse by genre', style: AppTextStyles.editorial.copyWith(fontSize: 22)),
+                      child: Text('Genres', style: AppTextStyles.sectionTitle),
                     ),
                   ),
                   SliverPadding(
@@ -253,24 +252,21 @@ class _ShowsPageState extends State<SearchPage> {
                 else if (_shows.isNotEmpty)
                   SliverPadding(
                     padding: EdgeInsets.fromLTRB(gutter, 24, gutter, 120),
-                    sliver: SliverList(
+                    sliver: SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: AppLayout.portraitColumns(context),
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 0.66,
+                      ),
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           final item = _shows[index];
-                          final mode = index % 6;
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 18),
-                            child: Align(
-                              alignment: index.isOdd ? Alignment.centerRight : Alignment.centerLeft,
-                              child: ChargePoster(
-                                item: item,
-                                width: mode == 0 || mode == 3 ? 220 : mode == 2 ? 148 : 168,
-                                height: mode == 0 || mode == 3 ? 132 : 232,
-                                wide: mode == 0 || mode == 3,
-                                circle: mode == 2,
-                                vault: mode == 4,
-                              ),
-                            ),
+                          return ChargePoster(
+                            item: item,
+                            width: double.infinity,
+                            height: double.infinity,
+                            style: ChargePosterStyle.portrait,
                           );
                         },
                         childCount: _shows.length,

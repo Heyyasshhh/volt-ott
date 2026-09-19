@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.bolt, color: AppColors.colorOrange, size: 36),
+                    const Icon(Icons.exit_to_app_rounded, color: AppColors.colorOrange, size: 28),
                     const SizedBox(height: 18),
                     Text('Exit App?', style: AppTextStyles.displayTitle.copyWith(fontSize: 26)),
                     const SizedBox(height: 10),
