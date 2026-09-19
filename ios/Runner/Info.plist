@@ -7,7 +7,7 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
-		<string>VOLT OTT</string>
+		<string>volt</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
-		<string>VOLT OTT</string>
+		<string>volt</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>
@@ -55,10 +55,10 @@
 				<key>CFBundleTypeRole</key>
 				<string>Editor</string>
 				<key>CFBundleURLName</key>
-				<string>app.butterflyott.app</string>
+				<string>app.voltott.app</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>VOLT OTT</string>
+					<string>volt</string>
 				</array>
 			</dict>
 			<dict>
@@ -81,7 +81,7 @@
 		<key>FacebookClientToken</key>
 		<string>FACEBOOK_CLIENT_TOKEN</string>
 		<key>FacebookDisplayName</key>
-		<string>VOLT OTT</string>
+		<string>volt</string>
 		<key>FirebaseAppDelegateProxyEnabled</key>
 		<false/>
 		<key>FlutterDeepLinkingEnabled</key>

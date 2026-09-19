@@ -14,7 +14,7 @@ class ForceUpdatePage extends StatelessWidget {
 
   static Future<void> openStore() async {
     final uri = PlatformUtils.isAndroid
-        ? Uri.parse('https://play.google.com/store/apps/details?id=app.butterflyott.app')
+        ? Uri.parse('https://play.google.com/store/apps/details?id=app.voltott.app')
         : PlatformUtils.isIOS
             ? Uri.parse('https://apps.apple.com/app/id') // Replace with real App Store ID
             : null;

@@ -46,7 +46,7 @@ class _DeepLinkHandlerState extends State<DeepLinkHandler> {
   }
 
   void _handleLink(Uri uri) {
-    if ((uri.scheme == "butterfly" && uri.host == "reel") || uri.scheme == 'https') {
+    if ((uri.scheme == "volt" && uri.host == "reel") || uri.scheme == 'https') {
       final reelId = uri.queryParameters['id'];
       if (reelId != null) {
         Provider.of<HomePageProvider>(context, listen: false)

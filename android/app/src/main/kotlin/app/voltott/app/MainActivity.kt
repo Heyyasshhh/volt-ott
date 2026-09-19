@@ -1,4 +1,4 @@
-package app.butterflyott.app
+package app.voltott.app
 
 import android.os.Bundle
 import android.view.WindowManager.LayoutParams

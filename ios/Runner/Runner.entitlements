@@ -17,7 +17,7 @@
 	</array>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)app.butterflyott.app</string>
+		<string>$(AppIdentifierPrefix)app.voltott.app</string>
 	</array>
 </dict>
 </plist>

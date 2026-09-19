@@ -313,7 +313,7 @@ class FooterWithBadges extends StatelessWidget {
                   alignment: WrapAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () => _launchUrl("https://play.google.com/store/apps/details?id=app.butterflyott.app"),
+                      onTap: () => _launchUrl("https://play.google.com/store/apps/details?id=app.voltott.app"),
                       child: Image.asset('assets/images/google-play.webp', width: 140, height: 50),
                     ),
                     GestureDetector(

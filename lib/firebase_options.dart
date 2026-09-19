@@ -69,7 +69,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '260972891398',
     projectId: 'butterfly-ott',
     storageBucket: 'butterfly-ott.firebasestorage.app',
-    iosBundleId: 'app.butterflyott.app',
+    iosBundleId: 'app.voltott.app',
   );
 
 }
