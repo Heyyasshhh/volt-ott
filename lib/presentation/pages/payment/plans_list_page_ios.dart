@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:ui';
+import '../authentication/login_screen.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:volt/constants/colors.dart';
 import 'package:volt/models/subscription_plan.dart';
-import 'package:volt/presentation/components/subscription/not_logged_in_subscribe.dart';
 import 'package:volt/presentation/components/subscription/plan_card.dart';
 import 'package:volt/presentation/components/ui/app_widgets.dart';
 import 'package:volt/presentation/pages/payment/payment_success_page.dart';
@@ -297,7 +297,16 @@ class _PlansListPageState extends State<PlansListPage> {
   Future<void> _startPurchase(SubscriptionPlan plan) async {
     final auth = Provider.of<AuthenticationProvider>(context, listen: false);
     final user = auth.getUser();
-    if (user == null) return;
+    if (user == null) {
+      if (!mounted) return;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => LoginPage(next: const PlansListPage()),
+        ),
+      );
+      return;
+    }
+
 
     final product = _getProductForPlan(plan);
     if (product == null) {
@@ -335,11 +344,6 @@ class _PlansListPageState extends State<PlansListPage> {
   // ------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthenticationProvider>(context);
-    final user = auth.getUser();
-
-    if (user == null) return NotLoggedInSubscribe();
-
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
       appBar: AppBar(

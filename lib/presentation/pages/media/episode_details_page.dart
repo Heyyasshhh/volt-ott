@@ -236,7 +236,8 @@ class _EpisodeDetailsPageState extends State<EpisodeDetailsPage> {
     final gutter = AppLayout.gutter(context);
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
-      body: AppBackground(
+      body: SafeArea(
+        child: AppBackground(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,6 +339,7 @@ class _EpisodeDetailsPageState extends State<EpisodeDetailsPage> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

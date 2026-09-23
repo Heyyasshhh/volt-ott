@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:volt/constants/colors.dart';
 import 'package:volt/models/media/media_item.dart';
-import 'package:volt/presentation/pages/authentication/login_screen.dart';
 import 'package:volt/presentation/pages/media/movie_details_page.dart';
 import 'package:volt/presentation/pages/media/tv_show_details_page.dart';
 import 'package:volt/presentation/pages/payment/plans_list_page.dart';
@@ -106,13 +105,7 @@ class _CustomControlsWidgetSliderState extends BetterPlayerControlsState<CustomC
                 shape: const StadiumBorder(),
               ),
               onPressed: () {
-                if (!widget.data['is_logged_in']) {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ));
-                  return;
-                }
-                if (!widget.data['is_subscribed']) {
+                if (!widget.data['is_logged_in'] || !widget.data['is_subscribed']) {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => PlansListPage(),
                   ));

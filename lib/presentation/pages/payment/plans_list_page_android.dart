@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
+import '../authentication/login_screen.dart';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,6 @@ import '../../../models/user/user.dart';
 import '../../../network/api_paths.dart';
 import '../../../services/network_service.dart';
 import '../../components/bottom_sheet/payment_bottomsheet.dart';
-import '../../components/subscription/not_logged_in_subscribe.dart';
 import 'plans_list_page_shimmer.dart';
 import 'sabpaisa_checkout_page.dart';
 
@@ -335,10 +335,6 @@ class _PlansListPageState extends State<PlansListPage> implements PayUCheckoutPr
   Widget build(BuildContext context) {
     final authenticationProvider = Provider.of<AuthenticationProvider>(context);
     final user = authenticationProvider.getUser();
-    if (user == null) {
-      return NotLoggedInSubscribe();
-    }
-
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
       appBar: AppBar(
@@ -446,7 +442,17 @@ class _PlansListPageState extends State<PlansListPage> implements PayUCheckoutPr
     );
   }
 
-  void _showPlanPopup(User user, SubscriptionPlan plan, String? code) async {
+  void _showPlanPopup(User? user, SubscriptionPlan plan, String? code) async {
+    if (user == null) {
+      if (!mounted) return;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => LoginPage(next: const PlansListPage()),
+        ),
+      );
+      return;
+    }
+
     preContext = context;
 
     final activeMethods = _enabledMethods;

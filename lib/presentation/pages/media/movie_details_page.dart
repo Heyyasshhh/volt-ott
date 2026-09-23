@@ -20,7 +20,6 @@ import '../../components/ui/app_widgets.dart';
 import '../../custom_controls/custom_controls_widget.dart';
 import 'package:volt/video_js_bridge.dart';
 import '../../../platform_utils.dart';
-import '../authentication/login_screen.dart';
 import '../payment/plans_list_page_mobile.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -289,7 +288,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
           ));
         } else {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => LoginPage(next: PlansListPage()),
+            builder: (context) => PlansListPage(),
           ));
         }
         return;
@@ -326,7 +325,8 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
 
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
-      body: AppBackground(
+      body: SafeArea(
+        child: AppBackground(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -487,6 +487,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

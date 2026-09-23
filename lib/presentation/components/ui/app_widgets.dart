@@ -561,28 +561,6 @@ class CategoryChipBar extends StatelessWidget {
   }
 }
 
-class ButterflyBottomNav extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onTap;
-  final bool showDownloads;
-
-  const ButterflyBottomNav({
-    super.key,
-    required this.currentIndex,
-    required this.onTap,
-    required this.showDownloads,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return VoltBottomNav(
-      currentIndex: currentIndex,
-      onTap: onTap,
-      showDownloads: showDownloads,
-    );
-  }
-}
-
 class VoltBottomNav extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;

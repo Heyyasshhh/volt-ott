@@ -123,12 +123,11 @@ flutter_native_splash:
   web: true
   fullscreen: false
   android_gravity: center
-  ios_content_mode: center
-  image: assets/images/volt-logo.png
+  ios_content_mode: scaleAspectFit
+  image: assets/images/splash-android12.png
   android_12:
     color: "#030507"
-    icon_background_color: "#030507"
-    image: assets/images/volt-logo.png
+    image: assets/images/splash-android12.png
 
 dependency_overrides:
   river_player:

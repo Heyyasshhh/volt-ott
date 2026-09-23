@@ -33,7 +33,6 @@ class _SectionsPageState extends State<SectionsPage> with WidgetsBindingObserver
   late final GlobalKey<ScaffoldState> _key;
   int _current = 0;
   int _selectedCategory = 0;
-  static const _categories = ['All', 'Movies', 'Series'];
   final List<GlobalKey<CarouselHeroItemState>> heroKeys = [];
   final PageController _pageController = PageController();
 
@@ -165,7 +164,9 @@ class _SectionsPageState extends State<SectionsPage> with WidgetsBindingObserver
       key: _key,
       backgroundColor: AppColors.colorBackground,
       extendBody: true,
-      body: AppBackground(
+      body: SafeArea(
+        bottom: false,
+        child: AppBackground(
         child: RefreshIndicator(
           onRefresh: () async {
             await Provider.of<ContentProvider>(context, listen: false).init();
@@ -180,16 +181,57 @@ class _SectionsPageState extends State<SectionsPage> with WidgetsBindingObserver
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
-                child: Stack(
-                  children: [
-                    if (loading || featured == null)
-                      SizedBox(
-                        height: MediaQuery.sizeOf(context).height * 0.68,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(AppLayout.gutter(context), 4, AppLayout.gutter(context), 8),
+                  child: Row(
+                    children: [
+                      const BrandWordmark(fontSize: 28),
+                      const Spacer(),
+                      CircleIconButton(
+                        icon: Icons.search_rounded,
+                        size: 40,
+                        onPressed: widget.onSearchTap ?? () {},
+                      ),
+                      const SizedBox(width: 8),
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          CircleIconButton(
+                            icon: Icons.notifications_none_rounded,
+                            size: 40,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => NotificationsPage()),
+                              );
+                            },
+                          ),
+                          if (inAppNotificationProvider.getNotifications().isNotEmpty)
+                            const Positioned(
+                              right: 6,
+                              top: 6,
+                              child: SizedBox(
+                                width: 8,
+                                height: 8,
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(color: AppColors.colorOrange, shape: BoxShape.circle),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: loading || featured == null
+                    ? SizedBox(
+                        height: MediaQuery.sizeOf(context).height * 0.72,
                         child: Center(child: Image.asset(BrandAssets.logo, width: 180)),
                       )
-                    else
-                      SizedBox(
-                        height: MediaQuery.sizeOf(context).height * 0.78,
+                    : SizedBox(
+                        height: MediaQuery.sizeOf(context).height * 0.72,
                         child: PageView.builder(
                           controller: _pageController,
                           itemCount: slides.isEmpty ? 1 : slides.length,
@@ -217,62 +259,6 @@ class _SectionsPageState extends State<SectionsPage> with WidgetsBindingObserver
                           },
                         ),
                       ),
-                    SafeArea(
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(AppLayout.gutter(context), 4, AppLayout.gutter(context), 0),
-                        child: Row(
-                          children: [
-                            const BrandWordmark(fontSize: 28),
-                            const Spacer(),
-                            CircleIconButton(
-                              icon: Icons.search_rounded,
-                              size: 40,
-                              onPressed: widget.onSearchTap ?? () {},
-                            ),
-                            const SizedBox(width: 8),
-                            Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                CircleIconButton(
-                                  icon: Icons.notifications_none_rounded,
-                                  size: 40,
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (_) => NotificationsPage()),
-                                    );
-                                  },
-                                ),
-                                if (inAppNotificationProvider.getNotifications().isNotEmpty)
-                                  const Positioned(
-                                    right: 6,
-                                    top: 6,
-                                    child: SizedBox(
-                                      width: 8,
-                                      height: 8,
-                                      child: DecoratedBox(
-                                        decoration: BoxDecoration(color: AppColors.colorOrange, shape: BoxShape.circle),
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 8),
-                  child: CategoryChipBar(
-                    labels: _categories,
-                    selectedIndex: _selectedCategory,
-                    onSelected: (index) => setState(() => _selectedCategory = index),
-                  ),
-                ),
               ),
               if (loading)
                 const SliverToBoxAdapter(
@@ -291,7 +277,7 @@ class _SectionsPageState extends State<SectionsPage> with WidgetsBindingObserver
                           children: [
                             const SizedBox(height: 28),
                             if (PlatformUtils.isWeb) const FooterWithBadges(),
-                            const SizedBox(height: 120),
+                            const SizedBox(height: 80),
                           ],
                         );
                       }
@@ -303,6 +289,7 @@ class _SectionsPageState extends State<SectionsPage> with WidgetsBindingObserver
             ],
           ),
         ),
+      ),
       ),
     );
   }

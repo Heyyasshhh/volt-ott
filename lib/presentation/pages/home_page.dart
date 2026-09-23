@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
           child: AnimatedOpacity(
             opacity: _isDrawerOpen ? 0.0 : 1.0,
             duration: const Duration(milliseconds: 300),
-            child: ButterflyBottomNav(
+            child: VoltBottomNav(
               currentIndex: _currentIndex,
               showDownloads: !kIsWeb,
               onTap: (idx) => setState(() => _currentIndex = idx),

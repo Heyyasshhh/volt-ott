@@ -248,7 +248,6 @@ class NowPlayingHero extends StatelessWidget {
   Widget build(BuildContext context) {
     final desktop = AppLayout.isDesktop(context);
     final height = desktop ? 680.0 : MediaQuery.sizeOf(context).height * 0.72;
-    final description = item.description.trim();
 
     return SizedBox(
       height: height,
@@ -262,34 +261,7 @@ class NowPlayingHero extends StatelessWidget {
             left: AppLayout.gutter(context),
             right: desktop ? MediaQuery.sizeOf(context).width * 0.38 : AppLayout.gutter(context),
             bottom: 28,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (item.categories.isNotEmpty)
-                  Text(
-                    item.categories.first,
-                    style: AppTextStyles.eyebrow,
-                  ),
-                const SizedBox(height: 8),
-                Text(
-                  item.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.displayTitle.copyWith(fontSize: desktop ? 52 : 34),
-                ),
-                const SizedBox(height: 10),
-                Text(mediaMetaLine(item), style: AppTextStyles.meta),
-                if (description.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    description,
-                    maxLines: desktop ? 3 : 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.meta.copyWith(fontSize: 14, height: 1.45),
-                  ),
-                ],
-                const SizedBox(height: 20),
-                Wrap(
+            child: Wrap(
                   spacing: 10,
                   runSpacing: 10,
                   children: [
@@ -304,8 +276,6 @@ class NowPlayingHero extends StatelessWidget {
                     ),
                   ],
                 ),
-              ],
-            ),
           ),
         ],
       ),

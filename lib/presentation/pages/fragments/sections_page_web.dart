@@ -148,7 +148,7 @@ class _SectionsPageWebState extends State<SectionsPageWeb> {
                             const SizedBox(width: 12),
                             const BrandWordmark(fontSize: 24),
                             const Spacer(),
-                            if (user != null && user.userSubscription == null)
+                            if (user == null || user.userSubscription == null)
                               GestureDetector(
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(builder: (_) => PlansListPage()));

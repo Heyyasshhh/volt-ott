@@ -169,7 +169,8 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
 
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
-      body: AppBackground(
+      body: SafeArea(
+        child: AppBackground(
         child: Stack(
           children: [
             SingleChildScrollView(
@@ -406,6 +407,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

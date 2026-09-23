@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import '../authentication/login_screen.dart';
 import 'package:volt/constants/colors.dart';
 import 'package:volt/models/subscription_plan.dart';
-import 'package:volt/presentation/components/subscription/not_logged_in_subscribe.dart';
 import 'package:volt/presentation/components/subscription/plan_card.dart';
 import 'package:volt/presentation/components/ui/app_widgets.dart';
 import 'package:volt/presentation/pages/payment/payment_success_page.dart';
@@ -40,10 +40,6 @@ class _PlansListPageState extends State<PlansListPage> {
   Widget build(BuildContext context) {
     final authenticationProvider = Provider.of<AuthenticationProvider>(context);
     final user = authenticationProvider.getUser();
-    if (user == null) {
-      return const NotLoggedInSubscribe();
-    }
-
     return Scaffold(
       backgroundColor: AppColors.colorBackground,
       appBar: AppBar(
@@ -110,7 +106,17 @@ class _PlansListPageState extends State<PlansListPage> {
     );
   }
 
-  void _showPlanPopup(User user, SubscriptionPlan plan) async {
+  void _showPlanPopup(User? user, SubscriptionPlan plan) async {
+    if (user == null) {
+      if (!mounted) return;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => LoginPage(next: const PlansListPage()),
+        ),
+      );
+      return;
+    }
+
     preContext = context;
     await NetworkService().post(
       APIPath.createRazorpayCharge,
